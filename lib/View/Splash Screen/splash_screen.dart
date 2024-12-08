@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:medicart/Utils/color_constants.dart';
 import 'package:medicart/Utils/image_constants.dart';
 import 'package:medicart/View/Login%20Screen/login_screen.dart';
+
 import 'package:medicart/View/Registration%20Screen/registration_screen.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -19,7 +20,7 @@ class _SplashScreenState extends State<SplashScreen> {
     super.initState();
     Timer(Duration(seconds: 3), () {
       Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (_) => RegistrationScreen()));
+          MaterialPageRoute(builder: (_) => LoginScreen()));
     });
   }
 
