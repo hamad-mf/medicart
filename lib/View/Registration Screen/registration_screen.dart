@@ -172,13 +172,15 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold),
                           )),
-                 
                   TextButton(
                       onPressed: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => LoginScreen()));
+                        Navigator.pushAndRemoveUntil(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => LoginScreen()),
+                          (Route<dynamic> route) =>
+                              false, 
+                        );
                       },
                       child: Text(
                         "Already have an account? Login",

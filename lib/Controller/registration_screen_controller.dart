@@ -14,7 +14,6 @@ class RegistrationScreenController with ChangeNotifier {
     isLoading = true;
     notifyListeners();
     try {
-      
       final credential = await FirebaseAuth.instance
           .createUserWithEmailAndPassword(email: email, password: password);
       if (credential.user?.uid != null) {
@@ -22,7 +21,10 @@ class RegistrationScreenController with ChangeNotifier {
             bgcolor: Colors.green,
             context: context,
             message: "Account Created Successfully");
-      
+             
+      await FirebaseAuth.instance.signOut();
+        Navigator.pushAndRemoveUntil(context,
+            MaterialPageRoute(builder: (context) => LoginScreen()), (route) => false,);
       }
     } on FirebaseAuthException catch (e) {
       if (e.code == 'week-password') {
