@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:curved_navigation_bar/curved_navigation_bar.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:medicart/Utils/color_constants.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
@@ -42,14 +44,19 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: ColorConstants.mainbg,
+      backgroundColor: ColorConstants.mainwhite,
       appBar: AppBar(
         backgroundColor: ColorConstants.appbar,
         actions: [
-          Icon(
-            Icons.notifications,
-            color: ColorConstants.mainwhite,
-            size: 30,
+          InkWell(
+            onTap: () {
+              FirebaseAuth.instance.signOut();
+            },
+            child: Icon(
+              Icons.notifications,
+              color: ColorConstants.mainwhite,
+              size: 30,
+            ),
           ),
           SizedBox(
             width: 10,
@@ -65,6 +72,7 @@ class _HomeScreenState extends State<HomeScreen> {
       // ),
       body: SingleChildScrollView(
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Stack(
               children: [
@@ -76,7 +84,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     gradient: LinearGradient(
                       begin: Alignment.topCenter,
                       end: Alignment.bottomCenter,
-                      colors: [ColorConstants.appbar, ColorConstants.mainbg],
+                      colors: [ColorConstants.appbar, ColorConstants.mainwhite],
                     ),
                   ),
                   child: Column(
@@ -169,11 +177,175 @@ class _HomeScreenState extends State<HomeScreen> {
               ],
             ),
             SizedBox(
-              height: 500,
+              height: 20,
             ),
-            Text("data")
+            Row(
+              children: [
+                SizedBox(
+                  width: 15,
+                ),
+                Text(
+                  "View By Category",
+                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+                ),
+                Spacer(),
+                Text(
+                  "See All",
+                  style: TextStyle(
+                      color: ColorConstants.appbar,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 15),
+                ),
+                Icon(
+                  Icons.arrow_forward_ios,
+                  size: 15,
+                  color: ColorConstants.appbar,
+                ),
+                SizedBox(
+                  width: 10,
+                )
+              ],
+            ),
+            SizedBox(
+              height: 20,
+            ),
+            Row(
+              children: [
+                SizedBox(
+                  width: 5,
+                ),
+                Container(
+                  height: 40,
+                  width: 120,
+                  decoration: BoxDecoration(
+                      color: ColorConstants.mainbg,
+                      border: Border.all(color: Colors.black, width: 1),
+                      borderRadius: BorderRadius.circular(19)),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Image.network(
+                        'https://res.cloudinary.com/dflu65eef/image/upload/v1734014656/Vitamins_qolxd4.png',
+                        scale: 20,
+                      ),
+                      Text("Vitamins"),
+                    ],
+                  ),
+                ),
+                SizedBox(
+                  width: 10,
+                ),
+                Container(
+                  height: 40,
+                  width: 120,
+                  decoration: BoxDecoration(
+                      color: ColorConstants.mainbg,
+                      border: Border.all(color: Colors.black, width: 1),
+                      borderRadius: BorderRadius.circular(19)),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Image.network(
+                        'https://res.cloudinary.com/dflu65eef/image/upload/v1734014385/Antibiotics_axajjp.png',
+                        scale: 20,
+                      ),
+                      Text("Antibiotics"),
+                    ],
+                  ),
+                ),
+                SizedBox(
+                  width: 10,
+                ),
+                Container(
+                  height: 40,
+                  width: 120,
+                  decoration: BoxDecoration(
+                      color: ColorConstants.mainbg,
+                      border: Border.all(color: Colors.black, width: 1),
+                      borderRadius: BorderRadius.circular(19)),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Image.network(
+                        'https://res.cloudinary.com/dflu65eef/image/upload/v1734014247/Pain_Relief_vby7ae.png',
+                        scale: 20,
+                      ),
+                      Text("Pain Relief"),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(
+              height: 20,
+            ),
+            Row(
+              children: [
+                SizedBox(
+                  width: 10,
+                ),
+                Text(
+                  "View By Category",
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                ),
+              ],
+            ),
+            GridView.builder(
+              shrinkWrap: true, // Allow GridView to shrink to fit content
+              physics: NeverScrollableScrollPhysics(),
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2, // Number of columns
+                crossAxisSpacing: 10.0, // Space between columns
+                mainAxisSpacing: 10.0, // Space between rows
+                childAspectRatio:
+                    1.0, // Width-to-height ratio of each container
+              ),
+              itemCount: 10, // Number of containers
+              itemBuilder: (context, index) {
+                return Container(
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                        fit: BoxFit.cover,
+                        image: NetworkImage(
+                            'https://images.pexels.com/photos/159211/headache-pain-pills-medication-159211.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2')),
+                    color: Colors.blueAccent.withOpacity(0.7),
+                    borderRadius: BorderRadius.circular(15),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black26,
+                        offset: Offset(2, 2),
+                        blurRadius: 5,
+                      ),
+                    ],
+                  ),
+                  child: Center(
+                    child: Text(
+                      "Container ${index + 1}",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                );
+              },
+              padding: EdgeInsets.all(10),
+            ),
           ],
         ),
+      ),
+      bottomNavigationBar: CurvedNavigationBar(
+        backgroundColor: ColorConstants.appbar,
+        items: <Widget>[
+          Icon(Icons.home, size: 30),
+          Icon(Icons.list, size: 30),
+          Icon(Icons.person, size: 30),
+        ],
+        onTap: (index) {
+          //Handle button tap
+        },
       ),
     );
   }
