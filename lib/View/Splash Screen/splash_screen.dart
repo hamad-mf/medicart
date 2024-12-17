@@ -1,12 +1,11 @@
 import 'dart:async';
-
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:medicart/Utils/color_constants.dart';
 import 'package:medicart/Utils/image_constants.dart';
+import 'package:medicart/View/Home%20Screen/home_screen.dart';
 import 'package:medicart/View/Login%20Screen/login_screen.dart';
-
-import 'package:medicart/View/Registration%20Screen/registration_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart'; 
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -19,9 +18,23 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
+    _checkLoginStatus();  // Call method to check login status
+  }
+
+  // Method to check login status
+  void _checkLoginStatus() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    bool isLoggedIn = prefs.getBool('isLoggedIn') ?? false;  // Get 'isLoggedIn' flag
+
+    // Wait for 4 seconds, then navigate based on login status
     Timer(Duration(seconds: 4), () {
-      Navigator.of(context)
-          .pushReplacement(MaterialPageRoute(builder: (_) => LoginScreen()));
+      if (isLoggedIn) {
+        // Navigate to HomeScreen if logged in
+        Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => HomeScreen()));
+      } else {
+        // Navigate to LoginScreen if not logged in
+        Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => LoginScreen()));
+      }
     });
   }
 
@@ -32,22 +45,16 @@ class _SplashScreenState extends State<SplashScreen> {
       body: Center(
         child: Column(
           children: [
-            SizedBox(
-              height: 200,
-            ),
+            SizedBox(height: 200),
             Image.asset(
               ImageConstants.Splashlogo,
               scale: 1.2,
             ),
-            SizedBox(
-              height: 30,
-            ),
+            SizedBox(height: 30),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                SizedBox(
-                  width: 20,
-                ),
+                SizedBox(width: 20),
                 AnimatedTextKit(
                   animatedTexts: [
                     TypewriterAnimatedText(

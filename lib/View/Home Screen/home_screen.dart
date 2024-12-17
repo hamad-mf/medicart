@@ -1,9 +1,13 @@
 import 'dart:async';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+
 import 'package:flutter/material.dart';
 import 'package:medicart/Utils/color_constants.dart';
+import 'package:medicart/View/Login%20Screen/login_screen.dart';
+import 'package:medicart/View/Sample%20Screen/sample_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -41,6 +45,16 @@ class _HomeScreenState extends State<HomeScreen> {
     super.dispose();
   }
 
+  Future<void> _logout() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('isLoggedIn', false); // Set isLoggedIn to false
+
+    // Navigate back to LoginScreen
+    Navigator.of(context).pushReplacement(
+      MaterialPageRoute(builder: (_) => LoginScreen()),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -50,7 +64,7 @@ class _HomeScreenState extends State<HomeScreen> {
         actions: [
           InkWell(
             onTap: () {
-              FirebaseAuth.instance.signOut();
+              _logout();
             },
             child: Icon(
               Icons.notifications,
@@ -63,13 +77,6 @@ class _HomeScreenState extends State<HomeScreen> {
           )
         ],
       ),
-      // body: Center(
-      //   child: ElevatedButton(
-      //       onPressed: () {
-      //         FirebaseAuth.instance.signOut();
-      //       },
-      //       child: Text("logout")),
-      // ),
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -189,12 +196,14 @@ class _HomeScreenState extends State<HomeScreen> {
                   style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
                 ),
                 Spacer(),
-                Text(
-                  "See All",
-                  style: TextStyle(
-                      color: ColorConstants.appbar,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 15),
+                InkWell(
+                  child: Text(
+                    "See All",
+                    style: TextStyle(
+                        color: ColorConstants.appbar,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 15),
+                  ),
                 ),
                 Icon(
                   Icons.arrow_forward_ios,
