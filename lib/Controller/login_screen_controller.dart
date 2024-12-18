@@ -2,46 +2,15 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:flutter/material.dart';
 import 'package:medicart/Utils/app_utils.dart';
+import 'package:medicart/View/Customer%20Screens/Custom%20BottomNavBar/custom_bottom_navbar.dart';
 
-import 'package:medicart/View/Home%20Screen/home_screen.dart';
+
+
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginScreenController with ChangeNotifier {
   bool isLoading = false;
-  // onLogin(
-  //     {required String email,
-  //     required String password,
-  //     required BuildContext context}) async {
-  //   isLoading = true;
-  //   notifyListeners();
-  //   try {
-  //     final credential = await FirebaseAuth.instance
-  //         .signInWithEmailAndPassword(email: email, password: password);
-  //     log("login success");
-  //     AppUtils.showSnackbar(
-  //         context: context, message: "login success", bgcolor: Colors.green);
-  //     log(credential.user?.email.toString() ?? "no data");
-  //   } on FirebaseAuthException catch (e) {
-  //     log(e.code.toString());
-  //     if (e.code == 'invalid-email') {
-  //       log("no user found for that emqil");
-  //       AppUtils.showSnackbar(
-  //           context: context, message: "no user found for that email");
-  //     } else if (e.code == 'wrong-password') {
-  //       log("please check the passwiord");
-  //       AppUtils.showSnackbar(
-  //           context: context, message: "please check the passwiord");
-  //     } else if (e.code == 'invalid-credential') {
-  //       log("please check the password/email");
-  //       AppUtils.showSnackbar(
-  //           context: context, message: "please check the passwiord/email");
-  //     }
-  //   } catch (e) {
-  //     print(e);
-  //   }
-  //   isLoading = false;
-  //   notifyListeners();
-  // }
+  
 
   onLogin(
       {required String email,
@@ -62,11 +31,12 @@ class LoginScreenController with ChangeNotifier {
           SharedPreferences prefs = await SharedPreferences.getInstance();
       await prefs.setBool('isLoggedIn', true);
           // Valid credentials: navigate to SampleScreen
-          Navigator.of(context).pop(); // Close bottom sheet
-          Navigator.of(context).push(
+         
+          Navigator.of(context).pushAndRemoveUntil(
             MaterialPageRoute(
-              builder: (context) => HomeScreen(),
-            ),
+              builder: (context) => CustomBottomNavbar(),
+
+            ),(route) => false,
           );
         } else {
           // Invalid credentials: Show error dialog
@@ -90,23 +60,5 @@ class LoginScreenController with ChangeNotifier {
     notifyListeners();
   }
 
-  void _showErrorDialog(BuildContext context, String message) {
-    showDialog(
-      context: context,
-      builder: (ctx) {
-        return AlertDialog(
-          title: Text('Error'),
-          content: Text(message),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(ctx).pop();
-              },
-              child: Text('OK'),
-            ),
-          ],
-        );
-      },
-    );
-  }
+ 
 }

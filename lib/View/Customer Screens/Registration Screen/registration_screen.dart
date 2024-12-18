@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:medicart/Controller/registration_screen_controller.dart';
 import 'package:medicart/Utils/color_constants.dart';
-import 'package:medicart/View/Login%20Screen/login_screen.dart';
+import 'package:medicart/View/Customer%20Screens/Login%20Screen/login_screen.dart';
+
 import 'package:provider/provider.dart';
 
 class RegistrationScreen extends StatefulWidget {
@@ -146,13 +147,15 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                   context.watch<RegistrationScreenController>().isLoading
                       ? CircularProgressIndicator()
                       : ElevatedButton(
-                          onPressed: () {
+                          onPressed: () async {
+                            final email = emailController.text.trim();
+                            final password = passController.text.trim();
                             if (_formKey.currentState!.validate()) {
-                              context
+                              await context
                                   .read<RegistrationScreenController>()
                                   .onRegistration(
-                                      email: emailController.text,
-                                      password: passController.text,
+                                      email: email,
+                                      password: password,
                                       context: context);
                             }
                           },
@@ -178,8 +181,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                           context,
                           MaterialPageRoute(
                               builder: (context) => LoginScreen()),
-                          (Route<dynamic> route) =>
-                              false, 
+                          (Route<dynamic> route) => false,
                         );
                       },
                       child: Text(

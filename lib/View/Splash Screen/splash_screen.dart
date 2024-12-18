@@ -3,8 +3,11 @@ import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:medicart/Utils/color_constants.dart';
 import 'package:medicart/Utils/image_constants.dart';
-import 'package:medicart/View/Home%20Screen/home_screen.dart';
-import 'package:medicart/View/Login%20Screen/login_screen.dart';
+import 'package:medicart/View/Customer%20Screens/Custom%20BottomNavBar/custom_bottom_navbar.dart';
+import 'package:medicart/View/Customer%20Screens/Home%20Screen/home_screen.dart';
+import 'package:medicart/View/Customer%20Screens/Login%20Screen/login_screen.dart';
+
+
 import 'package:shared_preferences/shared_preferences.dart'; 
 
 class SplashScreen extends StatefulWidget {
@@ -30,7 +33,7 @@ class _SplashScreenState extends State<SplashScreen> {
     Timer(Duration(seconds: 4), () {
       if (isLoggedIn) {
         // Navigate to HomeScreen if logged in
-        Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => HomeScreen()));
+        Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => CustomBottomNavbar()));
       } else {
         // Navigate to LoginScreen if not logged in
         Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => LoginScreen()));

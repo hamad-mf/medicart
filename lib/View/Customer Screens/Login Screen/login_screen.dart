@@ -2,9 +2,10 @@
 import 'package:flutter/material.dart';
 import 'package:medicart/Controller/login_screen_controller.dart';
 import 'package:medicart/Utils/color_constants.dart';
+import 'package:medicart/View/Customer%20Screens/Registration%20Screen/registration_screen.dart';
 
 
-import 'package:medicart/View/Registration%20Screen/registration_screen.dart';
+
 
 import 'package:provider/provider.dart';
 
@@ -144,11 +145,12 @@ class _LoginScreenState extends State<LoginScreen> {
                                 )),
                         TextButton(
                             onPressed: () {
-                              Navigator.push(
+                              Navigator.pushAndRemoveUntil(
                                   context,
                                   MaterialPageRoute(
                                       builder: (context) =>
-                                          RegistrationScreen()));
+                                          RegistrationScreen()),(route) => false,
+                                          );
                             },
                             child: Text(
                               "Dont have an account? Create",

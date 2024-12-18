@@ -1,12 +1,12 @@
 import 'dart:async';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:curved_navigation_bar/curved_navigation_bar.dart';
+
 
 import 'package:flutter/material.dart';
 import 'package:medicart/Utils/color_constants.dart';
-import 'package:medicart/View/Login%20Screen/login_screen.dart';
-import 'package:medicart/View/Sample%20Screen/sample_screen.dart';
+import 'package:medicart/View/Customer%20Screens/Login%20Screen/login_screen.dart';
+
+
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
@@ -18,6 +18,14 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+
+
+
+
+
+
+
+  
   final PageController _controller = PageController();
   final int _numPages = 3;
   Timer? _timer;
@@ -345,17 +353,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
         ),
       ),
-      bottomNavigationBar: CurvedNavigationBar(
-        backgroundColor: ColorConstants.appbar,
-        items: <Widget>[
-          Icon(Icons.home, size: 30),
-          Icon(Icons.list, size: 30),
-          Icon(Icons.person, size: 30),
-        ],
-        onTap: (index) {
-          //Handle button tap
-        },
-      ),
+      
     );
   }
 }
