@@ -4,8 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:medicart/Utils/color_constants.dart';
 import 'package:medicart/Utils/image_constants.dart';
 import 'package:medicart/View/Customer%20Screens/Custom%20BottomNavBar/custom_bottom_navbar.dart';
-import 'package:medicart/View/Customer%20Screens/Home%20Screen/home_screen.dart';
+
 import 'package:medicart/View/Customer%20Screens/Login%20Screen/login_screen.dart';
+import 'package:medicart/View/Sample%20Screen/product_adding.dart';
 
 
 import 'package:shared_preferences/shared_preferences.dart'; 

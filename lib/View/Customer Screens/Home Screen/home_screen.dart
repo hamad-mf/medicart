@@ -1,12 +1,8 @@
 import 'dart:async';
-
-
-
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:medicart/Utils/color_constants.dart';
 import 'package:medicart/View/Customer%20Screens/Login%20Screen/login_screen.dart';
-
-
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
@@ -18,14 +14,10 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  List<Map<String, String>> products = [];
+  final Stream<QuerySnapshot> _productsStream =
+      FirebaseFirestore.instance.collection('products').snapshots();
 
-
-
-
-
-
-
-  
   final PageController _controller = PageController();
   final int _numPages = 3;
   Timer? _timer;
@@ -302,58 +294,83 @@ class _HomeScreenState extends State<HomeScreen> {
                   width: 10,
                 ),
                 Text(
-                  "View By Category",
+                  "Recommended for you",
                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                 ),
               ],
             ),
-            GridView.builder(
-              shrinkWrap: true, // Allow GridView to shrink to fit content
-              physics: NeverScrollableScrollPhysics(),
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2, // Number of columns
-                crossAxisSpacing: 10.0, // Space between columns
-                mainAxisSpacing: 10.0, // Space between rows
-                childAspectRatio:
-                    1.0, // Width-to-height ratio of each container
-              ),
-              itemCount: 10, // Number of containers
-              itemBuilder: (context, index) {
-                return Container(
-                  decoration: BoxDecoration(
-                    image: DecorationImage(
-                        fit: BoxFit.cover,
-                        image: NetworkImage(
-                            'https://images.pexels.com/photos/159211/headache-pain-pills-medication-159211.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2')),
-                    color: Colors.blueAccent.withOpacity(0.7),
-                    borderRadius: BorderRadius.circular(15),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black26,
-                        offset: Offset(2, 2),
-                        blurRadius: 5,
-                      ),
-                    ],
-                  ),
-                  child: Center(
-                    child: Text(
-                      "Container ${index + 1}",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 18,
-                      ),
-                      textAlign: TextAlign.center,
+            StreamBuilder<QuerySnapshot>(
+              stream: _productsStream,
+              builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                if (snapshot.hasError) {
+                  return Center(child: const Text('Something went wrong'));
+                }
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Center(child: CircularProgressIndicator());
+                }
+                if (snapshot.hasData) {
+                  return GridView.builder(
+                    shrinkWrap: true, // Allow GridView to shrink to fit content
+                    physics: NeverScrollableScrollPhysics(),
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 3, // Number of columns
+                      crossAxisSpacing: 10.0, // Space between columns
+                      mainAxisSpacing: 10.0, // Space between rows
+                      childAspectRatio:
+                          1.0, // Width-to-height ratio of each container
                     ),
-                  ),
+                    itemCount:
+                        snapshot.data!.docs.length, // Number of containers
+                    itemBuilder: (context, index) {
+                      final List<QueryDocumentSnapshot<Object?>> productlist = snapshot.data!.docs;
+                      return Container(
+                        padding: EdgeInsets.all(12),
+                        decoration: BoxDecoration(
+                          color: Colors.white10.withOpacity(0.7),
+                          borderRadius: BorderRadius.circular(15),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black26,
+                              offset: Offset(2, 2),
+                              blurRadius: 5,
+                            ),
+                          ],
+                        ),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Center(
+                              child: Image.network(
+                                productlist[index]["image_url"],
+                                scale: 60,
+                              ),
+                            ),
+                            Text(
+                              productlist[index]["product_name"],
+                              style: TextStyle(color: ColorConstants.mainblack),
+                            ),
+                            Text(
+                              "₹${productlist[index]["price"]}",
+                              style: TextStyle(
+                                  color: ColorConstants.mainblack,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                    padding: EdgeInsets.all(10),
+                  );
+                }
+                return Center(
+                  child: CircularProgressIndicator(),
                 );
               },
-              padding: EdgeInsets.all(10),
             ),
           ],
         ),
       ),
-      
     );
   }
 }

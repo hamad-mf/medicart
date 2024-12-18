@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:medicart/Controller/login_screen_controller.dart';
+import 'package:medicart/Controller/product_adding_screen_controller.dart';
 import 'package:medicart/Controller/registration_screen_controller.dart';
 
 import 'package:medicart/View/Splash%20Screen/splash_screen.dart';
@@ -23,7 +24,8 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => RegistrationScreenController(),),
-        ChangeNotifierProvider(create: (context) => LoginScreenController(),)
+        ChangeNotifierProvider(create: (context) => LoginScreenController(),),
+        ChangeNotifierProvider(create: (context) => ProductAddingScreenController(),),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
