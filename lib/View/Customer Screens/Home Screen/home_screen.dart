@@ -317,13 +317,15 @@ class _HomeScreenState extends State<HomeScreen> {
                       crossAxisSpacing: 10.0, // Space between columns
                       mainAxisSpacing: 10.0, // Space between rows
                       childAspectRatio:
-                          1.0, // Width-to-height ratio of each container
+                          0.8, // Width-to-height ratio of each container
                     ),
                     itemCount:
                         snapshot.data!.docs.length, // Number of containers
                     itemBuilder: (context, index) {
-                      final List<QueryDocumentSnapshot<Object?>> productlist = snapshot.data!.docs;
+                      final List<QueryDocumentSnapshot<Object?>> productlist =
+                          snapshot.data!.docs;
                       return Container(
+                        height: 108,
                         padding: EdgeInsets.all(12),
                         decoration: BoxDecoration(
                           color: Colors.white10.withOpacity(0.7),
@@ -343,12 +345,15 @@ class _HomeScreenState extends State<HomeScreen> {
                             Center(
                               child: Image.network(
                                 productlist[index]["image_url"],
-                                scale: 60,
+                                width: 90,
+                                height: 80,
                               ),
                             ),
                             Text(
                               productlist[index]["product_name"],
-                              style: TextStyle(color: ColorConstants.mainblack),
+                              style: TextStyle(
+                                  color: ColorConstants.mainblack,
+                                  overflow: TextOverflow.ellipsis),
                             ),
                             Text(
                               "₹${productlist[index]["price"]}",
