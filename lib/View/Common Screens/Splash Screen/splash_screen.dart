@@ -3,9 +3,13 @@ import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:medicart/Utils/color_constants.dart';
 import 'package:medicart/Utils/image_constants.dart';
+
 import 'package:medicart/View/Customer%20Screens/Custom%20BottomNavBar/custom_bottom_navbar.dart';
-import 'package:medicart/View/Customer%20Screens/Login%20Screen/login_screen.dart';
-import 'package:medicart/View/Sample%20Screen/product_adding.dart';
+
+import 'package:medicart/View/Common%20Screens/Profile%20Selection%20Screen/profile_selection_screen.dart';
+
+
+
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -37,7 +41,7 @@ class _SplashScreenState extends State<SplashScreen> {
       } else {
         // Navigate to LoginScreen if not logged in
         Navigator.of(context)
-            .pushReplacement(MaterialPageRoute(builder: (_) => LoginScreen()));
+            .pushReplacement(MaterialPageRoute(builder: (_) => ProfileSelectionScreen()));
       }
     });
   }
