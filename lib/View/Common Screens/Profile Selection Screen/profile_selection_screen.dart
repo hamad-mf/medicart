@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:medicart/Controller/profile_selection_controller.dart';
-import 'package:medicart/View/Admin%20Screens/product_adding.dart';
-import 'package:medicart/View/Customer%20Screens/Home%20Screen/home_screen.dart';
+import 'package:medicart/Utils/color_constants.dart';
+import 'package:medicart/View/Admin%20Screens/Admin%20Login%20Screen/admin_login_screen.dart';
 import 'package:medicart/View/Customer%20Screens/Login%20Screen/login_screen.dart';
-import 'package:medicart/View/Doctor%20Screens/Home%20Screen/doctor_home_screen.dart';
+import 'package:medicart/View/Doctor%20Screens/Doctor%20Login%20Screen/doctor_login_screen.dart';
 import 'package:provider/provider.dart';
-
 
 class ProfileSelectionScreen extends StatelessWidget {
   const ProfileSelectionScreen({super.key});
@@ -16,7 +15,7 @@ class ProfileSelectionScreen extends StatelessWidget {
 
     return SafeArea(
       child: Scaffold(
-        backgroundColor: Colors.grey[300],
+        backgroundColor: ColorConstants.mainbg,
         body: Column(
           children: [
             const SizedBox(height: 120),
@@ -44,32 +43,50 @@ class ProfileSelectionScreen extends StatelessWidget {
             const SizedBox(height: 30),
             if (controller.isRoleSelected)
               ElevatedButton(
+                style: ButtonStyle(
+                    backgroundColor:
+                        WidgetStatePropertyAll(ColorConstants.mainblack),
+                    minimumSize: WidgetStatePropertyAll(Size(300, 50)),
+                    shape: WidgetStatePropertyAll(RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12)))),
                 onPressed: () {
                   // Navigate to the appropriate screen based on the selected role
                   switch (controller.selectedRole) {
                     case "Customer":
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => const LoginScreen()),
+                        MaterialPageRoute(
+                            builder: (context) => const LoginScreen()),
                       );
+                      controller.clearSelection();
                       break;
                     case "Doctor":
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => const DoctorHomeScreen()),
+                        MaterialPageRoute(
+                            builder: (context) => const DoctorLoginScreen()),
                       );
+                      controller.clearSelection();
                       break;
                     case "Admin":
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => const ProductAdding()),
+                        MaterialPageRoute(
+                            builder: (context) => const AdminLoginScreen()),
                       );
+                      controller.clearSelection();
                       break;
                     default:
                       break;
                   }
                 },
-                child: const Text("Continue"),
+                child: const Text(
+                  "Continue",
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold),
+                ),
               ),
           ],
         ),

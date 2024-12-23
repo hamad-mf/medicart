@@ -3,10 +3,12 @@ import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:medicart/Utils/color_constants.dart';
 import 'package:medicart/Utils/image_constants.dart';
+import 'package:medicart/View/Admin%20Screens/Product%20Adding%20Screen/product_adding.dart';
 
 import 'package:medicart/View/Customer%20Screens/Custom%20BottomNavBar/custom_bottom_navbar.dart';
 
 import 'package:medicart/View/Common%20Screens/Profile%20Selection%20Screen/profile_selection_screen.dart';
+import 'package:medicart/View/Doctor%20Screens/Home%20Screen/doctor_home_screen.dart';
 
 
 
@@ -26,25 +28,38 @@ class _SplashScreenState extends State<SplashScreen> {
     _checkLoginStatus(); // Call method to check login status
   }
 
-  // Method to check login status
-  void _checkLoginStatus() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    bool isLoggedIn =
-        prefs.getBool('isLoggedIn') ?? false; // Get 'isLoggedIn' flag
+  // Method to check user login status
+ void _checkLoginStatus() async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
 
-    // Wait for 4 seconds, then navigate based on login status
-    Timer(Duration(seconds: 4), () {
-      if (isLoggedIn) {
-        // Navigate to HomeScreen if logged in
-        Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (_) => CustomBottomNavbar()));
-      } else {
-        // Navigate to LoginScreen if not logged in
-        Navigator.of(context)
-            .pushReplacement(MaterialPageRoute(builder: (_) => ProfileSelectionScreen()));
-      }
-    });
-  }
+  // Check both user and admin login statuses
+  bool isUserLoggedIn = prefs.getBool('isLoggedIn') ?? false;
+  bool isAdminLoggedIn = prefs.getBool('isAdminLoggedIn') ?? false;
+  bool isDoctorLoggedIn = prefs.getBool('isDoctorLoggedIn') ?? false;
+
+  // Wait for 4 seconds, then navigate based on login status
+  Timer(Duration(seconds: 4), () {
+    if (isAdminLoggedIn) {
+      // Navigate to Admin HomeScreen
+      Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (_) => ProductAdding()));
+    } else if (isUserLoggedIn) {
+      // Navigate to User HomeScreen
+      Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (_) => CustomBottomNavbar()));
+    } else if (isDoctorLoggedIn) {
+      // Navigate to User HomeScreen
+      Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (_) => DoctorHomeScreen()));
+    } else {
+      // Navigate to Profile Selection Screen
+      Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (_) => ProfileSelectionScreen()));
+    }
+  });
+}
+
+
 
   @override
   Widget build(BuildContext context) {

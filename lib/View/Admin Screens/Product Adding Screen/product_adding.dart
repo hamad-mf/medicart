@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:medicart/Controller/product_adding_screen_controller.dart';
 import 'package:medicart/Utils/color_constants.dart';
+import 'package:medicart/View/Common%20Screens/Profile%20Selection%20Screen/profile_selection_screen.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ProductAdding extends StatefulWidget {
   const ProductAdding({super.key});
@@ -20,6 +22,17 @@ class _ProductAddingState extends State<ProductAdding> {
   TextEditingController usagectrl = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
+  Future<void> _adminlogout() async {
+    SharedPreferences adminprefs = await SharedPreferences.getInstance();
+    await adminprefs.setBool(
+        'isAdminLoggedIn', false); // Set isAdminLoggedIn to false
+
+    // Navigate back to LoginScreen
+    Navigator.of(context).pushReplacement(
+      MaterialPageRoute(builder: (_) => ProfileSelectionScreen()),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -31,8 +44,18 @@ class _ProductAddingState extends State<ProductAdding> {
             child: SingleChildScrollView(
               child: Column(
                 children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      IconButton(
+                          onPressed: () {
+                            _adminlogout();
+                          },
+                          icon: Icon(Icons.exit_to_app)),
+                    ],
+                  ),
                   SizedBox(
-                    height: 200,
+                    height: 50,
                   ),
                   Text(
                     "Add a product",
