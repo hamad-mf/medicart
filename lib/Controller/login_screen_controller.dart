@@ -28,8 +28,13 @@ class LoginScreenController with ChangeNotifier {
             .get();
 
         if (querySnapshot.docs.isNotEmpty) {
+          // Retrieve the first document's ID (assuming one user per email)
+          String docId = querySnapshot.docs.first.id;
+          print('Document ID: $docId');
           SharedPreferences prefs = await SharedPreferences.getInstance();
       await prefs.setBool('isLoggedIn', true);
+      await prefs.setString('docId', docId);
+      print('Login successful, docId saved: $docId'); // Store docId for future use
           // Valid credentials: navigate to SampleScreen
          
           Navigator.of(context).pushAndRemoveUntil(

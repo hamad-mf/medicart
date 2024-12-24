@@ -1,15 +1,10 @@
-
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:medicart/Utils/app_utils.dart';
 import 'package:medicart/View/Customer%20Screens/Login%20Screen/login_screen.dart';
 
-
 class RegistrationScreenController with ChangeNotifier {
   bool isLoading = false;
-
- 
 
   Future<void> onRegistration({
     required String email,
@@ -30,10 +25,20 @@ class RegistrationScreenController with ChangeNotifier {
 
         if (QuerySnapshot.docs.isEmpty) {
           //email not exist create new ac
-          await FirebaseFirestore.instance
+          final customerRef = await FirebaseFirestore.instance
               .collection('customers')
               .add({'email': email, 'password': password});
 
+          await customerRef.collection('DeliveryDetails').add({
+            'City/Town': 'test',
+            'Delivery Instructions': 'test',
+            'House/Flat Number': '000',
+            'Landmark': 'test',
+            'Pincode': '000000',
+            'Street Name/Locality': 'test',
+            'mobile number': '0000000000',
+            'name': 'test'
+          });
           AppUtils.showSnackbar(
               context: context,
               message: "Registration successful",
@@ -42,11 +47,12 @@ class RegistrationScreenController with ChangeNotifier {
           //navigate to login screen
 
           Navigator.pushAndRemoveUntil(
-              context,
-              MaterialPageRoute(
-                builder: (context) => LoginScreen(),
-              ),(route) => false,
-              );
+            context,
+            MaterialPageRoute(
+              builder: (context) => LoginScreen(),
+            ),
+            (route) => false,
+          );
         } else {
           //email already registered
           AppUtils.showSnackbar(
@@ -60,8 +66,9 @@ class RegistrationScreenController with ChangeNotifier {
       }
       isLoading = false;
       notifyListeners();
-    }else{
-      AppUtils.showSnackbar(context: context, message: "Fields cannot be empty");
+    } else {
+      AppUtils.showSnackbar(
+          context: context, message: "Fields cannot be empty");
     }
   }
 }

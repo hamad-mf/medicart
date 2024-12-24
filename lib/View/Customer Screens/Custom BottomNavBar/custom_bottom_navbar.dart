@@ -2,6 +2,7 @@ import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:medicart/Utils/color_constants.dart';
 import 'package:medicart/View/Customer%20Screens/Home%20Screen/home_screen.dart';
+import 'package:medicart/View/Customer%20Screens/Profile%20Screen/profile_screen.dart';
 
 class CustomBottomNavbar extends StatefulWidget {
   const CustomBottomNavbar({super.key});
@@ -17,7 +18,7 @@ class _CustomBottomNavbarState extends State<CustomBottomNavbar> {
   final List<Widget> _screens = [
     HomeScreen(),
     Center(child: Text("List Screen", style: TextStyle(fontSize: 24))),
-    Center(child: Text("Profile Screen", style: TextStyle(fontSize: 24))),
+    ProfileScreen()
   ];
   @override
   Widget build(BuildContext context) {
@@ -33,7 +34,7 @@ class _CustomBottomNavbarState extends State<CustomBottomNavbar> {
         index: _currentIndex,
         onTap: (index) {
           setState(() {
-             _currentIndex = index;
+            _currentIndex = index;
           });
         },
       ),

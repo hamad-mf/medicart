@@ -2,9 +2,8 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:medicart/Utils/color_constants.dart';
-import 'package:medicart/View/Common%20Screens/Profile%20Selection%20Screen/profile_selection_screen.dart';
+import 'package:medicart/View/Customer%20Screens/View%20By%20Category%20Screen/view_by_category_screen.dart';
 
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -46,16 +45,6 @@ class _HomeScreenState extends State<HomeScreen> {
     super.dispose();
   }
 
-  Future<void> _logout() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setBool('isLoggedIn', false); // Set isLoggedIn to false
-
-    // Navigate back to LoginScreen
-    Navigator.of(context).pushReplacement(
-      MaterialPageRoute(builder: (_) => ProfileSelectionScreen()),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -64,9 +53,7 @@ class _HomeScreenState extends State<HomeScreen> {
         backgroundColor: ColorConstants.appbar,
         actions: [
           InkWell(
-            onTap: () {
-              _logout();
-            },
+            onTap: () {},
             child: Icon(
               Icons.notifications,
               color: ColorConstants.mainwhite,
@@ -198,6 +185,12 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 Spacer(),
                 InkWell(
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => ViewByCategoryScreen()));
+                  },
                   child: Text(
                     "See All",
                     style: TextStyle(
