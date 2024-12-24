@@ -313,8 +313,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       childAspectRatio:
                           0.8, // Width-to-height ratio of each container
                     ),
-                    itemCount:
-                        snapshot.data!.docs.length, // Number of containers
+                    itemCount: 21, // Number of containers
                     itemBuilder: (context, index) {
                       final List<QueryDocumentSnapshot<Object?>> productlist =
                           snapshot.data!.docs;

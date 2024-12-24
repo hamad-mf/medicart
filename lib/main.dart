@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:medicart/Controller/admin_login_screen_controller.dart';
+import 'package:medicart/Controller/category_screen_controller.dart';
 import 'package:medicart/Controller/doctor_login_screen_controller.dart';
 import 'package:medicart/Controller/login_screen_controller.dart';
 import 'package:medicart/Controller/product_adding_screen_controller.dart';
@@ -43,6 +44,9 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (context) => DoctorLoginScreenController(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => CategoryScreenController(),
         ),
       ],
       child: MaterialApp(
