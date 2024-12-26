@@ -6,4 +6,5 @@ class ColorConstants {
   static Color mainblack = Color(0xff000000);
   static Color appbar = Color(0xff588157);
   static Color categorybtn = Color(0xffCCD9D3);
+  static Color textgrey = Color(0xffD3D3D3);
 }

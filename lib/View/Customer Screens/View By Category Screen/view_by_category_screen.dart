@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:medicart/Utils/color_constants.dart';
+import 'package:medicart/View/Customer%20Screens/Product%20Screen/product_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:medicart/Controller/category_screen_controller.dart';
 
@@ -41,7 +43,7 @@ class _ViewByCategoryScreenState extends State<ViewByCategoryScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Category Grid View'),
+        title: const Text('Explore Categories'),
       ),
       body: controller.categories.isEmpty
           ? const Center(child: CircularProgressIndicator())
@@ -135,38 +137,69 @@ class _ViewByCategoryScreenState extends State<ViewByCategoryScreen> {
                           itemCount: products.length,
                           itemBuilder: (context, index) {
                             final product = products[index];
-                            return Container(
-                              decoration: BoxDecoration(
-                                color: Colors.black,
-                                borderRadius: BorderRadius.circular(10),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.grey.withOpacity(0.3),
-                                    blurRadius: 5,
-                                    offset: const Offset(0, 3),
-                                  ),
-                                ],
-                              ),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  const Icon(Icons.medical_services,
-                                      size: 50, color: Colors.white),
-                                  const SizedBox(height: 10),
-                                  Text(
-                                    product['product_name'], // Product name
-                                    style: const TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.white,
+
+                            return InkWell(
+                              onTap: () {
+                                final List<QueryDocumentSnapshot<Object?>>
+                                    productlist = snapshot.data!.docs;
+                                final selectedProduct = productlist[index];
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => ProductScreen(
+                                              product_name: selectedProduct[
+                                                  "product_name"],
+                                              image_url:
+                                                  selectedProduct["image_url"],
+                                              category:
+                                                  selectedProduct["category"],
+                                              details:
+                                                  selectedProduct["details"],
+                                              price: selectedProduct["price"],
+                                              stocks: selectedProduct["stocks"],
+                                              usage: selectedProduct["usage"],
+                                              isPresNeeded: selectedProduct["prescription_required"],
+                                            )));
+                              },
+                              child: Container(
+                                height: 108,
+                                padding: EdgeInsets.all(12),
+                                decoration: BoxDecoration(
+                                  color: Colors.white10.withOpacity(0.7),
+                                  borderRadius: BorderRadius.circular(15),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black26,
+                                      offset: Offset(2, 2),
+                                      blurRadius: 5,
                                     ),
-                                    textAlign: TextAlign.center,
-                                  ),
-                                  const SizedBox(height: 5),
-                                  Text(
-                                    '\$${product['price']}', // Product price
-                                    style: const TextStyle(color: Colors.white),
-                                  ),
-                                ],
+                                  ],
+                                ),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Center(
+                                      child: Image.network(
+                                        product['image_url'],
+                                        width: 90,
+                                        height: 80,
+                                      ),
+                                    ),
+                                    Text(
+                                      product['product_name'],
+                                      style: TextStyle(
+                                        color: ColorConstants.mainblack,
+                                      ),
+                                    ),
+                                    Text(
+                                      '\$${product['price']}',
+                                      style: TextStyle(
+                                          color: ColorConstants.mainblack,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  ],
+                                ),
                               ),
                             );
                           },

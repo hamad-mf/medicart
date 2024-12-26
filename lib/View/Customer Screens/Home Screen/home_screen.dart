@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:medicart/Utils/color_constants.dart';
+import 'package:medicart/View/Customer%20Screens/Product%20Screen/product_screen.dart';
 import 'package:medicart/View/Customer%20Screens/View%20By%20Category%20Screen/view_by_category_screen.dart';
 
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
@@ -317,44 +318,66 @@ class _HomeScreenState extends State<HomeScreen> {
                     itemBuilder: (context, index) {
                       final List<QueryDocumentSnapshot<Object?>> productlist =
                           snapshot.data!.docs;
-                      return Container(
-                        height: 108,
-                        padding: EdgeInsets.all(12),
-                        decoration: BoxDecoration(
-                          color: Colors.white10.withOpacity(0.7),
-                          borderRadius: BorderRadius.circular(15),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black26,
-                              offset: Offset(2, 2),
-                              blurRadius: 5,
-                            ),
-                          ],
-                        ),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Center(
-                              child: Image.network(
-                                productlist[index]["image_url"],
-                                width: 90,
-                                height: 80,
+                      return InkWell(
+                        onTap: () {
+                          final List<QueryDocumentSnapshot<Object?>>
+                              productlist = snapshot.data!.docs;
+                          final selectedProduct = productlist[index];
+
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => ProductScreen(
+                                    isPresNeeded: selectedProduct["prescription_required"],
+                                        product_name:
+                                            selectedProduct["product_name"],
+                                        image_url: selectedProduct["image_url"],
+                                        category: selectedProduct["category"],
+                                        details: selectedProduct["details"],
+                                        price: selectedProduct["price"],
+                                        stocks: selectedProduct["stocks"],
+                                        usage: selectedProduct["usage"],
+                                      )));
+                        },
+                        child: Container(
+                          height: 108,
+                          padding: EdgeInsets.all(12),
+                          decoration: BoxDecoration(
+                            color: Colors.white10.withOpacity(0.7),
+                            borderRadius: BorderRadius.circular(15),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black26,
+                                offset: Offset(2, 2),
+                                blurRadius: 5,
                               ),
-                            ),
-                            Text(
-                              productlist[index]["product_name"],
-                              style: TextStyle(
-                                  color: ColorConstants.mainblack,
-                                  overflow: TextOverflow.ellipsis),
-                            ),
-                            Text(
-                              "₹${productlist[index]["price"]}",
-                              style: TextStyle(
-                                  color: ColorConstants.mainblack,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                          ],
+                            ],
+                          ),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Center(
+                                child: Image.network(
+                                  productlist[index]["image_url"],
+                                  width: 90,
+                                  height: 80,
+                                ),
+                              ),
+                              Text(
+                                productlist[index]["product_name"],
+                                style: TextStyle(
+                                    color: ColorConstants.mainblack,
+                                    overflow: TextOverflow.ellipsis),
+                              ),
+                              Text(
+                                "₹${productlist[index]["price"]}",
+                                style: TextStyle(
+                                    color: ColorConstants.mainblack,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            ],
+                          ),
                         ),
                       );
                     },
