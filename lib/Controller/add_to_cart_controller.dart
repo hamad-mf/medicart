@@ -14,6 +14,7 @@ class AddToCartController with ChangeNotifier {
     required num price,
     required num stocks,
     required bool requiresPrescription,
+    required num itemcount,
     required BuildContext context,
   }) async {
     if (category.isNotEmpty &&
@@ -39,7 +40,8 @@ class AddToCartController with ChangeNotifier {
             'product_name': product_name,
             'stocks': stocks,
             'usage': usage,
-            'requiresPrescription': requiresPrescription
+            'requiresPrescription': requiresPrescription,
+            'item_count':itemcount
           });
           AppUtils.showSnackbar(
               context: context,
