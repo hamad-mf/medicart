@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:medicart/Controller/add_to_cart_controller.dart';
 import 'package:medicart/Utils/color_constants.dart';
+import 'package:medicart/View/Global%20Widgets/custom_button.dart';
+import 'package:provider/provider.dart';
 
 // ignore: must_be_immutable
 class ProductScreen extends StatefulWidget {
@@ -50,91 +53,135 @@ class _ProductScreenState extends State<ProductScreen> {
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 15),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              width: 400,
-              height: 350,
-              decoration: BoxDecoration(color: Colors.grey.withOpacity(0.3)),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Image.network(
-                    widget.image_url,
-                    width: 340,
-                    height: 340,
-                  )
-                ],
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                width: 400,
+                height: 350,
+                decoration: BoxDecoration(color: Colors.grey.withOpacity(0.3)),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Image.network(
+                      widget.image_url,
+                      width: 340,
+                      height: 340,
+                    )
+                  ],
+                ),
               ),
-            ),
-            SizedBox(
-              height: 30,
-            ),
-            Text(
-              widget.product_name,
-              style: TextStyle(
-                  color: ColorConstants.mainblack,
-                  fontSize: 30,
-                  fontWeight: FontWeight.bold),
-            ),
-            Text(
-              widget.details,
-              style: TextStyle(
-                  color: ColorConstants.mainblack.withOpacity(0.7),
-                  fontSize: 17),
-            ),
-            SizedBox(
-              height: 20,
-            ),
-            Row(
-              children: [
-                Text(
-                  "₹${widget.price.toString()}",
-                  style: TextStyle(
-                      color: ColorConstants.mainblack,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 24),
-                ),
-                SizedBox(
-                  width: 10,
-                ),
-                Text("${widget.stocks.toString()} left")
-              ],
-            ),
-            SizedBox(
-              height: 20,
-            ),
-            Container(
-              padding: EdgeInsets.symmetric(horizontal: 10),
-              width: 140,
-              height: 25,
-              decoration: BoxDecoration(color: ColorConstants.mainblack),
-              child: Row(
+              SizedBox(
+                height: 30,
+              ),
+              Text(
+                widget.product_name,
+                style: TextStyle(
+                    color: ColorConstants.mainblack,
+                    fontSize: 30,
+                    fontWeight: FontWeight.bold),
+              ),
+              Text(
+                widget.details,
+                style: TextStyle(
+                    color: ColorConstants.mainblack.withOpacity(0.7),
+                    fontSize: 17),
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              Row(
                 children: [
                   Text(
-                    "Prescription: ${widget.isPresNeeded ? 'Yes' : 'No'}",
-                    style: TextStyle(color: ColorConstants.mainwhite),
-                  )
-                ],
-              ),
-            ),
-            RichText(
-                text: TextSpan(
-                    text: 'Usage: ',
+                    "₹${widget.price.toString()}",
                     style: TextStyle(
                         color: ColorConstants.mainblack,
                         fontWeight: FontWeight.bold,
-                        fontSize: 17),
-                    children: [
-                  TextSpan(
-                      text: widget.usage,
+                        fontSize: 24),
+                  ),
+                  SizedBox(
+                    width: 10,
+                  ),
+                  Text("${widget.stocks.toString()} left")
+                ],
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 10),
+                width: 136,
+                height: 25,
+                decoration: BoxDecoration(
+                    color: widget.isPresNeeded
+                        ? ColorConstants.mainred.withOpacity(0.6)
+                        : ColorConstants.appbar.withOpacity(0.8)),
+                child: Row(
+                  children: [
+                    Text(
+                      "Prescription: ${widget.isPresNeeded ? ' Yes' : ' No'}",
+                      style: TextStyle(
+                          color: ColorConstants.mainwhite,
+                          fontWeight: FontWeight.bold),
+                    )
+                  ],
+                ),
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              RichText(
+                  text: TextSpan(
+                      text: 'Usage: ',
                       style: TextStyle(
                           color: ColorConstants.mainblack,
-                          fontWeight: FontWeight.normal,
-                          fontSize: 15))
-                ]))
-          ],
+                          fontWeight: FontWeight.bold,
+                          fontSize: 17),
+                      children: [
+                    TextSpan(
+                        text: widget.usage,
+                        style: TextStyle(
+                            color: ColorConstants.mainblack,
+                            fontWeight: FontWeight.normal,
+                            fontSize: 15))
+                  ])),
+              SizedBox(
+                height: 40,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  context.watch<AddToCartController>().isLoading
+                      ? CircularProgressIndicator()
+                      : customButton(
+                          onPressed: () async {
+                            await context
+                                .read<AddToCartController>()
+                                .onAddtoCart(
+                                    category: widget.category,
+                                    details: widget.details,
+                                    image_url: widget.image_url,
+                                    product_name: widget.product_name,
+                                    usage: widget.usage,
+                                    price: widget.price,
+                                    stocks: widget.stocks,
+                                    requiresPrescription: widget.isPresNeeded,
+                                    context: context);
+                          },
+                          text: "Add to cart",
+                        ),
+                  customButton(
+                    onPressed: () {},
+                    text: "Buy now",
+                  )
+                ],
+              ),
+              SizedBox(
+                height: 30,
+              )
+            ],
+          ),
         ),
       ),
     );

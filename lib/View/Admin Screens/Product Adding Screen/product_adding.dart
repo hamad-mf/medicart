@@ -22,6 +22,8 @@ class _ProductAddingState extends State<ProductAdding> {
   TextEditingController usagectrl = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
+  bool requiresPrescription = false;
+
   Future<void> _adminlogout() async {
     SharedPreferences adminprefs = await SharedPreferences.getInstance();
     await adminprefs.setBool(
@@ -276,6 +278,30 @@ class _ProductAddingState extends State<ProductAdding> {
                       },
                     ),
                   ),
+                  Padding(
+                    padding: EdgeInsets.all(9),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          "Requires Prescription?",
+                          style: TextStyle(
+                              color: ColorConstants.mainblack,
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold),
+                        ),
+                        Switch(
+                          value: requiresPrescription,
+                          onChanged: (value) {
+                            setState(() {
+                              requiresPrescription = value;
+                            });
+                          },
+                          activeColor: ColorConstants.mainblack,
+                        )
+                      ],
+                    ),
+                  ),
                   SizedBox(
                     height: 10,
                   ),
@@ -294,6 +320,7 @@ class _ProductAddingState extends State<ProductAdding> {
                               await context
                                   .read<ProductAddingScreenController>()
                                   .onProductadd(
+                                    requiresPrescription: requiresPrescription,
                                       product_name: product_name,
                                       category: category,
                                       image_url: image_url,

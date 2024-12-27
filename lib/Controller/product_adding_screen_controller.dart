@@ -17,6 +17,7 @@ class ProductAddingScreenController with ChangeNotifier {
     required String image_url,
     required String product_name,
     required String usage,
+    required bool requiresPrescription,
     required num price,
     required num stocks,
     required BuildContext context,
@@ -37,7 +38,7 @@ class ProductAddingScreenController with ChangeNotifier {
           //product not exist add new product
           await FirebaseFirestore.instance
               .collection('products')
-              .add({'category': category, 'details': details, 'image_url': image_url, 'price': price, 'product_name': product_name, 'stocks': stocks, 'usage': usage, });
+              .add({'category': category, 'details': details, 'image_url': image_url, 'price': price, 'product_name': product_name, 'stocks': stocks, 'usage': usage, 'requiresPrescription':requiresPrescription});
 
           AppUtils.showSnackbar(
               context: context,
