@@ -1,15 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class CartScreen extends StatefulWidget {
+class CartScreen extends ConsumerWidget {
   const CartScreen({super.key});
 
   @override
-  State<CartScreen> createState() => _CartScreenState();
-}
-
-class _CartScreenState extends State<CartScreen> {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold();
+  Widget build(BuildContext context, WidgetRef ref) {
+    return Container();
   }
 }
