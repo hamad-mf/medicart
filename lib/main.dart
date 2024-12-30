@@ -1,24 +1,18 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:medicart/Controller/add_to_cart_controller.dart';
-import 'package:medicart/Controller/admin_login_screen_controller.dart';
-import 'package:medicart/Controller/category_screen_controller.dart';
-import 'package:medicart/Controller/doctor_login_screen_controller.dart';
-import 'package:medicart/Controller/login_screen_controller.dart';
-import 'package:medicart/Controller/product_adding_screen_controller.dart';
-import 'package:medicart/Controller/profile_selection_controller.dart';
-import 'package:medicart/Controller/registration_screen_controller.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 
 import 'package:medicart/View/Common%20Screens/Splash%20Screen/splash_screen.dart';
 import 'package:medicart/firebase_options.dart';
-import 'package:provider/provider.dart';
+
 
 Future<void> main(List<String> args) async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  runApp(MyApp());
+  runApp(ProviderScope(child: MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -26,37 +20,9 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider(
-          create: (context) => RegistrationScreenController(),
-        ),
-        ChangeNotifierProvider(
-          create: (context) => LoginScreenController(),
-        ),
-        ChangeNotifierProvider(
-          create: (context) => ProductAddingScreenController(),
-        ),
-        ChangeNotifierProvider(
-          create: (context) => ProfileSelectionController(),
-        ),
-        ChangeNotifierProvider(
-          create: (context) => AdminLoginScreenController(),
-        ),
-        ChangeNotifierProvider(
-          create: (context) => DoctorLoginScreenController(),
-        ),
-        ChangeNotifierProvider(
-          create: (context) => CategoryScreenController(),
-        ),
-        ChangeNotifierProvider(
-          create: (context) => AddToCartController(),
-        ),
-      ],
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        home: SplashScreen(),
-      ),
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: SplashScreen(),
     );
   }
 }

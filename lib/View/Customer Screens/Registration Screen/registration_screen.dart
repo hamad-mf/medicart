@@ -1,25 +1,25 @@
 import 'package:flutter/material.dart';
-import 'package:medicart/Controller/registration_screen_controller.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:medicart/Controller/Registration%20Screen%20Controller/registration_screen_controller.dart';
+import 'package:medicart/Controller/Registration%20Screen%20Controller/registration_screen_state.dart';
 import 'package:medicart/Utils/color_constants.dart';
 import 'package:medicart/View/Customer%20Screens/Login%20Screen/login_screen.dart';
 
-import 'package:provider/provider.dart';
+// ignore: must_be_immutable
+class RegistrationScreen extends ConsumerWidget {
+  RegistrationScreen({super.key});
 
-class RegistrationScreen extends StatefulWidget {
-  const RegistrationScreen({super.key});
-
-  @override
-  State<RegistrationScreen> createState() => _RegistrationScreenState();
-}
-
-class _RegistrationScreenState extends State<RegistrationScreen> {
   TextEditingController emailController = TextEditingController();
   TextEditingController passController = TextEditingController();
   TextEditingController CpassController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final registrationscreenstate =
+        ref.watch(RegistrationScreenStateNotifierProvider)
+            as RegistrationScreenState;
+
     return Scaffold(
       backgroundColor: ColorConstants.mainbg,
       body: Center(
@@ -144,18 +144,20 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                   SizedBox(
                     height: 20,
                   ),
-                  context.watch<RegistrationScreenController>().isLoading
+                  registrationscreenstate.isloading
                       ? CircularProgressIndicator()
                       : ElevatedButton(
                           onPressed: () async {
                             final email = emailController.text.trim();
                             final password = passController.text.trim();
                             if (_formKey.currentState!.validate()) {
-                              await context
-                                  .read<RegistrationScreenController>()
+                              ref
+                                  .read(RegistrationScreenStateNotifierProvider
+                                      .notifier)
                                   .onRegistration(
                                       email: email,
                                       password: password,
+                                      role: "user",
                                       context: context);
                             }
                           },

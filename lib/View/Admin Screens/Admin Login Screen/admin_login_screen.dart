@@ -1,24 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:medicart/Controller/admin_login_screen_controller.dart';
-
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:medicart/Controller/Admin%20Login%20Screen%20Controller/admin_login_screen_controller.dart';
+import 'package:medicart/Controller/Admin%20Login%20Screen%20Controller/admin_login_screen_state.dart';
 import 'package:medicart/Utils/color_constants.dart';
 
-
-import 'package:provider/provider.dart';
-
-class AdminLoginScreen extends StatefulWidget {
-  const AdminLoginScreen({super.key});
-
-  @override
-  State<AdminLoginScreen> createState() => _AdminLoginScreenState();
-}
-
-class _AdminLoginScreenState extends State<AdminLoginScreen> {
+// ignore: must_be_immutable
+class AdminLoginScreen extends ConsumerWidget {
+  AdminLoginScreen({super.key});
   TextEditingController adminUsernameController = TextEditingController();
   TextEditingController adminPassController = TextEditingController();
-
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final adminloginscreenstate = ref
+        .watch(AdminLoginScreenStateNotifierProvider) as AdminLoginScreenState;
     return Scaffold(
       backgroundColor: ColorConstants.mainbg,
       body: Center(
@@ -63,7 +57,7 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
                       if (value == null || value.isEmpty) {
                         return "Please Enter Your Username";
                       }
-                      
+
                       return null;
                     },
                   ),
@@ -106,17 +100,19 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
                 SizedBox(
                   height: 20,
                 ),
-                context.watch<AdminLoginScreenController>().isLoading
+                adminloginscreenstate.isloading
                     ? CircularProgressIndicator.adaptive()
                     : ElevatedButton(
                         onPressed: () async {
                           final username = adminUsernameController.text.trim();
                           final password = adminPassController.text.trim();
-                          await context.read<AdminLoginScreenController>().onAdminLogin(
-                            username: username,
-                            password: password,
-                            context: context
-                              );
+                          ref
+                              .read(AdminLoginScreenStateNotifierProvider
+                                  .notifier)
+                              .onAdminLogin(
+                                  email: username,
+                                  password: password,
+                                  context: context);
                         },
                         style: ButtonStyle(
                             backgroundColor: WidgetStatePropertyAll(
