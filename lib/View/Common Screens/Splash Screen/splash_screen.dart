@@ -4,8 +4,11 @@ import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:medicart/Utils/color_constants.dart';
 import 'package:medicart/Utils/image_constants.dart';
+import 'package:medicart/View/Admin%20Screens/Product%20Adding%20Screen/product_adding_screen.dart';
 
 import 'package:medicart/View/Common%20Screens/Profile%20Selection%20Screen/profile_selecction_screen.dart';
+import 'package:medicart/View/Customer%20Screens/Custom%20Bottom%20Navbar%20Screen/custom_bottom_navbar_screen.dart';
+import 'package:medicart/View/Doctor%20Screens/Doctor%20Home%20Screen/doctor_home_screen.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -34,26 +37,26 @@ class _SplashScreenState extends State<SplashScreen> {
 
   // Wait for 4 seconds, then navigate based on login status
   Timer(Duration(seconds: 4), () {
-    // if (isAdminLoggedIn) {
-    //   // Navigate to Admin HomeScreen
-    //   Navigator.of(context).pushReplacement(
-    //       MaterialPageRoute(builder: (_) => ProductAddingScreen()));
-    // } else if (isUserLoggedIn) {
-    //   // Navigate to User HomeScreen
-    //   Navigator.of(context).pushReplacement(
-    //       MaterialPageRoute(builder: (_) => CustomBottomNavbarScreen()));
-    // } else if (isDoctorLoggedIn) {
-    //   // Navigate to User HomeScreen
-    //   Navigator.of(context).pushReplacement(
-    //       MaterialPageRoute(builder: (_) => DoctorHomeScreen()));
-    // } else {
-    //   // Navigate to Profile Selection Screen
-    //   Navigator.of(context).pushReplacement(
-    //       MaterialPageRoute(builder: (_) => ProfileSelecctionScreen()));
-    // }
+    if (isAdminLoggedIn) {
+      // Navigate to Admin HomeScreen
+      Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (_) => ProductAddingScreen()));
+    } else if (isUserLoggedIn) {
+      // Navigate to User HomeScreen
+      Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (_) => CustomBottomNavbarScreen()));
+    } else if (isDoctorLoggedIn) {
+      // Navigate to User HomeScreen
+      Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (_) => DoctorHomeScreen()));
+    } else {
+      // Navigate to Profile Selection Screen
+      Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (_) => ProfileSelecctionScreen()));
+    }
 
-    Navigator.of(context).pushReplacement(
-           MaterialPageRoute(builder: (_) => ProfileSelecctionScreen()));
+    // Navigator.of(context).pushReplacement(
+    //        MaterialPageRoute(builder: (_) => ProfileSelecctionScreen()));
   });
 }
 

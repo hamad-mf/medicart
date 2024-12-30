@@ -7,6 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:medicart/Controller/Login%20Screen%20Controller/login_screen_state.dart';
 import 'package:medicart/Utils/app_utils.dart';
 import 'package:medicart/View/Customer%20Screens/Custom%20Bottom%20Navbar%20Screen/custom_bottom_navbar_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 final LoginScreenStateNotifierProvider =
     StateNotifierProvider((ref) => LoginScreenController());
@@ -37,6 +38,10 @@ class LoginScreenController extends StateNotifier<LoginScreenState> {
         log(role);
 
         if (role == 'user') {
+          
+          SharedPreferences prefs = await SharedPreferences.getInstance();
+      await prefs.setBool('isLoggedIn', true);
+     
           Navigator.push(
               context,
               MaterialPageRoute(

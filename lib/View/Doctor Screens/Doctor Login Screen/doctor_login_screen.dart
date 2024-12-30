@@ -1,17 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:medicart/Controller/Admin%20Login%20Screen%20Controller/admin_login_screen_controller.dart';
-import 'package:medicart/Controller/Admin%20Login%20Screen%20Controller/admin_login_screen_state.dart';
+import 'package:medicart/Controller/Doctor%20Login%20Screen%20Controller/doctor_login_screen_controller.dart';
+import 'package:medicart/Controller/Doctor%20Login%20Screen%20Controller/doctor_login_screen_state.dart';
 import 'package:medicart/Utils/color_constants.dart';
 
 // ignore: must_be_immutable
-class AdminLoginScreen extends ConsumerWidget {
-  AdminLoginScreen({super.key});
-  TextEditingController adminUsernameController = TextEditingController();
-  TextEditingController adminPassController = TextEditingController();
+class DoctorLoginScreen extends ConsumerWidget {
+  DoctorLoginScreen({super.key});
+
+  TextEditingController doctorUsernameController = TextEditingController();
+  TextEditingController doctorPassController = TextEditingController();
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final adminloginscreenstate = ref.watch(AdminLoginScreenStateNotifierProvider) as AdminLoginScreenState;
+    final docotrloginscreenstate =
+        ref.watch(DoctorLoginScreenStateNotifierProvider)
+            as DoctorLoginScreenState;
+
     return Scaffold(
       backgroundColor: ColorConstants.mainbg,
       body: Center(
@@ -35,7 +39,7 @@ class AdminLoginScreen extends ConsumerWidget {
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: TextFormField(
-                    controller: adminUsernameController,
+                    controller: doctorUsernameController,
                     decoration: InputDecoration(
                         hintText: "Enter your username",
                         hintStyle: TextStyle(color: Colors.grey),
@@ -67,7 +71,7 @@ class AdminLoginScreen extends ConsumerWidget {
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: TextFormField(
-                    controller: adminPassController,
+                    controller: doctorPassController,
                     decoration: InputDecoration(
                         hintText: "Enter your password",
                         hintStyle: TextStyle(color: Colors.grey),
@@ -99,16 +103,16 @@ class AdminLoginScreen extends ConsumerWidget {
                 SizedBox(
                   height: 20,
                 ),
-                adminloginscreenstate.isloading
+                docotrloginscreenstate.isloading
                     ? CircularProgressIndicator.adaptive()
                     : ElevatedButton(
                         onPressed: () async {
-                          final username = adminUsernameController.text.trim();
-                          final password = adminPassController.text.trim();
+                          final username = doctorUsernameController.text.trim();
+                          final password = doctorPassController.text.trim();
                           ref
-                              .read(AdminLoginScreenStateNotifierProvider
+                              .read(DoctorLoginScreenStateNotifierProvider
                                   .notifier)
-                              .onAdminLogin(
+                              .onDoctorLogin(
                                   email: username,
                                   password: password,
                                   context: context);

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:medicart/Utils/color_constants.dart';
 import 'package:medicart/View/Admin%20Screens/Admin%20Login%20Screen/admin_login_screen.dart';
-import 'package:medicart/View/Admin%20Screens/Product%20Adding%20Screen/product_adding_screen.dart';
 import 'package:medicart/View/Customer%20Screens/Registration%20Screen/registration_screen.dart';
 import 'package:medicart/View/Doctor%20Screens/Doctor%20Home%20Screen/doctor_home_screen.dart';
+import 'package:medicart/View/Doctor%20Screens/Doctor%20Login%20Screen/doctor_login_screen.dart';
 
 class ProfileSelecctionScreen extends StatelessWidget {
   const ProfileSelecctionScreen({super.key});
@@ -67,7 +67,7 @@ class ProfileSelecctionScreen extends StatelessWidget {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => DoctorHomeScreen()));
+                          builder: (context) => DoctorLoginScreen()));
                 },
                 child: Container(
                   width: 120,
@@ -95,7 +95,8 @@ class ProfileSelecctionScreen extends StatelessWidget {
           ),
           InkWell(
             onTap: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context)=>AdminLoginScreen()));
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => AdminLoginScreen()));
             },
             child: Container(
               width: 120,
