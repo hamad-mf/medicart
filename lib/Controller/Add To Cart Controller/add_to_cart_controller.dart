@@ -18,6 +18,7 @@ class AddToCartController extends StateNotifier<AddToCartState> {
     required String image_url,
     required String product_name,
     required String usage,
+    required num total_price,
     required num price,
     required num stocks,
     required bool requiresPrescription,
@@ -41,6 +42,7 @@ class AddToCartController extends StateNotifier<AddToCartState> {
           //if product is not in the cart , add it
 
           await FirebaseFirestore.instance.collection('cart').add({
+            'total_price':total_price,
             'category': category,
             'details': details,
             'image_url': image_url,

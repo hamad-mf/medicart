@@ -162,6 +162,7 @@ class ProductScreen extends ConsumerWidget {
                               .read(
                                   AddToCartScreenStateNotifierProvider.notifier)
                               .onAddToCart(
+                                total_price: price,
                                   category: category,
                                   details: details,
                                   image_url: image_url,
