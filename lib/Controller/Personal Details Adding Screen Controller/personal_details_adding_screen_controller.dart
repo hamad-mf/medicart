@@ -46,9 +46,11 @@ class PersonalDetailsAddingScreenController
         'phn': phn,
         'shipping_address': shipping_adress
       });
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      await prefs.setBool('isProfiledetailsAdded', true);
-
+      
+      await FirebaseFirestore.instance
+          .collection('roles')
+          .doc(uid)
+          .set({'isProfileDetailsAdded': true},SetOptions(merge: true));
       
       AppUtils.showSnackbar(context: context, message: "Details Added");
        Navigator.push(

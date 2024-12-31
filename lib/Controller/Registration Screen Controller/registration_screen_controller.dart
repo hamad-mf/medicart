@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:medicart/Controller/Registration%20Screen%20Controller/registration_screen_state.dart';
 import 'package:medicart/Utils/app_utils.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 final RegistrationScreenStateNotifierProvider =
     StateNotifierProvider((ref) => RegistrationScreenController());
@@ -31,8 +32,9 @@ class RegistrationScreenController
       await FirebaseFirestore.instance
           .collection('roles')
           .doc(uid)
-          .set({'role': role});
+          .set({'role': role,'isProfileDetailsAdded':false});
       if (credentials.user?.uid != null) {
+       
         AppUtils.showSnackbar(
             context: context, message: "registration success");
       }

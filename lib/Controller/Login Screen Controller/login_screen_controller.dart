@@ -37,22 +37,26 @@ class LoginScreenController extends StateNotifier<LoginScreenState> {
       if (userDoc.exists) {
         String role = userDoc['role'];
         log(role);
+        bool isProfileDetailsAdded = userDoc['isProfileDetailsAdded'];
+
 
         if (role == 'user') {
-          
           SharedPreferences prefs = await SharedPreferences.getInstance();
-      await prefs.setBool('isLoggedIn', true);
-     
-     bool ispersonaldetailsadded = prefs.getBool('isProfiledetailsAdded') ?? false;
-          if (ispersonaldetailsadded) {
-      // Navigate to Admin HomeScreen
-      Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (_) => CustomBottomNavbarScreen()));
-    } else {
-      // Navigate to User HomeScreen
-      Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (_) => PersonalDetailsAddingScreen()));
-    }
+          await prefs.setBool('isLoggedIn', true);
+          if (isProfileDetailsAdded) {
+            // Navigate to Admin HomeScreen
+            Navigator.of(context).pushReplacement(
+                MaterialPageRoute(builder: (_) => CustomBottomNavbarScreen()));
+          } else {
+            // Navigate to User HomeScreen
+            Navigator.of(context).pushReplacement(
+                MaterialPageRoute(builder: (_) => PersonalDetailsAddingScreen()));
+          }
+
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => CustomBottomNavbarScreen()));
         } else if (role == 'admin') {
           AppUtils.showSnackbar(
               context: context, message: "please enter correct details");
