@@ -9,7 +9,7 @@ class CartScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final cartScreenState = ref.watch(CartScreenStateNotifierProvider);
+    
     final cartController = ref.read(CartScreenStateNotifierProvider.notifier);
 
     final Stream<QuerySnapshot> _cartStream =

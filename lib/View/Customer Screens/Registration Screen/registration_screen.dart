@@ -157,7 +157,7 @@ class RegistrationScreen extends ConsumerWidget {
                                   .onRegistration(
                                       email: email,
                                       password: password,
-                                      role: "doctor",
+                                      role: "user",
                                       context: context);
                             }
                           },

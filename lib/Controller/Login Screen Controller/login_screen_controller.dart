@@ -7,6 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:medicart/Controller/Login%20Screen%20Controller/login_screen_state.dart';
 import 'package:medicart/Utils/app_utils.dart';
 import 'package:medicart/View/Customer%20Screens/Custom%20Bottom%20Navbar%20Screen/custom_bottom_navbar_screen.dart';
+import 'package:medicart/View/Customer%20Screens/Personal%20Details%20Adding%20Screen/personal_details_adding_Screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 final LoginScreenStateNotifierProvider =
@@ -42,10 +43,16 @@ class LoginScreenController extends StateNotifier<LoginScreenState> {
           SharedPreferences prefs = await SharedPreferences.getInstance();
       await prefs.setBool('isLoggedIn', true);
      
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => CustomBottomNavbarScreen()));
+     bool ispersonaldetailsadded = prefs.getBool('isProfiledetailsAdded') ?? false;
+          if (ispersonaldetailsadded) {
+      // Navigate to Admin HomeScreen
+      Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (_) => CustomBottomNavbarScreen()));
+    } else {
+      // Navigate to User HomeScreen
+      Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (_) => PersonalDetailsAddingScreen()));
+    }
         } else if (role == 'admin') {
           AppUtils.showSnackbar(
               context: context, message: "please enter correct details");
