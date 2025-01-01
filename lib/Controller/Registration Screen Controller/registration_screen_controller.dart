@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:medicart/Controller/Registration%20Screen%20Controller/registration_screen_state.dart';
 import 'package:medicart/Utils/app_utils.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 final RegistrationScreenStateNotifierProvider =
     StateNotifierProvider((ref) => RegistrationScreenController());

@@ -9,7 +9,6 @@ class CartScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    
     final cartController = ref.read(CartScreenStateNotifierProvider.notifier);
 
     final Stream<QuerySnapshot> _cartStream =
@@ -20,7 +19,8 @@ class CartScreen extends ConsumerWidget {
         stream: _cartStream,
         builder: (context, snapshot) {
           if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-           return SizedBox.shrink(); // Hide FloatingActionButton if cart is empty
+            return SizedBox
+                .shrink(); // Hide FloatingActionButton if cart is empty
           }
 
           // Calculate total price

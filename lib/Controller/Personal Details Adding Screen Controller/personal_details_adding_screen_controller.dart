@@ -7,7 +7,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:medicart/Controller/Personal%20Details%20Adding%20Screen%20Controller/personal_details_adding_screen_state.dart';
 import 'package:medicart/Utils/app_utils.dart';
 import 'package:medicart/View/Customer%20Screens/Custom%20Bottom%20Navbar%20Screen/custom_bottom_navbar_screen.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 final PersonalDetailsAddingScreenStateNotifeirProvider =
     StateNotifierProvider((ref) => PersonalDetailsAddingScreenController());
@@ -53,10 +52,10 @@ class PersonalDetailsAddingScreenController
           .set({'isProfileDetailsAdded': true},SetOptions(merge: true));
       
       AppUtils.showSnackbar(context: context, message: "Details Added");
-       Navigator.push(
+       Navigator.pushAndRemoveUntil(
               context,
               MaterialPageRoute(
-                  builder: (context) => CustomBottomNavbarScreen()));
+                  builder: (context) => CustomBottomNavbarScreen()),(route) => false,);
     } catch (e) {
       print(e);
       log(e.toString());
