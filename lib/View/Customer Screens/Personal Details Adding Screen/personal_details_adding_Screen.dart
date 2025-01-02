@@ -33,7 +33,7 @@ class PersonalDetailsAddingScreen extends ConsumerWidget {
               child: Column(
                 children: [
                   Text(
-                    "Add a product",
+                    "Add a Your Details",
                     style: TextStyle(
                         color: ColorConstants.mainblack,
                         fontSize: 30,
@@ -47,9 +47,9 @@ class PersonalDetailsAddingScreen extends ConsumerWidget {
                     child: TextFormField(
                       controller: fullnamectrl,
                       decoration: InputDecoration(
-                          hintText: "Enter product namel",
+                          hintText: "Enter Full name",
                           hintStyle: TextStyle(color: Colors.grey),
-                          labelText: "product name",
+                          labelText: "name",
                           labelStyle: TextStyle(color: Colors.black),
                           enabledBorder: OutlineInputBorder(
                             borderSide: BorderSide(color: Colors.grey),
@@ -64,7 +64,7 @@ class PersonalDetailsAddingScreen extends ConsumerWidget {
                               borderRadius: BorderRadius.circular(12))),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return "Please Enter Your product name";
+                          return "Please Enter Your Full name";
                         }
 
                         return null;
@@ -79,9 +79,9 @@ class PersonalDetailsAddingScreen extends ConsumerWidget {
                     child: TextFormField(
                       controller: emailctrl,
                       decoration: InputDecoration(
-                          hintText: "Enter product namel",
+                          hintText: "Enter email",
                           hintStyle: TextStyle(color: Colors.grey),
-                          labelText: "product name",
+                          labelText: "Email",
                           labelStyle: TextStyle(color: Colors.black),
                           enabledBorder: OutlineInputBorder(
                             borderSide: BorderSide(color: Colors.grey),
@@ -96,7 +96,7 @@ class PersonalDetailsAddingScreen extends ConsumerWidget {
                               borderRadius: BorderRadius.circular(12))),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return "Please Enter Your product name";
+                          return "Please Enter Your Email";
                         }
 
                         return null;
@@ -111,9 +111,9 @@ class PersonalDetailsAddingScreen extends ConsumerWidget {
                     child: TextFormField(
                       controller: phnctrl,
                       decoration: InputDecoration(
-                          hintText: "Enter product namel",
+                          hintText: "Enter Your mobile number",
                           hintStyle: TextStyle(color: Colors.grey),
-                          labelText: "product name",
+                          labelText: "mobile number",
                           labelStyle: TextStyle(color: Colors.black),
                           enabledBorder: OutlineInputBorder(
                             borderSide: BorderSide(color: Colors.grey),
@@ -128,7 +128,7 @@ class PersonalDetailsAddingScreen extends ConsumerWidget {
                               borderRadius: BorderRadius.circular(12))),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return "Please Enter Your product name";
+                          return "Please Enter Your mobile number";
                         }
 
                         return null;
@@ -143,9 +143,9 @@ class PersonalDetailsAddingScreen extends ConsumerWidget {
                     child: TextFormField(
                       controller: cityctrl,
                       decoration: InputDecoration(
-                          hintText: "Enter product namel",
+                          hintText: "Enter name of your city",
                           hintStyle: TextStyle(color: Colors.grey),
-                          labelText: "product name",
+                          labelText: "City",
                           labelStyle: TextStyle(color: Colors.black),
                           enabledBorder: OutlineInputBorder(
                             borderSide: BorderSide(color: Colors.grey),
@@ -160,7 +160,7 @@ class PersonalDetailsAddingScreen extends ConsumerWidget {
                               borderRadius: BorderRadius.circular(12))),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return "Please Enter Your product name";
+                          return "Please Enter Your City Name";
                         }
 
                         return null;
@@ -175,9 +175,9 @@ class PersonalDetailsAddingScreen extends ConsumerWidget {
                     child: TextFormField(
                       controller: countryctrl,
                       decoration: InputDecoration(
-                          hintText: "Enter product namel",
+                          hintText: "Enter Country Name",
                           hintStyle: TextStyle(color: Colors.grey),
-                          labelText: "product name",
+                          labelText: "Country Name",
                           labelStyle: TextStyle(color: Colors.black),
                           enabledBorder: OutlineInputBorder(
                             borderSide: BorderSide(color: Colors.grey),
@@ -192,7 +192,7 @@ class PersonalDetailsAddingScreen extends ConsumerWidget {
                               borderRadius: BorderRadius.circular(12))),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return "Please Enter Your product name";
+                          return "Please Enter Your Country Name";
                         }
 
                         return null;
@@ -207,9 +207,9 @@ class PersonalDetailsAddingScreen extends ConsumerWidget {
                     child: TextFormField(
                       controller: pincodectrl,
                       decoration: InputDecoration(
-                          hintText: "Enter product namel",
+                          hintText: "Enter Your PinCode",
                           hintStyle: TextStyle(color: Colors.grey),
-                          labelText: "product name",
+                          labelText: "Pincode",
                           labelStyle: TextStyle(color: Colors.black),
                           enabledBorder: OutlineInputBorder(
                             borderSide: BorderSide(color: Colors.grey),
@@ -224,7 +224,7 @@ class PersonalDetailsAddingScreen extends ConsumerWidget {
                               borderRadius: BorderRadius.circular(12))),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return "Please Enter Your product name";
+                          return "Please Enter Your Pincode";
                         }
 
                         return null;
@@ -239,9 +239,9 @@ class PersonalDetailsAddingScreen extends ConsumerWidget {
                     child: TextFormField(
                       controller: statectrl,
                       decoration: InputDecoration(
-                          hintText: "Enter product namel",
+                          hintText: "Enter Your State Name",
                           hintStyle: TextStyle(color: Colors.grey),
-                          labelText: "product name",
+                          labelText: "State Name",
                           labelStyle: TextStyle(color: Colors.black),
                           enabledBorder: OutlineInputBorder(
                             borderSide: BorderSide(color: Colors.grey),
@@ -256,7 +256,7 @@ class PersonalDetailsAddingScreen extends ConsumerWidget {
                               borderRadius: BorderRadius.circular(12))),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return "Please Enter Your product name";
+                          return "Please Enter Your State Name";
                         }
 
                         return null;
@@ -271,9 +271,9 @@ class PersonalDetailsAddingScreen extends ConsumerWidget {
                     child: TextFormField(
                       controller: streetadressctrl,
                       decoration: InputDecoration(
-                          hintText: "Enter product namel",
+                          hintText: "Enter Your Street Address",
                           hintStyle: TextStyle(color: Colors.grey),
-                          labelText: "product name",
+                          labelText: "Street Address",
                           labelStyle: TextStyle(color: Colors.black),
                           enabledBorder: OutlineInputBorder(
                             borderSide: BorderSide(color: Colors.grey),
@@ -288,7 +288,7 @@ class PersonalDetailsAddingScreen extends ConsumerWidget {
                               borderRadius: BorderRadius.circular(12))),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return "Please Enter Your product name";
+                          return "Please Enter Your Street Address";
                         }
 
                         return null;

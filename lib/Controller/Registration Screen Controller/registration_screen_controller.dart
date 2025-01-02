@@ -31,11 +31,12 @@ class RegistrationScreenController
       await FirebaseFirestore.instance
           .collection('roles')
           .doc(uid)
-          .set({'role': role,'isProfileDetailsAdded':false});
+          .set({'role': role, 'isProfileDetailsAdded': false});
       if (credentials.user?.uid != null) {
-       
         AppUtils.showSnackbar(
-            context: context, message: "registration success");
+            context: context,
+            message: "Registration Success",
+            bgcolor: Colors.green);
       }
     } on FirebaseAuthException catch (e) {
       if (e.code == 'week-password') {

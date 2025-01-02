@@ -55,8 +55,6 @@ class LoginScreenController extends StateNotifier<LoginScreenState> {
               (route) => false,
             );
           }
-
-        
         } else if (role == 'admin') {
           AppUtils.showSnackbar(
               context: context, message: "please enter correct details");
@@ -65,12 +63,13 @@ class LoginScreenController extends StateNotifier<LoginScreenState> {
     } on FirebaseAuthException catch (e) {
       log(e.toString());
       if (e.code == 'invalid-email') {
-        AppUtils.showSnackbar(
-            context: context, message: "No user found for that email.");
-      } else if (e.code == 'wrong-password') {
+        log(e.toString());
+        AppUtils.showSnackbar(context: context, message: "Enter a valid email");
+      } else if (e.code == 'invalid-credential') {
+        log(e.toString());
         AppUtils.showSnackbar(
             context: context,
-            message: "Wrong password provided for that user.");
+            message: "Incorrect password/email");
       }
     } catch (e) {
       log(e.toString());
