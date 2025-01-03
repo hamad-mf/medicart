@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:medicart/Controller/Add%20To%20Cart%20Controller/add_to_cart_controller.dart';
@@ -162,6 +163,7 @@ class ProductScreen extends ConsumerWidget {
                               .read(
                                   AddToCartScreenStateNotifierProvider.notifier)
                               .onAddToCart(
+                                userId: FirebaseAuth.instance.currentUser!.uid,
                                 total_price: price,
                                   category: category,
                                   details: details,

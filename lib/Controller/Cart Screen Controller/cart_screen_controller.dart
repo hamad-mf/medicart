@@ -9,43 +9,47 @@ final CartScreenStateNotifierProvider =
 class CartScreenController extends StateNotifier<CartScreenState> {
   CartScreenController() : super(CartScreenState());
 
-  Future<void> incrementItemCount(
-      String cartItemId, int currentCount, num pricePerItem) async {
-    try {
-      final newCount = currentCount + 1;
-      final newPrice = pricePerItem * newCount;
+ Future<void> incrementItemCount(
+    String cartId, String cartItemId, num currentCount, num pricePerItem) async {
+  try {
+    final newCount = currentCount + 1;
+    final newPrice = pricePerItem * newCount;
 
-      // Update count and total price in Firebase
-      await FirebaseFirestore.instance
-          .collection('cart')
-          .doc(cartItemId)
-          .update({
-        'item_count': newCount,
-        'total_price': newPrice,
-      });
+    // Update the item count and total price in the subcollection
+    await FirebaseFirestore.instance
+        .collection('cart')
+        .doc(cartId)
+        .collection('items')
+        .doc(cartItemId)
+        .update({
+      'item_count': newCount,
+      'total_price': newPrice,
+    });
 
-      // Update the UI state
-      state = state.copywith(newCount: newCount);
-    } catch (e) {
-      print('Error incrementing item count: $e');
-    }
+    print('Item count incremented successfully.');
+  } catch (e) {
+    print('Error incrementing item count: $e');
   }
+}
 
-Future<num> calculateTotalPrice() async {
+Future<num> calculateTotalPrice(String cartId) async {
   num totalPrice = 0;
 
   try {
-    QuerySnapshot cartSnapshot = await FirebaseFirestore.instance
+    // Fetch all items in the subcollection
+    QuerySnapshot itemsSnapshot = await FirebaseFirestore.instance
         .collection('cart')
-        .get(); // Fetch all items in the cart
+        .doc(cartId)
+        .collection('items')
+        .get();
 
-    for (var doc in cartSnapshot.docs) {
-      final price = doc['price'] as num;
-      final count = doc['item_count'] as num;
-      totalPrice += price * count; // Calculate total price for each item
+    // Sum up the total price for all items
+    for (var doc in itemsSnapshot.docs) {
+      final itemPrice = doc['total_price'] as num;
+      totalPrice += itemPrice;
     }
   } catch (e) {
-    print("Error calculating total price: $e");
+    print('Error calculating total price: $e');
   }
 
   return totalPrice;
@@ -54,30 +58,37 @@ Future<num> calculateTotalPrice() async {
 
 
   Future<void> decrementItemCount(
-      String cartItemId, int currentCount, num pricePerItem) async {
-    try {
-      if (currentCount > 1) {
-        final newCount = currentCount - 1;
-        final newPrice = pricePerItem * newCount;
+    String cartId, String cartItemId, num currentCount, num pricePerItem) async {
+  try {
+    if (currentCount > 1) {
+      final newCount = currentCount - 1;
+      final newPrice = pricePerItem * newCount;
 
-        // Decrement count and update total price in Firebase
-        await FirebaseFirestore.instance
-            .collection('cart')
-            .doc(cartItemId)
-            .update({
-          'item_count': newCount,
-          'total_price': newPrice,
-        });
+      // Update the item count and total price in the subcollection
+      await FirebaseFirestore.instance
+          .collection('cart')
+          .doc(cartId)
+          .collection('items')
+          .doc(cartItemId)
+          .update({
+        'item_count': newCount,
+        'total_price': newPrice,
+      });
 
-        // Update the UI state
-        state = state.copywith(newCount: newCount);
-      } else {
-        // If count becomes zero, delete the item
-        await FirebaseFirestore.instance.collection('cart').doc(cartItemId).delete();
-        print('Item removed from cart as count reached zero');
-      }
-    } catch (e) {
-      print('Error decrementing item count or removing item: $e');
+      print('Item count decremented successfully.');
+    } else {
+      // If count becomes zero, delete the item
+      await FirebaseFirestore.instance
+          .collection('cart')
+          .doc(cartId)
+          .collection('items')
+          .doc(cartItemId)
+          .delete();
+
+      print('Item removed from cart as count reached zero.');
     }
+  } catch (e) {
+    print('Error decrementing item count or removing item: $e');
   }
+}
 }

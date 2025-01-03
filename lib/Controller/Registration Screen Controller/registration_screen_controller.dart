@@ -21,25 +21,35 @@ class RegistrationScreenController
     required BuildContext context,
   }) async {
     state = state.copywith(isloading: true);
+
     try {
+      // Create a new user with email and password
       final credentials = await FirebaseAuth.instance
           .createUserWithEmailAndPassword(email: email, password: password);
-      //get the uid
+
+      // Get the UID of the created user
       String uid = credentials.user!.uid;
 
-      //store the role
+      // Store the user role in the 'roles' collection
       await FirebaseFirestore.instance
           .collection('roles')
           .doc(uid)
           .set({'role': role, 'isProfileDetailsAdded': false});
-      if (credentials.user?.uid != null) {
-        AppUtils.showSnackbar(
-            context: context,
-            message: "Registration Success",
-            bgcolor: Colors.green);
-      }
+
+      // Initialize an empty cart for the specific user
+      await FirebaseFirestore.instance
+          .collection('cart')
+          .doc(uid)
+          .set({'created_at': DateTime.now(), 'total_price': 0});
+
+      // Notify user about registration success
+      AppUtils.showSnackbar(
+          context: context,
+          message: "Registration Success",
+          bgcolor: Colors.green);
     } on FirebaseAuthException catch (e) {
-      if (e.code == 'week-password') {
+      // Handle Firebase-specific exceptions
+      if (e.code == 'weak-password') {
         AppUtils.showSnackbar(
             context: context, message: "The password provided is too weak.");
       } else if (e.code == 'email-already-in-use') {
@@ -48,13 +58,14 @@ class RegistrationScreenController
             message: "The account already exists for that email.");
       } else if (e.code == 'network-request-failed') {
         AppUtils.showSnackbar(
-            context: context, message: "please check your network");
+            context: context, message: "Please check your network.");
       }
     } catch (e) {
-      print(e);
+      // Handle general exceptions
       log(e.toString());
       AppUtils.showSnackbar(context: context, message: e.toString());
     }
+
     state = state.copywith(isloading: false);
   }
 }

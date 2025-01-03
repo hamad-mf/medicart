@@ -5,42 +5,45 @@ import 'package:medicart/Controller/Cart%20Screen%20Controller/cart_screen_contr
 import 'package:medicart/Utils/color_constants.dart';
 
 class CartScreen extends ConsumerWidget {
-  const CartScreen({super.key});
+  final String userId; // User ID to identify the user's cart
+  
+  const CartScreen({super.key, required this.userId});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final cartController = ref.read(CartScreenStateNotifierProvider.notifier);
 
-    final Stream<QuerySnapshot> _cartStream =
-        FirebaseFirestore.instance.collection('cart').snapshots();
+    // Stream for the specific user's cart
+    final Stream<QuerySnapshot> userCartStream = FirebaseFirestore.instance
+        .collection('cart')
+        .doc(userId)
+        .collection('items')
+        .snapshots();
 
     return Scaffold(
       floatingActionButton: StreamBuilder<QuerySnapshot>(
-        stream: _cartStream,
+        stream: userCartStream,
         builder: (context, snapshot) {
           if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-            return SizedBox
-                .shrink(); // Hide FloatingActionButton if cart is empty
+            return const SizedBox.shrink(); // Hide if no items in cart
           }
 
-          // Calculate total price
+          // Calculate the total price dynamically
           num totalPrice = 0;
           for (var doc in snapshot.data!.docs) {
-            final pricePerItem = doc['price'] as num;
-            final itemCount = doc['item_count'] as num;
-            totalPrice += pricePerItem * itemCount;
+            totalPrice += doc['total_price'] as num;
           }
 
           return SizedBox(
-            width: 360, // Custom width
-            height: 70, // Custom height
+            width: 360,
+            height: 70,
             child: FloatingActionButton(
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(15), // Custom border radius
+                borderRadius: BorderRadius.circular(15),
               ),
-              backgroundColor: Colors.white, // Custom background color
+              backgroundColor: Colors.white,
               onPressed: () {
-                print("FloatingActionButton Pressed!");
+                print("Proceed to Checkout with Total Price: ₹$totalPrice");
               },
               child: Row(
                 children: [
@@ -84,11 +87,11 @@ class CartScreen extends ConsumerWidget {
           child: Column(
             children: [
               StreamBuilder(
-                stream: _cartStream,
+                stream: userCartStream,
                 builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
                   if (snapshot.hasError) {
                     return const Center(
-                      child: Text("Something went wrong"),
+                      child: Text("Something went wrong. Please try again."),
                     );
                   }
                   if (snapshot.connectionState == ConnectionState.waiting) {
@@ -109,49 +112,44 @@ class CartScreen extends ConsumerWidget {
                       ),
                     );
                   }
-                  if (snapshot.hasData) {
-                    return GridView.builder(
-                      shrinkWrap:
-                          true, // Allow GridView to shrink to fit content
-                      physics: const NeverScrollableScrollPhysics(),
-                      gridDelegate:
-                          const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 1,
-                        childAspectRatio: 3,
-                        mainAxisSpacing: 6,
-                      ),
-                      itemCount: snapshot.data!.docs.length,
-                      itemBuilder: (context, index) {
-                        final List<QueryDocumentSnapshot<Object?>> cartList =
-                            snapshot.data!.docs;
 
-                        final cartItem = cartList[index];
-                        final cartItemId = cartItem.id;
-                        final itemCount = cartItem['item_count'];
-                        final pricePerItem = cartItem['price'];
-                        final totalPrice = cartItem['total_price'];
+                  // Display cart items
+                  return ListView.builder(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: snapshot.data!.docs.length,
+                    itemBuilder: (context, index) {
+                      final cartItem = snapshot.data!.docs[index];
+                      final cartItemId = cartItem.id;
+                      final itemCount = cartItem['item_count'] as num;
+                      final pricePerItem = cartItem['price_per_item'] as num;
+                      final totalPrice = cartItem['total_price'] as num;
 
-                        return Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 10),
-                          height: 130,
-                          decoration: BoxDecoration(
-                            color: ColorConstants.cartCardwhite,
-                          ),
-                          child: Row(
-                            children: [
-                              Container(
-                                width: 80,
-                                height: 80,
-                                decoration: BoxDecoration(
-                                  image: DecorationImage(
-                                    image: NetworkImage(cartItem['image_url']),
-                                    fit: BoxFit.cover,
-                                  ),
-                                  color: ColorConstants.mainwhite,
+                      return Container(
+                        margin: const EdgeInsets.symmetric(vertical: 8),
+                        padding: const EdgeInsets.symmetric(horizontal: 10),
+                        height: 130,
+                        decoration: BoxDecoration(
+                          color: ColorConstants.cartCardwhite,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Row(
+                          children: [
+                            Container(
+                              width: 80,
+                              height: 80,
+                              decoration: BoxDecoration(
+                                image: DecorationImage(
+                                  image: NetworkImage(cartItem['image_url']),
+                                  fit: BoxFit.cover,
                                 ),
+                                borderRadius: BorderRadius.circular(8),
+                                color: ColorConstants.mainwhite,
                               ),
-                              const SizedBox(width: 15),
-                              Column(
+                            ),
+                            const SizedBox(width: 15),
+                            Expanded(
+                              child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   const SizedBox(height: 15),
@@ -164,23 +162,23 @@ class CartScreen extends ConsumerWidget {
                                   ),
                                   const SizedBox(height: 15),
                                   Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
                                     children: [
                                       Text(
-                                        "₹${totalPrice.toString()}",
+                                        "₹${totalPrice.toStringAsFixed(2)}",
                                         style: const TextStyle(
                                           fontSize: 16,
                                           fontWeight: FontWeight.w600,
                                         ),
                                       ),
-                                      const SizedBox(width: 50),
                                       Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
                                         children: [
                                           IconButton(
                                             onPressed: () async {
                                               await cartController
                                                   .decrementItemCount(
+                                                userId,
                                                 cartItemId,
                                                 itemCount,
                                                 pricePerItem,
@@ -193,13 +191,14 @@ class CartScreen extends ConsumerWidget {
                                           ),
                                           Text(
                                             itemCount.toString(),
-                                            style:
-                                                const TextStyle(fontSize: 17),
+                                            style: const TextStyle(
+                                                fontSize: 17),
                                           ),
                                           IconButton(
                                             onPressed: () async {
                                               await cartController
                                                   .incrementItemCount(
+                                                userId,
                                                 cartItemId,
                                                 itemCount,
                                                 pricePerItem,
@@ -216,23 +215,22 @@ class CartScreen extends ConsumerWidget {
                                         onPressed: () async {
                                           await FirebaseFirestore.instance
                                               .collection('cart')
+                                              .doc(userId)
+                                              .collection('items')
                                               .doc(cartItemId)
                                               .delete();
                                         },
                                         icon: const Icon(Icons.delete),
                                       ),
                                     ],
-                                  )
+                                  ),
                                 ],
                               ),
-                            ],
-                          ),
-                        );
-                      },
-                    );
-                  }
-                  return const Center(
-                    child: CircularProgressIndicator(),
+                            ),
+                          ],
+                        ),
+                      );
+                    },
                   );
                 },
               ),
