@@ -63,6 +63,8 @@ class _CustomerHomeScreenState extends ConsumerState<CustomerHomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
       backgroundColor: ColorConstants.mainwhite,
       appBar: AppBar(
@@ -75,11 +77,11 @@ class _CustomerHomeScreenState extends ConsumerState<CustomerHomeScreen> {
             child: Icon(
               Icons.notifications,
               color: ColorConstants.mainwhite,
-              size: 30,
+              size: screenHeight * 0.03,
             ),
           ),
           SizedBox(
-            width: 10,
+            width: screenWidth * 0.02,
           )
         ],
       ),
@@ -90,9 +92,9 @@ class _CustomerHomeScreenState extends ConsumerState<CustomerHomeScreen> {
             Stack(
               children: [
                 Container(
-                  padding: EdgeInsets.symmetric(horizontal: 20),
+                  padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.05),
                   width: double.infinity,
-                  height: 300,
+                  height: screenHeight * 0.40,
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
                       begin: Alignment.topCenter,
@@ -103,7 +105,7 @@ class _CustomerHomeScreenState extends ConsumerState<CustomerHomeScreen> {
                   child: Column(
                     children: [
                       SizedBox(
-                        height: 20,
+                        height: screenHeight * 0.02,
                       ),
                       TextFormField(
                         decoration: InputDecoration(
@@ -125,12 +127,13 @@ class _CustomerHomeScreenState extends ConsumerState<CustomerHomeScreen> {
                   left: 0,
                   right: 0,
                   child: SizedBox(
-                    height: 150,
+                    height: screenHeight * 0.19,
                     child: PageView(
                       controller: _controller,
                       children: [
                         Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 20),
+                          padding: EdgeInsets.symmetric(
+                              horizontal: screenWidth * 0.05),
                           child: Container(
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(12),
@@ -143,7 +146,8 @@ class _CustomerHomeScreenState extends ConsumerState<CustomerHomeScreen> {
                           ),
                         ),
                         Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 20),
+                          padding: EdgeInsets.symmetric(
+                              horizontal: screenWidth * 0.05),
                           child: Container(
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(12),
@@ -156,7 +160,8 @@ class _CustomerHomeScreenState extends ConsumerState<CustomerHomeScreen> {
                           ),
                         ),
                         Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 20),
+                          padding: EdgeInsets.symmetric(
+                              horizontal: screenWidth * 0.05),
                           child: Container(
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(12),
@@ -180,8 +185,8 @@ class _CustomerHomeScreenState extends ConsumerState<CustomerHomeScreen> {
                     controller: _controller,
                     count: _numPages,
                     effect: WormEffect(
-                      dotHeight: 7,
-                      dotWidth: 7,
+                      dotHeight: screenHeight * 0.011,
+                      dotWidth: screenWidth * 0.017,
                       activeDotColor: ColorConstants.mainblack,
                       dotColor: ColorConstants.mainblack,
                     ),
@@ -190,16 +195,18 @@ class _CustomerHomeScreenState extends ConsumerState<CustomerHomeScreen> {
               ],
             ),
             SizedBox(
-              height: 20,
+              height: screenHeight * 0.02,
             ),
             Row(
               children: [
                 SizedBox(
-                  width: 15,
+                  width: screenWidth * 0.025,
                 ),
                 Text(
                   "View By Category",
-                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                      fontSize: screenWidth * 0.04,
+                      fontWeight: FontWeight.bold),
                 ),
                 Spacer(),
                 InkWell(
@@ -214,100 +221,117 @@ class _CustomerHomeScreenState extends ConsumerState<CustomerHomeScreen> {
                     style: TextStyle(
                         color: ColorConstants.appbar,
                         fontWeight: FontWeight.bold,
-                        fontSize: 15),
+                        fontSize: screenWidth * 0.04),
                   ),
                 ),
                 Icon(
                   Icons.arrow_forward_ios,
-                  size: 15,
+                  size: screenWidth * 0.04,
                   color: ColorConstants.appbar,
                 ),
                 SizedBox(
-                  width: 10,
+                  width: screenWidth * 0.035,
                 )
               ],
             ),
             SizedBox(
-              height: 20,
+              height: screenHeight * 0.02,
             ),
-            Row(
-              children: [
-                SizedBox(
-                  width: 5,
-                ),
-                Container(
-                  height: 40,
-                  width: 120,
-                  decoration: BoxDecoration(
-                      color: ColorConstants.mainbg,
-                      border: Border.all(color: Colors.black, width: 1),
-                      borderRadius: BorderRadius.circular(19)),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Image.network(
-                        'https://res.cloudinary.com/dflu65eef/image/upload/v1734014656/Vitamins_qolxd4.png',
-                        scale: 20,
-                      ),
-                      Text("Vitamins"),
-                    ],
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                children: [
+                  SizedBox(
+                    width: screenWidth * 0.06,
                   ),
-                ),
-                SizedBox(
-                  width: 10,
-                ),
-                Container(
-                  height: 40,
-                  width: 120,
-                  decoration: BoxDecoration(
-                      color: ColorConstants.mainbg,
-                      border: Border.all(color: Colors.black, width: 1),
-                      borderRadius: BorderRadius.circular(19)),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Image.network(
-                        'https://res.cloudinary.com/dflu65eef/image/upload/v1734014385/Antibiotics_axajjp.png',
-                        scale: 20,
-                      ),
-                      Text("Antibiotics"),
-                    ],
+                  Container(
+                    height: screenHeight * 0.05,
+                    width: screenWidth * 0.35,
+                    decoration: BoxDecoration(
+                        color: ColorConstants.mainbg,
+                        border: Border.all(color: Colors.black, width: 1),
+                        borderRadius: BorderRadius.circular(19)),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Image.network(
+                          'https://res.cloudinary.com/dflu65eef/image/upload/v1734014656/Vitamins_qolxd4.png',
+                          scale: screenWidth * 0.060,
+                        ),
+                        Text(
+                          "Vitamins",
+                          style: TextStyle(fontSize: screenWidth * 0.038),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-                SizedBox(
-                  width: 10,
-                ),
-                Container(
-                  height: 40,
-                  width: 120,
-                  decoration: BoxDecoration(
-                      color: ColorConstants.mainbg,
-                      border: Border.all(color: Colors.black, width: 1),
-                      borderRadius: BorderRadius.circular(19)),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Image.network(
-                        'https://res.cloudinary.com/dflu65eef/image/upload/v1734014247/Pain_Relief_vby7ae.png',
-                        scale: 20,
-                      ),
-                      Text("Pain Relief"),
-                    ],
+                  SizedBox(
+                    width: screenWidth * 0.04,
                   ),
-                ),
-              ],
+                  Container(
+                    height: screenHeight * 0.05,
+                    width: screenWidth * 0.35,
+                    decoration: BoxDecoration(
+                        color: ColorConstants.mainbg,
+                        border: Border.all(color: Colors.black, width: 1),
+                        borderRadius: BorderRadius.circular(19)),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Image.network(
+                          'https://res.cloudinary.com/dflu65eef/image/upload/v1734014385/Antibiotics_axajjp.png',
+                          scale: screenWidth * 0.060,
+                        ),
+                        Text(
+                          "Antibiotics",
+                          style: TextStyle(fontSize: screenWidth * 0.038),
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(
+                    width: screenWidth * 0.04,
+                  ),
+                  Container(
+                    height: screenHeight * 0.05,
+                    width: screenWidth * 0.35,
+                    decoration: BoxDecoration(
+                        color: ColorConstants.mainbg,
+                        border: Border.all(color: Colors.black, width: 1),
+                        borderRadius: BorderRadius.circular(19)),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Image.network(
+                          'https://res.cloudinary.com/dflu65eef/image/upload/v1734014247/Pain_Relief_vby7ae.png',
+                          scale: screenWidth * 0.060,
+                        ),
+                        Text(
+                          "Pain Relief",
+                          style: TextStyle(fontSize: screenWidth * 0.038),
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(
+                    width: screenWidth * 0.06,
+                  ),
+                ],
+              ),
             ),
             SizedBox(
-              height: 20,
+              height: screenHeight * 0.02,
             ),
             Row(
               children: [
                 SizedBox(
-                  width: 10,
+                  width: screenWidth * 0.025,
                 ),
                 Text(
                   "Recommended for you",
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                      fontSize: screenWidth * 0.04,
+                      fontWeight: FontWeight.bold),
                 ),
               ],
             ),
@@ -326,10 +350,12 @@ class _CustomerHomeScreenState extends ConsumerState<CustomerHomeScreen> {
                     physics: NeverScrollableScrollPhysics(),
                     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 3, // Number of columns
-                      crossAxisSpacing: 10.0, // Space between columns
-                      mainAxisSpacing: 10.0, // Space between rows
-                      childAspectRatio:
-                          0.8, // Width-to-height ratio of each container
+                      crossAxisSpacing:
+                          screenWidth * 0.03, // Space between columns
+                      mainAxisSpacing:
+                          screenHeight * 0.02, // Space between rows
+                      childAspectRatio: screenWidth *
+                          0.002, // Width-to-height ratio of each container
                     ),
                     itemCount: 21, // Number of containers
                     itemBuilder: (context, index) {
@@ -358,7 +384,7 @@ class _CustomerHomeScreenState extends ConsumerState<CustomerHomeScreen> {
                                       )));
                         },
                         child: Container(
-                          height: 108,
+                          height: screenWidth * 0.02,
                           padding: EdgeInsets.all(12),
                           decoration: BoxDecoration(
                             color: Colors.white10.withOpacity(0.7),
@@ -378,19 +404,21 @@ class _CustomerHomeScreenState extends ConsumerState<CustomerHomeScreen> {
                               Center(
                                 child: Image.network(
                                   productlist[index]["image_url"],
-                                  width: 90,
-                                  height: 80,
+                                  width: screenWidth * 0.20,
+                                  height: screenHeight * 0.09,
                                 ),
                               ),
                               Text(
                                 productlist[index]["product_name"],
                                 style: TextStyle(
+                                    fontSize: screenWidth * 0.040,
                                     color: ColorConstants.mainblack,
                                     overflow: TextOverflow.ellipsis),
                               ),
                               Text(
                                 "₹${productlist[index]["price"]}",
                                 style: TextStyle(
+                                    fontSize: screenWidth * 0.040,
                                     color: ColorConstants.mainblack,
                                     fontWeight: FontWeight.bold),
                               ),
@@ -399,7 +427,7 @@ class _CustomerHomeScreenState extends ConsumerState<CustomerHomeScreen> {
                         ),
                       );
                     },
-                    padding: EdgeInsets.all(10),
+                    padding: EdgeInsets.all(screenWidth * 0.03),
                   );
                 }
                 return Center(

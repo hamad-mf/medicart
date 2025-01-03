@@ -30,6 +30,8 @@ class ProductScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
     final addtocartstate =
         ref.watch(AddToCartScreenStateNotifierProvider) as AddToCartState;
     return Scaffold(
@@ -41,24 +43,24 @@ class ProductScreen extends ConsumerWidget {
             child: Icon(Icons.arrow_back_ios_new)),
         actions: [
           Icon(Icons.favorite_border_outlined),
-          SizedBox(width: 20),
+          SizedBox(width: screenHeight * 0.02),
           Icon(Icons.ios_share),
-          SizedBox(width: 20)
+          SizedBox(width: screenWidth * 0.02)
         ],
       ),
       body: Stack(
         children: [
           // Main content of the screen
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 15),
+            padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.04),
             child: SingleChildScrollView(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // Product Image
                   Container(
-                    width: 400,
-                    height: 350,
+                    width: double.infinity,
+                    height: screenHeight * 0.40,
                     decoration:
                         BoxDecoration(color: Colors.grey.withOpacity(0.3)),
                     child: Column(
@@ -66,28 +68,29 @@ class ProductScreen extends ConsumerWidget {
                       children: [
                         Image.network(
                           image_url,
-                          width: 340,
-                          height: 340,
+                          width: screenWidth * 0.8,
+                          height: screenHeight * 0.35,
+                          fit: BoxFit.contain,
                         )
                       ],
                     ),
                   ),
-                  SizedBox(height: 30),
+                  SizedBox(height: screenHeight * 0.03),
                   // Product Details
                   Text(
                     product_name,
                     style: TextStyle(
                         color: ColorConstants.mainblack,
-                        fontSize: 30,
+                        fontSize: screenWidth * 0.07,
                         fontWeight: FontWeight.bold),
                   ),
                   Text(
                     details,
                     style: TextStyle(
                         color: ColorConstants.mainblack.withOpacity(0.7),
-                        fontSize: 17),
+                        fontSize: screenWidth * 0.04),
                   ),
-                  SizedBox(height: 20),
+                  SizedBox(height: screenHeight * 0.02),
                   Row(
                     children: [
                       Text(
@@ -95,18 +98,18 @@ class ProductScreen extends ConsumerWidget {
                         style: TextStyle(
                             color: ColorConstants.mainblack,
                             fontWeight: FontWeight.bold,
-                            fontSize: 24),
+                            fontSize: screenWidth * 0.06),
                       ),
-                      SizedBox(width: 10),
+                      SizedBox(width: screenWidth * 0.02),
                       Text("${stocks.toString()} left")
                     ],
                   ),
-                  SizedBox(height: 20),
+                  SizedBox(height: screenHeight * 0.02),
                   // Prescription Indicator
                   Container(
                     padding: EdgeInsets.symmetric(horizontal: 10),
-                    width: 136,
-                    height: 25,
+                    width: screenWidth * 0.35,
+                    height: screenHeight * 0.03,
                     decoration: BoxDecoration(
                         color: isPresNeeded
                             ? ColorConstants.mainred.withOpacity(0.6)
@@ -116,20 +119,21 @@ class ProductScreen extends ConsumerWidget {
                         Text(
                           "Prescription: ${isPresNeeded ? ' Yes' : ' No'}",
                           style: TextStyle(
+                              fontSize: screenWidth * 0.035,
                               color: ColorConstants.mainwhite,
                               fontWeight: FontWeight.bold),
                         )
                       ],
                     ),
                   ),
-                  SizedBox(height: 20),
+                  SizedBox(height: screenHeight * 0.02),
                   RichText(
                     text: TextSpan(
                       text: 'Usage: ',
                       style: TextStyle(
                           color: ColorConstants.mainblack,
                           fontWeight: FontWeight.bold,
-                          fontSize: 17),
+                          fontSize: screenWidth * 0.04),
                       children: [
                         TextSpan(
                             text: usage,
@@ -140,62 +144,58 @@ class ProductScreen extends ConsumerWidget {
                       ],
                     ),
                   ),
-                  SizedBox(height: 40),
+                  SizedBox(height: screenHeight * 0.10),
                   // Buttons Row
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      customButton(
-                        onPressed: () async {
-                          // await context.read<AddToCartController>().onAddtoCart(
-                          //     itemcount: 1,
-                          //     category: widget.category,
-                          //     details: widget.details,
-                          //     image_url: widget.image_url,
-                          //     product_name: widget.product_name,
-                          //     usage: widget.usage,
-                          //     price: widget.price,
-                          //     stocks: widget.stocks,
-                          //     requiresPrescription: widget.isPresNeeded,
-                          //     context: context);
-
-                          ref
-                              .read(
-                                  AddToCartScreenStateNotifierProvider.notifier)
-                              .onAddToCart(
-                                userId: FirebaseAuth.instance.currentUser!.uid,
-                                total_price: price,
-                                  category: category,
-                                  details: details,
-                                  image_url: image_url,
-                                  product_name: product_name,
-                                  usage: usage,
-                                  price: price,
-                                  stocks: stocks,
-                                  requiresPrescription: isPresNeeded,
-                                  itemcount: 1,
-                                  context: context);
-                        },
-                        text: "Add to cart",
+                      Expanded(
+                        child: customButton(
+                          onPressed: () async {
+                            ref
+                                .read(AddToCartScreenStateNotifierProvider
+                                    .notifier)
+                                .onAddToCart(
+                                    userId:
+                                        FirebaseAuth.instance.currentUser!.uid,
+                                    total_price: price,
+                                    category: category,
+                                    details: details,
+                                    image_url: image_url,
+                                    product_name: product_name,
+                                    usage: usage,
+                                    price: price,
+                                    stocks: stocks,
+                                    requiresPrescription: isPresNeeded,
+                                    itemcount: 1,
+                                    context: context);
+                          },
+                          text: "Add to cart",
+                        ),
                       ),
-                      customButton(
-                        onPressed: () {},
-                        text: "Buy now",
+                      SizedBox(width: screenWidth * 0.02),
+                      Expanded(
+                        child: customButton(
+                          onPressed: () {},
+                          text: "Buy now",
+                        ),
                       ),
                     ],
                   ),
-                  SizedBox(height: 30),
+                  SizedBox(height: screenHeight * 0.03),
                 ],
               ),
             ),
           ),
 
           if (addtocartstate.isloading)
-            Container(
-              color: Colors.black.withOpacity(0.5),
-              child: Center(
-                child: CircularProgressIndicator(
-                  color: ColorConstants.mainwhite,
+            Positioned.fill(
+              child: Container(
+                color: Colors.black.withOpacity(0.5),
+                child: Center(
+                  child: CircularProgressIndicator(
+                    color: ColorConstants.mainwhite,
+                  ),
                 ),
               ),
             ),
