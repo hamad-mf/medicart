@@ -42,6 +42,7 @@ class LoginScreenController extends StateNotifier<LoginScreenState> {
         if (role == 'user') {
           SharedPreferences prefs = await SharedPreferences.getInstance();
           await prefs.setBool('isLoggedIn', true);
+         
           if (isProfileDetailsAdded) {
             // Navigate to Admin HomeScreen
             Navigator.of(context).pushAndRemoveUntil(

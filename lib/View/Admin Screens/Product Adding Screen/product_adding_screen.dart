@@ -36,6 +36,9 @@ class ProductAddingScreen extends ConsumerWidget {
             as ProductAddingScreenState;
 
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: ColorConstants.mainbg,
+      ),
       backgroundColor: ColorConstants.mainbg,
       body: Center(
         child: Form(

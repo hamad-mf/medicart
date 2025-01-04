@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:medicart/Controller/Admin%20Login%20Screen%20Controller/admin_login_screen_state.dart';
 import 'package:medicart/Utils/app_utils.dart';
+import 'package:medicart/View/Admin%20Screens/Admin%20Home%20Screen/admin_home_screen.dart';
 import 'package:medicart/View/Admin%20Screens/Product%20Adding%20Screen/product_adding_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -42,7 +43,7 @@ class AdminLoginScreenController extends StateNotifier<AdminLoginScreenState> {
           SharedPreferences adminprefs = await SharedPreferences.getInstance();
           await adminprefs.setBool('isAdminLoggedIn', true);
           Navigator.push(context,
-              MaterialPageRoute(builder: (context) => ProductAddingScreen()));
+              MaterialPageRoute(builder: (context) => AdminHomeScreen()));
         } else if (role == 'user' || role == 'doctor') {
           AppUtils.showSnackbar(
               context: context, message: "Enter correct details");

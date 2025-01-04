@@ -107,15 +107,18 @@ class _CustomerHomeScreenState extends ConsumerState<CustomerHomeScreen> {
                       SizedBox(
                         height: screenHeight * 0.02,
                       ),
-                      TextFormField(
-                        decoration: InputDecoration(
-                          hintText: "Search...",
-                          prefixIcon: Icon(Icons.search, color: Colors.grey),
-                          filled: true,
-                          fillColor: Colors.grey[200],
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(30.0),
-                            borderSide: BorderSide.none,
+                      SizedBox(
+                        height: screenHeight * 0.06,
+                        child: TextFormField(
+                          decoration: InputDecoration(
+                            hintText: "Search...",
+                            prefixIcon: Icon(Icons.search, color: Colors.grey),
+                            filled: true,
+                            fillColor: Colors.grey[200],
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(20.0),
+                              borderSide: BorderSide.none,
+                            ),
                           ),
                         ),
                       ),
@@ -178,15 +181,15 @@ class _CustomerHomeScreenState extends ConsumerState<CustomerHomeScreen> {
                   ),
                 ),
                 Positioned(
-                  top: 264,
-                  left: 170,
+                  top: screenHeight * 0.33,
+                  left: screenWidth * 0.45,
                   right: 0,
                   child: SmoothPageIndicator(
                     controller: _controller,
                     count: _numPages,
                     effect: WormEffect(
-                      dotHeight: screenHeight * 0.011,
-                      dotWidth: screenWidth * 0.017,
+                      dotHeight: screenHeight * 0.010,
+                      dotWidth: screenWidth * 0.016,
                       activeDotColor: ColorConstants.mainblack,
                       dotColor: ColorConstants.mainblack,
                     ),
@@ -242,11 +245,11 @@ class _CustomerHomeScreenState extends ConsumerState<CustomerHomeScreen> {
               child: Row(
                 children: [
                   SizedBox(
-                    width: screenWidth * 0.06,
+                    width: screenWidth * 0.04,
                   ),
                   Container(
-                    height: screenHeight * 0.05,
-                    width: screenWidth * 0.35,
+                    height: screenHeight * 0.04,
+                    width: screenWidth * 0.32,
                     decoration: BoxDecoration(
                         color: ColorConstants.mainbg,
                         border: Border.all(color: Colors.black, width: 1),
@@ -256,11 +259,11 @@ class _CustomerHomeScreenState extends ConsumerState<CustomerHomeScreen> {
                       children: [
                         Image.network(
                           'https://res.cloudinary.com/dflu65eef/image/upload/v1734014656/Vitamins_qolxd4.png',
-                          scale: screenWidth * 0.060,
+                          scale: screenWidth * 0.070,
                         ),
                         Text(
                           "Vitamins",
-                          style: TextStyle(fontSize: screenWidth * 0.038),
+                          style: TextStyle(fontSize: screenWidth * 0.034),
                         ),
                       ],
                     ),
@@ -269,8 +272,8 @@ class _CustomerHomeScreenState extends ConsumerState<CustomerHomeScreen> {
                     width: screenWidth * 0.04,
                   ),
                   Container(
-                    height: screenHeight * 0.05,
-                    width: screenWidth * 0.35,
+                    height: screenHeight * 0.04,
+                    width: screenWidth * 0.32,
                     decoration: BoxDecoration(
                         color: ColorConstants.mainbg,
                         border: Border.all(color: Colors.black, width: 1),
@@ -280,11 +283,11 @@ class _CustomerHomeScreenState extends ConsumerState<CustomerHomeScreen> {
                       children: [
                         Image.network(
                           'https://res.cloudinary.com/dflu65eef/image/upload/v1734014385/Antibiotics_axajjp.png',
-                          scale: screenWidth * 0.060,
+                          scale: screenWidth * 0.070,
                         ),
                         Text(
                           "Antibiotics",
-                          style: TextStyle(fontSize: screenWidth * 0.038),
+                          style: TextStyle(fontSize: screenWidth * 0.034),
                         ),
                       ],
                     ),
@@ -293,8 +296,8 @@ class _CustomerHomeScreenState extends ConsumerState<CustomerHomeScreen> {
                     width: screenWidth * 0.04,
                   ),
                   Container(
-                    height: screenHeight * 0.05,
-                    width: screenWidth * 0.35,
+                    height: screenHeight * 0.04,
+                    width: screenWidth * 0.32,
                     decoration: BoxDecoration(
                         color: ColorConstants.mainbg,
                         border: Border.all(color: Colors.black, width: 1),
@@ -304,17 +307,17 @@ class _CustomerHomeScreenState extends ConsumerState<CustomerHomeScreen> {
                       children: [
                         Image.network(
                           'https://res.cloudinary.com/dflu65eef/image/upload/v1734014247/Pain_Relief_vby7ae.png',
-                          scale: screenWidth * 0.060,
+                          scale: screenWidth * 0.070,
                         ),
                         Text(
                           "Pain Relief",
-                          style: TextStyle(fontSize: screenWidth * 0.038),
+                          style: TextStyle(fontSize: screenWidth * 0.034),
                         ),
                       ],
                     ),
                   ),
                   SizedBox(
-                    width: screenWidth * 0.06,
+                    width: screenWidth * 0.04,
                   ),
                 ],
               ),

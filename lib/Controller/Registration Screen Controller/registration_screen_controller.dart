@@ -36,12 +36,14 @@ class RegistrationScreenController
           .doc(uid)
           .set({'role': role, 'isProfileDetailsAdded': false});
 
-      // Initialize an empty cart for the specific user
+      
+  if (role =='user') {
+     // Initialize an empty cart for the specific user
       await FirebaseFirestore.instance
           .collection('cart')
           .doc(uid)
           .set({'created_at': DateTime.now(), 'total_price': 0});
-
+  }
       // Notify user about registration success
       AppUtils.showSnackbar(
           context: context,
