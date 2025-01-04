@@ -16,11 +16,8 @@ class CartScreen extends ConsumerWidget {
     final screenHeight = MediaQuery.of(context).size.height;
     final cartController = ref.read(CartScreenStateNotifierProvider.notifier);
 
-    final Stream<QuerySnapshot> userCartStream = FirebaseFirestore.instance
-        .collection('cart')
-        .doc(userId)
-        .collection('items')
-        .snapshots();
+    final userCartStream = cartController.getUserCartStream(userId);
+
 
     return Scaffold(
       floatingActionButton: StreamBuilder<QuerySnapshot>(
@@ -89,6 +86,13 @@ class CartScreen extends ConsumerWidget {
       ),
       appBar: AppBar(
         title: const Text("Cart"),
+        actions: [
+          IconButton(
+              onPressed: () async {
+                await CartScreenController().deleteAllItemsFromCart(userId);
+              },
+              icon: Icon(Icons.delete_forever_sharp))
+        ],
       ),
       body: Padding(
         padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.03),
@@ -147,15 +151,28 @@ class CartScreen extends ConsumerWidget {
                           children: [
                             InkWell(
                               onTap: () {
-                                Navigator.push(context, MaterialPageRoute(builder: (context)=>ProductScreen(isPresNeeded: cartItem["requiresPrescription"], product_name: cartItem["product_name"], image_url: cartItem["image_url"], category: cartItem["category"], details: cartItem["details"], price: cartItem["price"], stocks: cartItem["stocks"], usage: cartItem["usage"])));
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => ProductScreen(
+                                            isPresNeeded: cartItem[
+                                                "requiresPrescription"],
+                                            product_name:
+                                                cartItem["product_name"],
+                                            image_url: cartItem["image_url"],
+                                            category: cartItem["category"],
+                                            details: cartItem["details"],
+                                            price: cartItem["price"],
+                                            stocks: cartItem["stocks"],
+                                            usage: cartItem["usage"])));
                               },
                               child: Container(
                                 width: screenWidth * 0.22,
-                                height: screenHeight * 0.14,
+                                height: screenHeight * 0.10,
                                 decoration: BoxDecoration(
                                   image: DecorationImage(
                                     image: NetworkImage(cartItem['image_url']),
-                                    fit: BoxFit.cover,
+                                    fit: BoxFit.contain,
                                   ),
                                   borderRadius: BorderRadius.circular(8),
                                   color: ColorConstants.mainwhite,
@@ -233,12 +250,9 @@ class CartScreen extends ConsumerWidget {
                                       ),
                                       IconButton(
                                         onPressed: () async {
-                                          await FirebaseFirestore.instance
-                                              .collection('cart')
-                                              .doc(userId)
-                                              .collection('items')
-                                              .doc(cartItemId)
-                                              .delete();
+                                          await cartController
+                                              .deleteCartItemAndUpdateTotal(
+                                                  userId, cartItemId);
                                         },
                                         icon: const Icon(Icons.delete),
                                       ),

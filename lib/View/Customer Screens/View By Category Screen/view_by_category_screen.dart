@@ -9,37 +9,38 @@ class ViewByCategoryScreen extends ConsumerStatefulWidget {
   const ViewByCategoryScreen({super.key});
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _ViewByCategoryScreenState();
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      _ViewByCategoryScreenState();
 }
 
 class _ViewByCategoryScreenState extends ConsumerState<ViewByCategoryScreen> {
-
-
   final categoryControllerProvider =
-    StateNotifierProvider<CategoryController, CategoryState>((ref) {
-  return CategoryController();
-});
+      StateNotifierProvider<CategoryController, CategoryState>((ref) {
+    return CategoryController();
+  });
 
-// Stream Provider for Products by Category
-final productsByCategoryProvider = StreamProvider.family.autoDispose<
-    QuerySnapshot, String>((ref, category) {
-  return FirebaseFirestore.instance
-      .collection('products')
-      .where('category', isEqualTo: category)
-      .snapshots();
-});
+  // Stream Provider for Products by Category
+  final productsByCategoryProvider =
+      StreamProvider.family.autoDispose<QuerySnapshot, String>((ref, category) {
+    return FirebaseFirestore.instance
+        .collection('products')
+        .where('category', isEqualTo: category)
+        .snapshots();
+  });
 
-   int selectedIndex = 0;
+  int selectedIndex = 0;
 
   @override
   void initState() {
     super.initState();
-    Future.microtask(() =>
-        ref.read(categoryControllerProvider.notifier).fetchCategories());
+    Future.microtask(
+        () => ref.read(categoryControllerProvider.notifier).fetchCategories());
   }
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
     final categoryState = ref.watch(categoryControllerProvider);
 
     return Scaffold(
@@ -54,7 +55,7 @@ final productsByCategoryProvider = StreamProvider.family.autoDispose<
                   children: [
                     // Category Sidebar
                     Container(
-                      width: 100,
+                      width: screenWidth * 0.26,
                       color: Colors.blue[50],
                       child: ListView.builder(
                         itemCount: categoryState.categories.length,
@@ -66,26 +67,29 @@ final productsByCategoryProvider = StreamProvider.family.autoDispose<
                               });
                             },
                             child: Container(
-                              margin: const EdgeInsets.all(8.0),
-                              padding: const EdgeInsets.all(8.0),
+                              margin: EdgeInsets.all(screenWidth * 0.02),
+                              padding: EdgeInsets.all(screenWidth * 0.02),
                               decoration: BoxDecoration(
                                 color: selectedIndex == index
                                     ? Colors.blue
                                     : Colors.white,
-                                borderRadius: BorderRadius.circular(10),
+                                borderRadius:
+                                    BorderRadius.circular(screenWidth * 0.03),
                               ),
                               child: Column(
                                 children: [
                                   Icon(
                                     Icons.category,
+                                    size: screenWidth * 0.06,
                                     color: selectedIndex == index
                                         ? Colors.white
                                         : Colors.blue,
                                   ),
-                                  const SizedBox(height: 5),
+                                  SizedBox(height: screenHeight * 0.01),
                                   Text(
                                     categoryState.categories[index],
                                     style: TextStyle(
+                                      fontSize: screenWidth * 0.035,
                                       color: selectedIndex == index
                                           ? Colors.white
                                           : Colors.blue,
@@ -102,7 +106,7 @@ final productsByCategoryProvider = StreamProvider.family.autoDispose<
                     // Products Grid
                     Expanded(
                       child: Padding(
-                        padding: const EdgeInsets.all(8.0),
+                        padding: EdgeInsets.all(screenWidth * 0.022),
                         child: Consumer(
                           builder: (context, ref, child) {
                             final productsStream = ref.watch(
@@ -123,11 +127,11 @@ final productsByCategoryProvider = StreamProvider.family.autoDispose<
 
                                 return GridView.builder(
                                   gridDelegate:
-                                      const SliverGridDelegateWithFixedCrossAxisCount(
-                                    crossAxisCount: 2,
-                                    crossAxisSpacing: 10,
-                                    mainAxisSpacing: 10,
-                                    childAspectRatio: 3 / 4,
+                                      SliverGridDelegateWithFixedCrossAxisCount(
+                                    crossAxisCount: screenWidth < 600 ? 2 : 3,
+                                    crossAxisSpacing: screenWidth * 0.02,
+                                    mainAxisSpacing: screenHeight * 0.02,
+                                    childAspectRatio: 3 / 4.9,
                                   ),
                                   itemCount: products.length,
                                   itemBuilder: (context, index) {
@@ -153,18 +157,21 @@ final productsByCategoryProvider = StreamProvider.family.autoDispose<
                                         );
                                       },
                                       child: Container(
-                                        height: 108,
-                                        padding: const EdgeInsets.all(12),
+                                        height: screenHeight * 0.25,
+                                        padding:
+                                            EdgeInsets.all(screenWidth * 0.03),
                                         decoration: BoxDecoration(
-                                          color: Colors.white10
-                                              .withOpacity(0.7),
-                                          borderRadius:
-                                              BorderRadius.circular(15),
-                                          boxShadow: const [
+                                          color:
+                                              Colors.white10.withOpacity(0.7),
+                                          borderRadius: BorderRadius.circular(
+                                              screenWidth * 0.03),
+                                          boxShadow: [
                                             BoxShadow(
                                               color: Colors.black26,
-                                              offset: Offset(2, 2),
-                                              blurRadius: 5,
+                                              offset: Offset(
+                                                  screenWidth * 0.005,
+                                                  screenHeight * 0.005),
+                                              blurRadius: screenWidth * 0.02,
                                             ),
                                           ],
                                         ),
@@ -177,21 +184,30 @@ final productsByCategoryProvider = StreamProvider.family.autoDispose<
                                             Center(
                                               child: Image.network(
                                                 product['image_url'],
-                                                width: 90,
-                                                height: 80,
+                                                width: screenWidth * 0.25,
+                                                height: screenHeight * 0.15,
                                               ),
                                             ),
+                                            SizedBox(
+                                                height: screenHeight * 0.01),
                                             Text(
                                               product['product_name'],
-                                              style: const TextStyle(
+                                              style: TextStyle(
                                                 color: Colors.black,
+                                                fontSize: screenWidth * 0.035,
                                               ),
+                                              maxLines: 1,
+                                              overflow: TextOverflow.ellipsis,
                                             ),
+                                            SizedBox(
+                                                height: screenHeight * 0.005),
                                             Text(
-                                              '\$${product['price']}',
-                                              style: const TextStyle(
-                                                  color: Colors.black,
-                                                  fontWeight: FontWeight.bold),
+                                              '₹${product['price']}',
+                                              style: TextStyle(
+                                                color: Colors.black,
+                                                fontSize: screenWidth * 0.04,
+                                                fontWeight: FontWeight.bold,
+                                              ),
                                             ),
                                           ],
                                         ),

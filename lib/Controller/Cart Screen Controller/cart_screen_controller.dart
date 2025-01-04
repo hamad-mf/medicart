@@ -9,8 +9,8 @@ final CartScreenStateNotifierProvider =
 class CartScreenController extends StateNotifier<CartScreenState> {
   CartScreenController() : super(CartScreenState());
 
- Future<void> incrementItemCount(
-    String cartId, String cartItemId, num currentCount, num pricePerItem) async {
+Future<void> incrementItemCount(
+  String cartId, String cartItemId, num currentCount, num pricePerItem) async {
   try {
     final newCount = currentCount + 1;
     final newPrice = pricePerItem * newCount;
@@ -26,7 +26,14 @@ class CartScreenController extends StateNotifier<CartScreenState> {
       'total_price': newPrice,
     });
 
-    print('Item count incremented successfully.');
+    // Recalculate and update the total price in the parent cart document
+    final updatedTotalPrice = await calculateTotalPrice(cartId);
+    await FirebaseFirestore.instance
+        .collection('cart')
+        .doc(cartId)
+        .update({'total_price': updatedTotalPrice});
+
+    print('Item count incremented and total price updated successfully.');
   } catch (e) {
     print('Error incrementing item count: $e');
   }
@@ -57,8 +64,8 @@ Future<num> calculateTotalPrice(String cartId) async {
 
 
 
-  Future<void> decrementItemCount(
-    String cartId, String cartItemId, num currentCount, num pricePerItem) async {
+Future<void> decrementItemCount(
+  String cartId, String cartItemId, num currentCount, num pricePerItem) async {
   try {
     if (currentCount > 1) {
       final newCount = currentCount - 1;
@@ -74,8 +81,6 @@ Future<num> calculateTotalPrice(String cartId) async {
         'item_count': newCount,
         'total_price': newPrice,
       });
-
-      print('Item count decremented successfully.');
     } else {
       // If count becomes zero, delete the item
       await FirebaseFirestore.instance
@@ -84,11 +89,81 @@ Future<num> calculateTotalPrice(String cartId) async {
           .collection('items')
           .doc(cartItemId)
           .delete();
-
-      print('Item removed from cart as count reached zero.');
     }
+
+    // Recalculate and update the total price in the parent cart document
+    final updatedTotalPrice = await calculateTotalPrice(cartId);
+    await FirebaseFirestore.instance
+        .collection('cart')
+        .doc(cartId)
+        .update({'total_price': updatedTotalPrice});
+
+    print('Item count decremented and total price updated successfully.');
   } catch (e) {
     print('Error decrementing item count or removing item: $e');
   }
 }
+
+Future<void> deleteAllItemsFromCart(String cartId) async {
+  try {
+    // Fetch all items in the subcollection
+    QuerySnapshot itemsSnapshot = await FirebaseFirestore.instance
+        .collection('cart')
+        .doc(cartId)
+        .collection('items')
+        .get();
+
+    // Delete each document in the subcollection
+    for (var doc in itemsSnapshot.docs) {
+      await doc.reference.delete();
+    }
+
+    // Set the total price to 0 in the parent cart document
+    await FirebaseFirestore.instance
+        .collection('cart')
+        .doc(cartId)
+        .update({'total_price': 0});
+
+    print('All items from cart "$cartId" deleted successfully.');
+  } catch (e) {
+    print('Error deleting all items from cart: $e');
+  }
+}
+
+Stream<QuerySnapshot> getUserCartStream(String userId) {
+    return FirebaseFirestore.instance
+        .collection('cart')
+        .doc(userId)
+        .collection('items')
+        .snapshots();
+  }
+
+
+
+
+
+
+
+ Future<void> deleteCartItemAndUpdateTotal(String userId, String cartItemId) async {
+    final cartRef = FirebaseFirestore.instance
+        .collection('cart')
+        .doc(userId)
+        .collection('items');
+
+    // Delete the specific item
+    await cartRef.doc(cartItemId).delete();
+
+    // Recalculate the total price
+    num newTotalPrice = 0;
+    final snapshot = await cartRef.get();
+    for (var doc in snapshot.docs) {
+      newTotalPrice += doc['total_price'] as num;
+    }
+
+    // Update Firestore with the new total price (optional)
+    await FirebaseFirestore.instance
+        .collection('cart')
+        .doc(userId)
+        .update({'total_price': newTotalPrice});
+  }
 }
