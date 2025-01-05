@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:medicart/Utils/color_constants.dart';
-import 'package:medicart/View/Admin%20Screens/Dummy%20Screen1/dummy_screen1.dart';
-import 'package:medicart/View/Admin%20Screens/Dummy%20Screen2/dummy_screen2.dart';
+import 'package:medicart/View/Admin%20Screens/Settings%20Screen/settings_screen.dart';
+import 'package:medicart/View/Admin%20Screens/Orders%20Screen/orders_screen.dart';
+import 'package:medicart/View/Admin%20Screens/Admins%20Screen/admins_screen.dart';
 import 'package:medicart/View/Admin%20Screens/Product%20Adding%20Screen/product_adding_screen.dart';
 
 class AdminHomeScreen extends StatefulWidget {
@@ -18,28 +19,26 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
     final screenHeight = MediaQuery.of(context).size.height;
     List Screens = [
       ProductAddingScreen(),
-      DummyScreen1(),
-      DummyScreen2(),
+      OrdersScreen(),
+      AdminsScreen(),
+      SettingsScreen()
     ];
-    List optionsText = [
-      "Add a Product",
-      "Assign an option",
-      "Assign an option"
-    ];
+    List optionsText = ["Add a Product", "Orders", "Admins", "Settings"];
     return Scaffold(
       backgroundColor: ColorConstants.mainbg,
       body: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 20, vertical: 30),
+        padding: EdgeInsets.symmetric(
+            horizontal: screenWidth * 0.06, vertical: screenHeight * 0.03),
         child: Column(
           children: [
             SizedBox(
-              height: 80,
+              height: screenHeight * 0.1,
             ),
             Text(
               "Select An Option",
               style: TextStyle(
                   color: Colors.black,
-                  fontSize: 20,
+                  fontSize: screenWidth * 0.05,
                   fontWeight: FontWeight.bold),
             ),
             Expanded(
@@ -47,16 +46,22 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
                   itemBuilder: (context, index) {
                     return InkWell(
                       onTap: () {
-                        Navigator.push(context, MaterialPageRoute(builder: (context)=>Screens[index]));
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => Screens[index]));
                       },
                       child: Container(
-                        padding: EdgeInsets.symmetric(horizontal: 20),
-                        height: 80,
+                        padding: EdgeInsets.symmetric(
+                            horizontal: screenWidth * 0.06),
+                        height: screenHeight * 0.1,
                         width: double.infinity,
                         decoration: BoxDecoration(
                             color: Colors.white,
                             borderRadius: BorderRadius.circular(12),
-                            border: Border.all(width: 4, color: Colors.black)),
+                            border: Border.all(
+                                width: screenWidth * 0.01,
+                                color: Colors.black)),
                         child: Row(
                           children: [
                             Text(
@@ -64,7 +69,7 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
                               style: TextStyle(
                                   color: Colors.black,
                                   fontWeight: FontWeight.bold,
-                                  fontSize: 17),
+                                  fontSize: screenWidth * 0.045),
                             )
                           ],
                         ),
@@ -73,10 +78,10 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
                   },
                   separatorBuilder: (context, index) {
                     return SizedBox(
-                      height: 20,
+                      height: screenHeight * 0.03,
                     );
                   },
-                  itemCount: 3),
+                  itemCount: 4),
             ),
           ],
         ),

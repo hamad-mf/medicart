@@ -21,15 +21,8 @@ class ProductAddingScreen extends ConsumerWidget {
   bool requiresPrescription = false;
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    Future<void> _logout() async {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      await prefs.setBool('isAdminLoggedIn', false); // Set isLoggedIn to false
-
-      // Navigate back to LoginScreen
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (_) => ProfileSelecctionScreen()),
-      );
-    }
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
 
     final productaddingscreenstate =
         ref.watch(ProductAddingScreenStateNotifierProvider)
@@ -47,31 +40,21 @@ class ProductAddingScreen extends ConsumerWidget {
             child: SingleChildScrollView(
               child: Column(
                 children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      IconButton(
-                          onPressed: () async {
-                            _logout();
-                          },
-                          icon: Icon(Icons.exit_to_app)),
-                    ],
-                  ),
                   SizedBox(
-                    height: 50,
+                    height: screenHeight * 0.02,
                   ),
                   Text(
                     "Add a product",
                     style: TextStyle(
                         color: ColorConstants.mainblack,
-                        fontSize: 30,
+                        fontSize: screenWidth * 0.07,
                         fontWeight: FontWeight.bold),
                   ),
                   SizedBox(
-                    height: 10,
+                    height: screenHeight * 0.01,
                   ),
                   Padding(
-                    padding: const EdgeInsets.all(8.0),
+                    padding: EdgeInsets.all(screenWidth * 0.02),
                     child: TextFormField(
                       controller: product_namectrl,
                       decoration: InputDecoration(
@@ -100,10 +83,10 @@ class ProductAddingScreen extends ConsumerWidget {
                     ),
                   ),
                   SizedBox(
-                    height: 10,
+                    height: screenHeight * 0.01,
                   ),
                   Padding(
-                    padding: const EdgeInsets.all(8.0),
+                    padding: EdgeInsets.all(screenWidth * 0.02),
                     child: TextFormField(
                       controller: categoryctrl,
                       decoration: InputDecoration(
@@ -131,10 +114,10 @@ class ProductAddingScreen extends ConsumerWidget {
                     ),
                   ),
                   SizedBox(
-                    height: 10,
+                    height: screenHeight * 0.01,
                   ),
                   Padding(
-                    padding: const EdgeInsets.all(8.0),
+                    padding: EdgeInsets.all(screenWidth * 0.02),
                     child: TextFormField(
                       controller: image_urlctrl,
                       decoration: InputDecoration(
@@ -162,10 +145,10 @@ class ProductAddingScreen extends ConsumerWidget {
                     ),
                   ),
                   SizedBox(
-                    height: 10,
+                    height: screenHeight * 0.01,
                   ),
                   Padding(
-                    padding: const EdgeInsets.all(8.0),
+                    padding: EdgeInsets.all(screenWidth * 0.02),
                     child: TextFormField(
                       controller: detailsctrl,
                       decoration: InputDecoration(
@@ -193,10 +176,10 @@ class ProductAddingScreen extends ConsumerWidget {
                     ),
                   ),
                   SizedBox(
-                    height: 10,
+                    height: screenHeight * 0.01,
                   ),
                   Padding(
-                    padding: const EdgeInsets.all(8.0),
+                    padding: EdgeInsets.all(screenWidth * 0.02),
                     child: TextFormField(
                       controller: pricectrl,
                       decoration: InputDecoration(
@@ -224,7 +207,7 @@ class ProductAddingScreen extends ConsumerWidget {
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.all(8.0),
+                    padding: EdgeInsets.all(screenWidth * 0.02),
                     child: TextFormField(
                       controller: usagectrl,
                       decoration: InputDecoration(
@@ -252,7 +235,7 @@ class ProductAddingScreen extends ConsumerWidget {
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.all(8.0),
+                    padding: EdgeInsets.all(screenWidth * 0.02),
                     child: TextFormField(
                       controller: stocksctrl,
                       decoration: InputDecoration(
@@ -280,7 +263,7 @@ class ProductAddingScreen extends ConsumerWidget {
                     ),
                   ),
                   Padding(
-                    padding: EdgeInsets.all(9),
+                    padding: EdgeInsets.all(screenWidth * 0.03),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -288,7 +271,7 @@ class ProductAddingScreen extends ConsumerWidget {
                           "Requires Prescription?",
                           style: TextStyle(
                               color: ColorConstants.mainblack,
-                              fontSize: 18,
+                              fontSize: screenWidth * 0.04,
                               fontWeight: FontWeight.bold),
                         ),
                         Switch(
@@ -303,9 +286,6 @@ class ProductAddingScreen extends ConsumerWidget {
                         )
                       ],
                     ),
-                  ),
-                  SizedBox(
-                    height: 10,
                   ),
                   productaddingscreenstate.isloading
                       ? CircularProgressIndicator()
@@ -349,10 +329,13 @@ class ProductAddingScreen extends ConsumerWidget {
                           child: Text(
                             "Add",
                             style: TextStyle(
-                                color: ColorConstants.mainwhite,
-                                fontSize: 18,
+                                color: ColorConstants.mainblack,
+                                fontSize: screenWidth * 0.06,
                                 fontWeight: FontWeight.bold),
                           )),
+                  SizedBox(
+                    height: screenHeight * 0.03,
+                  )
                 ],
               ),
             ),
