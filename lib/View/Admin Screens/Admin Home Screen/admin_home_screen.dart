@@ -4,6 +4,7 @@ import 'package:medicart/View/Admin%20Screens/Settings%20Screen/settings_screen.
 import 'package:medicart/View/Admin%20Screens/Orders%20Screen/orders_screen.dart';
 import 'package:medicart/View/Admin%20Screens/Admins%20Screen/admins_screen.dart';
 import 'package:medicart/View/Admin%20Screens/Product%20Adding%20Screen/product_adding_screen.dart';
+import 'package:medicart/View/Admin%20Screens/TEST/upload_home_screen.dart';
 
 class AdminHomeScreen extends StatefulWidget {
   const AdminHomeScreen({super.key});
@@ -21,9 +22,10 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
       ProductAddingScreen(),
       OrdersScreen(),
       AdminsScreen(),
-      SettingsScreen()
+      SettingsScreen(),
+      UploadHomeScreen(),
     ];
-    List optionsText = ["Add a Product", "Orders", "Admins", "Settings"];
+    List optionsText = ["Add a Product", "Orders", "Admins", "Settings","Images"];
     return Scaffold(
       backgroundColor: ColorConstants.mainbg,
       body: Padding(
@@ -81,7 +83,7 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
                       height: screenHeight * 0.03,
                     );
                   },
-                  itemCount: 4),
+                  itemCount: 5),
             ),
           ],
         ),

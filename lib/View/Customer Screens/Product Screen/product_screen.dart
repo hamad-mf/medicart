@@ -4,6 +4,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:medicart/Controller/Add%20To%20Cart%20Controller/add_to_cart_controller.dart';
 import 'package:medicart/Controller/Add%20To%20Cart%20Controller/add_to_cart_state.dart';
 import 'package:medicart/Utils/color_constants.dart';
+import 'package:medicart/View/Customer%20Screens/Product%20Ordering%20Screen/product_ordering_screen.dart';
+import 'package:medicart/View/Customer%20Screens/Upload%20Prescription%20Screen/upload_prescription_screen.dart';
 import 'package:medicart/View/Global%20Widgets/custom_button.dart';
 
 // ignore: must_be_immutable
@@ -152,23 +154,48 @@ class ProductScreen extends ConsumerWidget {
                       Expanded(
                         child: customButton(
                           onPressed: () async {
-                            ref
-                                .read(AddToCartScreenStateNotifierProvider
-                                    .notifier)
-                                .onAddToCart(
-                                    userId:
-                                        FirebaseAuth.instance.currentUser!.uid,
-                                    total_price: price,
-                                    category: category,
-                                    details: details,
-                                    image_url: image_url,
-                                    product_name: product_name,
-                                    usage: usage,
-                                    price: price,
-                                    stocks: stocks,
-                                    requiresPrescription: isPresNeeded,
-                                    itemcount: 1,
-                                    context: context);
+                            if (isPresNeeded) {
+                              showDialog(
+                                context: context,
+                                builder: (context) => AlertDialog(
+                                  title: Text("Important"),
+                                  content: Text(
+                                      "this product needs a prescription to buy,upload here"),
+                                  actions: [
+                                    TextButton(
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                        },
+                                        child: Container(
+                                          child: Text("cancel"),
+                                        )),
+                                    TextButton(
+                                        onPressed: () {},
+                                        child: Container(
+                                          child: Text("upload now"),
+                                        )),
+                                  ],
+                                ),
+                              );
+                            } else {
+                              ref
+                                  .read(AddToCartScreenStateNotifierProvider
+                                      .notifier)
+                                  .onAddToCart(
+                                      userId: FirebaseAuth
+                                          .instance.currentUser!.uid,
+                                      total_price: price,
+                                      category: category,
+                                      details: details,
+                                      image_url: image_url,
+                                      product_name: product_name,
+                                      usage: usage,
+                                      price: price,
+                                      stocks: stocks,
+                                      requiresPrescription: isPresNeeded,
+                                      itemcount: 1,
+                                      context: context);
+                            }
                           },
                           text: "Add to cart",
                         ),
@@ -176,7 +203,46 @@ class ProductScreen extends ConsumerWidget {
                       SizedBox(width: screenWidth * 0.02),
                       Expanded(
                         child: customButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            if (isPresNeeded) {
+                              showDialog(
+                                context: context,
+                                builder: (context) => AlertDialog(
+                                  title: Text("Important"),
+                                  content: Text(
+                                      "this product needs a prescription to buy,upload here"),
+                                  actions: [
+                                    TextButton(
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                        },
+                                        child: Container(
+                                          child: Text("cancel"),
+                                        )),
+                                    TextButton(
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      UploadPrescriptionScreen(ProductName: product_name,)));
+                                        },
+                                        child: Container(
+                                          child: Text("upload now"),
+                                        )),
+                                  ],
+                                ),
+                              );
+                            } else {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        ProductOrderingScreen(),
+                                  ));
+                            }
+                          },
                           text: "Buy now",
                         ),
                       ),

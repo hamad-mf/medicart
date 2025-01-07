@@ -3,8 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:medicart/Controller/Product%20Adding%20Screen%20Controller/product_adding_screen_controller.dart';
 import 'package:medicart/Controller/Product%20Adding%20Screen%20Controller/product_adding_screen_state.dart';
 import 'package:medicart/Utils/color_constants.dart';
-import 'package:medicart/View/Common%20Screens/Profile%20Selection%20Screen/profile_selecction_screen.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 // ignore: must_be_immutable
 class ProductAddingScreen extends ConsumerWidget {
