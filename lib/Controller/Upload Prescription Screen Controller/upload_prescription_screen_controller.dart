@@ -2,17 +2,20 @@ import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:medicart/Controller/Upload%20Prescription%20Screen%20Controller/upload_prescription_screen_state.dart';
+import 'package:medicart/Utils/app_utils.dart';
 
-final uploadPrescriptionScreenControllerProvider =
-    StateNotifierProvider<UploadPrescriptionScreenController, UploadPrescriptionScreenState>(
-        (ref) => UploadPrescriptionScreenController());
+final uploadPrescriptionScreenControllerProvider = StateNotifierProvider<
+        UploadPrescriptionScreenController, UploadPrescriptionScreenState>(
+    (ref) => UploadPrescriptionScreenController());
 
-class UploadPrescriptionScreenController extends StateNotifier<UploadPrescriptionScreenState> {
+class UploadPrescriptionScreenController
+    extends StateNotifier<UploadPrescriptionScreenState> {
   UploadPrescriptionScreenController() : super(UploadPrescriptionScreenState());
 
   /// Function to pick an image from the gallery
@@ -26,7 +29,8 @@ class UploadPrescriptionScreenController extends StateNotifier<UploadPrescriptio
 
   /// Function to upload an image to Imgur
   Future<String?> uploadImageToImgur(File imageFile) async {
-    const String clientId = '71ef9f46d10df0e'; // Replace with your Imgur Client ID
+    const String clientId =
+        '71ef9f46d10df0e'; // Replace with your Imgur Client ID
     try {
       final request = http.MultipartRequest(
         'POST',
@@ -59,33 +63,33 @@ class UploadPrescriptionScreenController extends StateNotifier<UploadPrescriptio
     required String userId,
     required String productName,
     required String imageUrl,
+    required BuildContext context,
   }) async {
     try {
-      final prescriptionRef = FirebaseFirestore.instance.collection('prescriptions');
+      final prescriptionRef =
+          FirebaseFirestore.instance.collection('prescriptions').doc(userId);
+
+      final onePrescription = prescriptionRef.collection('prescription');
 
       // Check if a prescription already exists for the same user and product
-      final existingPrescription = await prescriptionRef
-          .where('user_id', isEqualTo: userId)
-          .where('productName', isEqualTo: productName)
-          .get();
+      final existingPrescription = await onePrescription
+    .where('user_id', isEqualTo: userId)
+    .where('product_name', isEqualTo: productName)
+    .get();
 
       if (existingPrescription.docs.isEmpty) {
         // Add a new prescription entry
-        await prescriptionRef.add({
-          'user_id': userId,
-          'productName': productName,
-          'prescription_url': imageUrl,
-          'uploaded_at': FieldValue.serverTimestamp(),
-        });
+        await onePrescription.add({
+    'user_id': userId,
+    'product_name': productName, // Make sure this matches consistently
+    'prescription_url': imageUrl,
+    'uploaded_at': FieldValue.serverTimestamp(),
+  });
         log('Prescription saved to Firestore.');
       } else {
         // Update the existing prescription entry
-        final docId = existingPrescription.docs.first.id;
-        await prescriptionRef.doc(docId).update({
-          'prescription_url': imageUrl,
-          'uploaded_at': FieldValue.serverTimestamp(),
-        });
-        log('Existing prescription updated in Firestore.');
+        AppUtils.showSnackbar(
+            context: context, message: "already added", bgcolor: Colors.red);
       }
     } catch (e) {
       log('Error saving prescription to Firestore: $e');
@@ -96,6 +100,7 @@ class UploadPrescriptionScreenController extends StateNotifier<UploadPrescriptio
   Future<void> uploadAndSavePrescription({
     required String userId,
     required String productName,
+    required BuildContext context
   }) async {
     final selectedImage = state.selectedImage;
     if (selectedImage == null) {
@@ -111,6 +116,7 @@ class UploadPrescriptionScreenController extends StateNotifier<UploadPrescriptio
       if (imageUrl != null) {
         // Save the prescription details to Firestore
         await savePrescriptionToFirestore(
+          context: context,
           userId: userId,
           productName: productName,
           imageUrl: imageUrl,

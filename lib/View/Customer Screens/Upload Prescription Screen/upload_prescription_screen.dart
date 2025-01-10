@@ -1,4 +1,3 @@
-import 'dart:math';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -42,7 +41,7 @@ class UploadPrescriptionScreen extends ConsumerWidget {
   onPressed: uploadState.isUploading
       ? null // Disable the button while uploading
       : () async {
-          await uploadController.uploadAndSavePrescription(userId: uid,productName: ProductName);
+          await uploadController.uploadAndSavePrescription(userId: uid,productName: ProductName,context: context);
 
           // Show success message after the upload
           if (uploadState.uploadedImageUrl != null) {
