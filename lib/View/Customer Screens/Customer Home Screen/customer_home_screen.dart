@@ -4,10 +4,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:medicart/Utils/color_constants.dart';
-import 'package:medicart/View/Common%20Screens/Profile%20Selection%20Screen/profile_selecction_screen.dart';
 import 'package:medicart/View/Customer%20Screens/Product%20Screen/product_screen.dart';
 import 'package:medicart/View/Customer%20Screens/View%20By%20Category%20Screen/view_by_category_screen.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class CustomerHomeScreen extends ConsumerStatefulWidget {
@@ -27,15 +25,7 @@ class _CustomerHomeScreenState extends ConsumerState<CustomerHomeScreen> {
   final int _numPages = 3;
   Timer? _timer;
 
-  Future<void> _logout() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setBool('isLoggedIn', false); // Set isLoggedIn to false
 
-    // Navigate back to LoginScreen
-    Navigator.of(context).pushReplacement(
-      MaterialPageRoute(builder: (_) => ProfileSelecctionScreen()),
-    );
-  }
 
   @override
   void initState() {
@@ -72,7 +62,7 @@ class _CustomerHomeScreenState extends ConsumerState<CustomerHomeScreen> {
         actions: [
           InkWell(
             onTap: () {
-              _logout();
+             
             },
             child: Icon(
               Icons.notifications,

@@ -2,6 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:medicart/Utils/color_constants.dart';
+import 'package:medicart/View/Common%20Screens/Profile%20Selection%20Screen/profile_selecction_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -20,7 +22,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   void getCurrentUserUID() {
-    final User? user = FirebaseAuth.instance.currentUser; // Get the current user
+    final User? user =
+        FirebaseAuth.instance.currentUser; // Get the current user
     if (user != null) {
       setState(() {
         uid = user.uid; // Retrieve the UID
@@ -28,6 +31,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
     } else {
       print("No user is currently signed in.");
     }
+  }
+
+  Future<void> _logout() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('isLoggedIn', false); // Set isLoggedIn to false
+
+    // Navigate back to LoginScreen
+    Navigator.of(context).pushReplacement(
+      MaterialPageRoute(builder: (_) => ProfileSelecctionScreen()),
+    );
   }
 
   @override
@@ -40,11 +53,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }
 
     final Stream<DocumentSnapshot<Map<String, dynamic>>> detailsStream =
-        FirebaseFirestore.instance.collection('profile_details').doc(uid).snapshots();
+        FirebaseFirestore.instance
+            .collection('profile_details')
+            .doc(uid)
+            .snapshots();
 
     return Scaffold(
       appBar: AppBar(
         title: Text("My Profile"),
+        actions: [
+          IconButton(
+              onPressed: () {
+                _logout();
+              },
+              icon: Icon(Icons.exit_to_app))
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -78,20 +101,23 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     Center(
                       child: Text(
                         data['full_name'] ?? "Name",
-                        style: TextStyle(fontSize: 25, fontWeight: FontWeight.w600),
+                        style: TextStyle(
+                            fontSize: 25, fontWeight: FontWeight.w600),
                       ),
                     ),
                     SizedBox(height: 20),
                     Text(
                       "Personal Details",
-                      style: TextStyle(color: ColorConstants.mainblack, fontSize: 18),
+                      style: TextStyle(
+                          color: ColorConstants.mainblack, fontSize: 18),
                     ),
                     SizedBox(height: 10),
                     Row(
                       children: [
                         Text(
                           "Full Name: ",
-                          style: TextStyle(fontSize: 16, color: ColorConstants.mainred),
+                          style: TextStyle(
+                              fontSize: 16, color: ColorConstants.mainred),
                         ),
                         Text(
                           data['full_name'] ?? "",
@@ -104,7 +130,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       children: [
                         Text(
                           "Email: ",
-                          style: TextStyle(fontSize: 16, color: ColorConstants.mainred),
+                          style: TextStyle(
+                              fontSize: 16, color: ColorConstants.mainred),
                         ),
                         Text(
                           data['email'] ?? "",
@@ -117,7 +144,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       children: [
                         Text(
                           "Phone Number: ",
-                          style: TextStyle(fontSize: 16, color: ColorConstants.mainred),
+                          style: TextStyle(
+                              fontSize: 16, color: ColorConstants.mainred),
                         ),
                         Text(
                           data['phn']?.toString() ?? "",
@@ -128,14 +156,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     SizedBox(height: 20),
                     Text(
                       "Address Details",
-                      style: TextStyle(color: ColorConstants.mainblack, fontSize: 18),
+                      style: TextStyle(
+                          color: ColorConstants.mainblack, fontSize: 18),
                     ),
                     SizedBox(height: 10),
                     Row(
                       children: [
                         Text(
                           "City: ",
-                          style: TextStyle(fontSize: 16, color: ColorConstants.mainred),
+                          style: TextStyle(
+                              fontSize: 16, color: ColorConstants.mainred),
                         ),
                         Text(
                           shippingAddress['city'] ?? "",
@@ -148,7 +178,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       children: [
                         Text(
                           "Country: ",
-                          style: TextStyle(fontSize: 16, color: ColorConstants.mainred),
+                          style: TextStyle(
+                              fontSize: 16, color: ColorConstants.mainred),
                         ),
                         Text(
                           shippingAddress['country'] ?? "",
@@ -161,7 +192,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       children: [
                         Text(
                           "Pin Code: ",
-                          style: TextStyle(fontSize: 16, color: ColorConstants.mainred),
+                          style: TextStyle(
+                              fontSize: 16, color: ColorConstants.mainred),
                         ),
                         Text(
                           shippingAddress['pin_code'] ?? "",
@@ -174,7 +206,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       children: [
                         Text(
                           "State: ",
-                          style: TextStyle(fontSize: 16, color: ColorConstants.mainred),
+                          style: TextStyle(
+                              fontSize: 16, color: ColorConstants.mainred),
                         ),
                         Text(
                           shippingAddress['state'] ?? "",
@@ -187,7 +220,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       children: [
                         Text(
                           "Street Address: ",
-                          style: TextStyle(fontSize: 16, color: ColorConstants.mainred),
+                          style: TextStyle(
+                              fontSize: 16, color: ColorConstants.mainred),
                         ),
                         Text(
                           shippingAddress['street_address'] ?? "",
