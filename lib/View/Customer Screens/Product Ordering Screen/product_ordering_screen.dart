@@ -2,8 +2,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
+// ignore: must_be_immutable
 class ProductOrderingScreen extends StatefulWidget {
-  const ProductOrderingScreen({super.key});
+  String imgUrl;
+
+  ProductOrderingScreen({super.key, required this.imgUrl});
 
   @override
   State<ProductOrderingScreen> createState() => _ProductOrderingScreenState();
@@ -125,11 +128,35 @@ class _ProductOrderingScreenState extends State<ProductOrderingScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            data['full_name'] ?? "Name",
+                            data['full_name'],
                             style: TextStyle(
                                 fontSize: 25, fontWeight: FontWeight.w600),
                           ),
-                          Text(shippingAddress['city'])
+                          Row(
+                            children: [
+                              Text("${shippingAddress['city']},"),
+                              SizedBox(
+                                width: 7,
+                              ),
+                              Text(shippingAddress['state']),
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              Text("${shippingAddress['country']},"),
+                              SizedBox(
+                                width: 7,
+                              ),
+                              Text(shippingAddress['pin_code']),
+                            ],
+                          ),
+                          Text(shippingAddress['street_address']),
+                          Text(
+                            data['full_name'],
+                          ),
+                          Text(
+                            data['phn'].toString(),
+                          )
                         ],
                       );
                     } else {
@@ -142,6 +169,16 @@ class _ProductOrderingScreenState extends State<ProductOrderingScreen> {
                     }
                   },
                 ),
+                SizedBox(
+                  height: 20,
+                ),
+                Container(
+                  width: 50,
+                  height: 70,
+                  decoration: BoxDecoration(
+                      image:
+                          DecorationImage(image: NetworkImage(widget.imgUrl))),
+                )
               ],
             ),
           ),

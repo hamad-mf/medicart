@@ -181,7 +181,9 @@ class ProductScreen extends ConsumerWidget {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => ProductOrderingScreen(),
+                                  builder: (context) => ProductOrderingScreen(
+                                    imgUrl: image_url,
+                                  ),
                                 ));
                           },
                           text: "Buy now",
