@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:medicart/Utils/color_constants.dart';
 
 // ignore: must_be_immutable
 class ProductOrderingScreen extends StatefulWidget {
@@ -35,6 +36,8 @@ class _ProductOrderingScreenState extends State<ProductOrderingScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
     // Ensure uid is not null before creating the Firestore stream
     if (uid == null) {
       return Scaffold(
@@ -63,33 +66,40 @@ class _ProductOrderingScreenState extends State<ProductOrderingScreen> {
           // Progress Bar Row
           Row(
             children: [
-              Padding(padding: EdgeInsets.symmetric(horizontal: 16)),
+              Padding(
+                  padding:
+                      EdgeInsets.symmetric(horizontal: screenWidth * 0.04)),
               Icon(
                 Icons.check_circle,
-                size: 23,
+                size: screenWidth * 0.06,
               ),
               Padding(
-                padding: EdgeInsets.symmetric(horizontal: 10.0),
-                child:
-                    Container(height: 1.0, width: 110.0, color: Colors.black),
+                padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.03),
+                child: Container(
+                    height: 1.0,
+                    width: screenWidth * 0.27,
+                    color: Colors.black),
               ),
               Icon(
                 Icons.check_circle_outline,
-                size: 23,
+                size: screenWidth * 0.06,
               ),
               Padding(
-                padding: EdgeInsets.symmetric(horizontal: 10.0),
-                child:
-                    Container(height: 1.0, width: 110.0, color: Colors.black),
+                padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.03),
+                child: Container(
+                    height: 1.0,
+                    width: screenWidth * 0.27,
+                    color: Colors.black),
               ),
               Icon(
                 Icons.check_circle_outline,
-                size: 23,
+                size: screenWidth * 0.06,
               ),
             ],
           ),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 20),
+            padding: EdgeInsets.symmetric(
+                horizontal: screenWidth * 0.04, vertical: screenHeight * 0.03),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -97,14 +107,14 @@ class _ProductOrderingScreenState extends State<ProductOrderingScreen> {
                   children: [
                     Text(
                       "Deliver to:",
-                      style:
-                          TextStyle(fontSize: 19, fontWeight: FontWeight.bold),
+                      style: TextStyle(
+                          fontSize: screenWidth * 0.05,
+                          fontWeight: FontWeight.bold),
                     ),
                     Spacer(),
                     TextButton(onPressed: () {}, child: Text("Change"))
                   ],
                 ),
-                // StreamBuilder for Firestore data
                 StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
                   stream: detailsStream,
                   builder: (context, snapshot) {
@@ -130,13 +140,14 @@ class _ProductOrderingScreenState extends State<ProductOrderingScreen> {
                           Text(
                             data['full_name'],
                             style: TextStyle(
-                                fontSize: 25, fontWeight: FontWeight.w600),
+                                fontSize: screenWidth * 0.06,
+                                fontWeight: FontWeight.w600),
                           ),
                           Row(
                             children: [
                               Text("${shippingAddress['city']},"),
                               SizedBox(
-                                width: 7,
+                                width: screenWidth * 0.02,
                               ),
                               Text(shippingAddress['state']),
                             ],
@@ -145,7 +156,7 @@ class _ProductOrderingScreenState extends State<ProductOrderingScreen> {
                             children: [
                               Text("${shippingAddress['country']},"),
                               SizedBox(
-                                width: 7,
+                                width: screenWidth * 0.02,
                               ),
                               Text(shippingAddress['pin_code']),
                             ],
@@ -163,21 +174,25 @@ class _ProductOrderingScreenState extends State<ProductOrderingScreen> {
                       return Center(
                         child: Text(
                           'No data found',
-                          style: TextStyle(fontSize: 16),
+                          style: TextStyle(fontSize: screenWidth * 0.04),
                         ),
                       );
                     }
                   },
                 ),
                 SizedBox(
-                  height: 20,
+                  height: screenHeight * 0.02,
                 ),
                 Container(
-                  width: 50,
-                  height: 70,
+                  width: screenWidth * 0.23,
+                  height: screenHeight * 0.14,
                   decoration: BoxDecoration(
-                      image:
-                          DecorationImage(image: NetworkImage(widget.imgUrl))),
+                      color: ColorConstants.cartCardwhite,
+                      image: DecorationImage(
+                          image: NetworkImage(
+                            widget.imgUrl,
+                          ),
+                          fit: BoxFit.cover)),
                 )
               ],
             ),
