@@ -183,6 +183,8 @@ class ProductScreen extends ConsumerWidget {
                                 MaterialPageRoute(
                                   builder: (context) => ProductOrderingScreen(
                                     imgUrl: image_url,
+                                    price: price,
+                                    proName: product_name,
                                   ),
                                 ));
                           },

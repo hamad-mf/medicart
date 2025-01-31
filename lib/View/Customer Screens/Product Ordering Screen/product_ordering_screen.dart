@@ -1,200 +1,291 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:medicart/Controller/Product%20Ordering%20Screen%20Controller/product_ordering_screen_controller.dart';
+import 'package:medicart/View/Customer%20Screens/Payment%20Screen/payment_screen.dart';
+import 'package:medicart/View/Customer%20Screens/Product%20Ordering%20Screen/widgets/address_details.dart';
+import 'package:medicart/View/Customer%20Screens/Product%20Ordering%20Screen/widgets/progress_bar.dart';
+
 import 'package:medicart/Utils/color_constants.dart';
 
-// ignore: must_be_immutable
-class ProductOrderingScreen extends StatefulWidget {
-  String imgUrl;
+class ProductOrderingScreen extends ConsumerWidget {
+  final String imgUrl;
+  final num price;
+  final String proName;
 
-  ProductOrderingScreen({super.key, required this.imgUrl});
-
-  @override
-  State<ProductOrderingScreen> createState() => _ProductOrderingScreenState();
-}
-
-class _ProductOrderingScreenState extends State<ProductOrderingScreen> {
-  String? uid;
+  const ProductOrderingScreen(
+      {super.key,
+      required this.imgUrl,
+      required this.proName,
+      required this.price});
 
   @override
-  void initState() {
-    super.initState();
-    getCurrentUserUID();
-  }
-
-  void getCurrentUserUID() {
-    final User? user =
-        FirebaseAuth.instance.currentUser; // Get the current user
-    if (user != null) {
-      setState(() {
-        uid = user.uid; // Retrieve the UID
-      });
-    } else {
-      print("No user is currently signed in.");
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
-    // Ensure uid is not null before creating the Firestore stream
+
+    final uid = ref.watch(userUIDProvider);
+    final dropdownValue = ref.watch(dropdownValueProvider);
+
+    // Calculate total amount based on quantity
+    final totalAmount = price * (int.tryParse(dropdownValue ?? '1') ?? 1);
+
     if (uid == null) {
       return Scaffold(
-        appBar: AppBar(
-          title: Text("Order Summary"),
-        ),
-        body: Center(
-          child: Text("User is not signed in."),
-        ),
+        appBar: AppBar(title: const Text("Order Summary")),
+        body: const Center(child: Text("User is not signed in.")),
       );
     }
 
-    final Stream<DocumentSnapshot<Map<String, dynamic>>> detailsStream =
-        FirebaseFirestore.instance
-            .collection('profile_details')
-            .doc(uid)
-            .snapshots();
+    final profileDetailsStream = ref.watch(profileDetailsProvider(uid));
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text("Order Summary"),
-      ),
+      appBar: AppBar(title: const Text("Order Summary")),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Progress Bar Row
-          Row(
-            children: [
-              Padding(
-                  padding:
-                      EdgeInsets.symmetric(horizontal: screenWidth * 0.04)),
-              Icon(
-                Icons.check_circle,
-                size: screenWidth * 0.06,
-              ),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.03),
-                child: Container(
-                    height: 1.0,
-                    width: screenWidth * 0.27,
-                    color: Colors.black),
-              ),
-              Icon(
-                Icons.check_circle_outline,
-                size: screenWidth * 0.06,
-              ),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.03),
-                child: Container(
-                    height: 1.0,
-                    width: screenWidth * 0.27,
-                    color: Colors.black),
-              ),
-              Icon(
-                Icons.check_circle_outline,
-                size: screenWidth * 0.06,
-              ),
-            ],
-          ),
-          Padding(
-            padding: EdgeInsets.symmetric(
-                horizontal: screenWidth * 0.04, vertical: screenHeight * 0.03),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
+          // Progress Bar
+          ProgressBar(screenWidth: screenWidth),
+          Expanded(
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: EdgeInsets.symmetric(
+                    horizontal: screenWidth * 0.04,
+                    vertical: screenHeight * 0.03),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      "Deliver to:",
-                      style: TextStyle(
-                          fontSize: screenWidth * 0.05,
-                          fontWeight: FontWeight.bold),
+                    // Rest of your UI code...
+                    // Deliver To Section
+                    Row(
+                      children: [
+                        Text(
+                          "Deliver to:",
+                          style: TextStyle(
+                              fontSize: screenWidth * 0.05,
+                              fontWeight: FontWeight.bold),
+                        ),
+                        const Spacer(),
+                        TextButton(
+                            onPressed: () {}, child: const Text("Change"))
+                      ],
                     ),
-                    Spacer(),
-                    TextButton(onPressed: () {}, child: Text("Change"))
+
+                    // StreamBuilder for Profile Details
+                    profileDetailsStream.when(
+                      data: (snapshot) {
+                        if (snapshot == null || !snapshot.exists) {
+                          return const Text('No data found');
+                        }
+                        final data = snapshot.data()!;
+                        final shippingAddress = data['shipping_address'] ?? {};
+
+                        // Store address details for payment screen
+                        final name = data['full_name'] ?? '';
+                        final phone = data['phn']?.toString() ?? '';
+                        final city = shippingAddress['city'] ?? '';
+                        final state = shippingAddress['state'] ?? '';
+                        final country = shippingAddress['country'] ?? '';
+                        final pinCode = shippingAddress['pin_code'] ?? '';
+                        final streetAddress =
+                            shippingAddress['street_address'] ?? '';
+
+                        return Column(
+                          children: [
+                            AddressDetails(
+                              name: name,
+                              phone: phone,
+                              city: city,
+                              state: state,
+                              country: country,
+                              pinCode: pinCode,
+                              streetAddress: streetAddress,
+                              screenWidth: screenWidth,
+                            ),
+
+                            // Rest of your UI code...
+// Product Image
+                            SizedBox(height: screenHeight * 0.02),
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Container(
+                                  width: screenWidth * 0.23,
+                                  height: screenHeight * 0.14,
+                                  decoration: BoxDecoration(
+                                    color: ColorConstants.cartCardwhite,
+                                    image: DecorationImage(
+                                      image: NetworkImage(imgUrl),
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: screenWidth * 0.02,
+                                ),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      proName,
+                                      style: TextStyle(
+                                          fontSize: screenWidth * 0.05,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    SizedBox(
+                                      height: screenHeight * 0.02,
+                                    ),
+                                    Text(
+                                      "${price.toString()}₹",
+                                      style: TextStyle(
+                                          fontSize: screenWidth * 0.05,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: screenHeight * 0.01),
+                            Row(
+                              children: [
+                                Text(
+                                  "Quantity: ",
+                                  style: TextStyle(
+                                      fontSize: screenWidth * 0.04,
+                                      fontWeight: FontWeight.w500),
+                                ),
+                                DropdownButton<String>(
+                                  value: dropdownValue,
+                                  items: qnt.map((nums) {
+                                    return DropdownMenuItem<String>(
+                                      value: nums,
+                                      child: Text(nums),
+                                    );
+                                  }).toList(),
+                                  onChanged: (value) {
+                                    ref
+                                        .read(dropdownValueProvider.notifier)
+                                        .state = value;
+                                  },
+                                  hint: const Text("Select"),
+                                ),
+                              ],
+                            ),
+
+                            // Bottom payment button
+                            SizedBox(height: screenHeight * 0.25),
+                            Container(
+                              padding: EdgeInsets.all(screenWidth * 0.04),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.grey.withOpacity(0.2),
+                                    spreadRadius: 1,
+                                    blurRadius: 5,
+                                    offset: const Offset(0, -2),
+                                  ),
+                                ],
+                              ),
+                              child: Column(
+                                children: [
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        "Total Amount:",
+                                        style: TextStyle(
+                                          fontSize: screenWidth * 0.045,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      Text(
+                                        "₹${totalAmount.toStringAsFixed(2)}",
+                                        style: TextStyle(
+                                          fontSize: screenWidth * 0.045,
+                                          fontWeight: FontWeight.bold,
+                                          color: ColorConstants.mainblack,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(height: screenHeight * 0.02),
+                                  SizedBox(
+                                    width: double.infinity,
+                                    child: ElevatedButton(
+                                      onPressed: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) => PaymentScreen(
+                                              quantity: dropdownValue ?? '1',
+                                              state: state,
+                                              country: country,
+                                              pin_code: pinCode,
+                                              street_address: streetAddress,
+                                              city: city,
+                                              phn: phone,
+                                              name: name,
+                                              amount: totalAmount,
+                                              product_name: proName,
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                      style: ButtonStyle(
+                                        textStyle: WidgetStatePropertyAll(
+                                          TextStyle(
+                                            color: ColorConstants.mainwhite,
+                                            fontWeight: FontWeight.w600,
+                                            fontSize: 18,
+                                          ),
+                                        ),
+                                        minimumSize:
+                                            const WidgetStatePropertyAll(
+                                          Size(175, 50),
+                                        ),
+                                        shape: WidgetStatePropertyAll(
+                                          RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(12),
+                                          ),
+                                        ),
+                                        foregroundColor: WidgetStatePropertyAll(
+                                          Colors.white,
+                                        ),
+                                        backgroundColor: WidgetStatePropertyAll(
+                                          ColorConstants.appbar,
+                                        ),
+                                      ),
+                                      child: Text(
+                                        "Continue",
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: screenWidth * 0.045,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        );
+                      },
+                      loading: () => const Center(
+                        child: CircularProgressIndicator(),
+                      ),
+                      error: (error, stackTrace) => Center(
+                        child: Text(
+                          'Error: $error',
+                          style: const TextStyle(color: Colors.red),
+                        ),
+                      ),
+                    ),
                   ],
                 ),
-                StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
-                  stream: detailsStream,
-                  builder: (context, snapshot) {
-                    if (snapshot.hasError) {
-                      return Center(
-                        child: Text(
-                          'Something went wrong',
-                          style: TextStyle(color: Colors.red),
-                        ),
-                      );
-                    }
-
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return Center(child: CircularProgressIndicator());
-                    }
-
-                    if (snapshot.hasData && snapshot.data!.data() != null) {
-                      final data = snapshot.data!.data()!;
-                      final shippingAddress = data['shipping_address'] ?? {};
-                      return Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            data['full_name'],
-                            style: TextStyle(
-                                fontSize: screenWidth * 0.06,
-                                fontWeight: FontWeight.w600),
-                          ),
-                          Row(
-                            children: [
-                              Text("${shippingAddress['city']},"),
-                              SizedBox(
-                                width: screenWidth * 0.02,
-                              ),
-                              Text(shippingAddress['state']),
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              Text("${shippingAddress['country']},"),
-                              SizedBox(
-                                width: screenWidth * 0.02,
-                              ),
-                              Text(shippingAddress['pin_code']),
-                            ],
-                          ),
-                          Text(shippingAddress['street_address']),
-                          Text(
-                            data['full_name'],
-                          ),
-                          Text(
-                            data['phn'].toString(),
-                          )
-                        ],
-                      );
-                    } else {
-                      return Center(
-                        child: Text(
-                          'No data found',
-                          style: TextStyle(fontSize: screenWidth * 0.04),
-                        ),
-                      );
-                    }
-                  },
-                ),
-                SizedBox(
-                  height: screenHeight * 0.02,
-                ),
-                Container(
-                  width: screenWidth * 0.23,
-                  height: screenHeight * 0.14,
-                  decoration: BoxDecoration(
-                      color: ColorConstants.cartCardwhite,
-                      image: DecorationImage(
-                          image: NetworkImage(
-                            widget.imgUrl,
-                          ),
-                          fit: BoxFit.cover)),
-                )
-              ],
+              ),
             ),
           ),
         ],
