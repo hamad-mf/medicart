@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
+import 'package:medicart/View/Customer%20Screens/Custom%20Bottom%20Navbar%20Screen/custom_bottom_navbar_screen.dart';
 import 'package:medicart/View/Customer%20Screens/Customer%20Home%20Screen/customer_home_screen.dart';
 
 class OrderSuccessScreen extends StatefulWidget {
@@ -18,7 +19,7 @@ class _OrderSuccessScreenState extends State<OrderSuccessScreen> {
       Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute(
-          builder: (context) => CustomerHomeScreen(),
+          builder: (context) => CustomBottomNavbarScreen(),
         ),
         (route) => false,
       );

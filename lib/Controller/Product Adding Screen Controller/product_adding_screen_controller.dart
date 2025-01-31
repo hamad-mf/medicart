@@ -13,20 +13,17 @@ class ProductAddingScreenController
     extends StateNotifier<ProductAddingScreenState> {
   ProductAddingScreenController() : super(ProductAddingScreenState());
 
-void toggleRequiresPrescription() {
+  void toggleRequiresPrescription() {
     state = state.copywith(
       requiresPrescription: !state.requiresPrescription,
     );
   }
 
-
-void setRequiresPrescription(bool value) {
+  void setRequiresPrescription(bool value) {
     state = state.copywith(
       requiresPrescription: value,
     );
   }
-
-
 
   Future<void> onProductAdd({
     required String category,
@@ -72,6 +69,7 @@ void setRequiresPrescription(bool value) {
               message: "Added successfully",
               bgcolor: Colors.green);
         } else {
+          log("product already added");
           AppUtils.showSnackbar(
               context: context, message: "product already added");
         }
@@ -81,7 +79,9 @@ void setRequiresPrescription(bool value) {
       }
       state = state.copywith(isloading: false);
     } else {
-      AppUtils.showSnackbar(context: context, message: "fields cannot be empty");
+      log("fields cannot be empty");
+      AppUtils.showSnackbar(
+          context: context, message: "fields cannot be empty");
     }
   }
-}
+}                                                                                                                                                                                                                                   

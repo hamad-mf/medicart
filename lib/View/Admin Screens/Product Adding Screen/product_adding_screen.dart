@@ -319,6 +319,7 @@ class ProductAddingScreen extends ConsumerWidget {
                             pricectrl.clear();
                             usagectrl.clear();
                             stocksctrl.clear();
+                            
                             ref
                                 .read(ProductAddingScreenStateNotifierProvider
                                     .notifier)

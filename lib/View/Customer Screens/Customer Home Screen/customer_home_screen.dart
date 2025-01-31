@@ -365,7 +365,7 @@ class _CustomerHomeScreenState extends ConsumerState<CustomerHomeScreen> {
                               MaterialPageRoute(
                                   builder: (context) => ProductScreen(
                                         isPresNeeded: selectedProduct[
-                                            "prescription_required"],
+                                            "requiresPrescription"],
                                         product_name:
                                             selectedProduct["product_name"],
                                         image_url: selectedProduct["image_url"],
