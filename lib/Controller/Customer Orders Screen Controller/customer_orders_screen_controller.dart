@@ -17,4 +17,14 @@ class CustomerOrdersScreenController
         .collection('products')
         .snapshots();
   }
+
+  Future<void> cancelAnItem(String userId, String orderedItemId) async {
+    final ordersRef = FirebaseFirestore.instance
+        .collection('orders')
+        .doc(userId)
+        .collection('products');
+
+    //delete that product
+    await ordersRef.doc(orderedItemId).delete();
+  }
 }

@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:medicart/Utils/color_constants.dart';
-import 'package:medicart/View/Admin%20Screens/Orders%20Screen/orders_screen.dart';
 import 'package:medicart/View/Common%20Screens/Profile%20Selection%20Screen/profile_selecction_screen.dart';
 import 'package:medicart/View/Customer%20Screens/Customer%20Orders%20Screen/customer_orders_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';

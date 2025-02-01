@@ -151,7 +151,7 @@ class _ViewByCategoryScreenState extends ConsumerState<ViewByCategoryScreen> {
                                               stocks: product["stocks"],
                                               usage: product["usage"],
                                               isPresNeeded: product[
-                                                  "prescription_required"],
+                                                  "requiresPrescription"],
                                             ),
                                           ),
                                         );
