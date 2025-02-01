@@ -219,6 +219,7 @@ class ProductOrderingScreen extends ConsumerWidget {
                                           MaterialPageRoute(
                                             builder: (context) => PaymentScreen(
                                               quantity: dropdownValue ?? '1',
+                                              img_url: imgUrl,
                                               state: state,
                                               country: country,
                                               pin_code: pinCode,

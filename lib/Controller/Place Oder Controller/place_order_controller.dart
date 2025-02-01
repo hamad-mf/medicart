@@ -11,6 +11,7 @@ class PlaceOrderController extends StateNotifier<PlaceOrderState> {
   PlaceOrderController() : super(PlaceOrderState());
 
   Future<void> onPlaceOrder({
+    required String img_url,
     required String userId,
     required String name,
     required String phn,
@@ -26,6 +27,7 @@ class PlaceOrderController extends StateNotifier<PlaceOrderState> {
     //check empty
     if (name.isEmpty ||
         phn.isEmpty ||
+        img_url.isEmpty ||
         product_name.isEmpty ||
         State.isEmpty ||
         city.isEmpty ||
@@ -50,6 +52,7 @@ class PlaceOrderController extends StateNotifier<PlaceOrderState> {
       final productRef = ordersRef.collection('products');
 
       await productRef.add({
+        'img_url':img_url,
         'userid': userId,
         'name': name,
         'phone_number': phn,

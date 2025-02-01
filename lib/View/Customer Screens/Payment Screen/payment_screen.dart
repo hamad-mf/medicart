@@ -19,9 +19,11 @@ class PaymentScreen extends ConsumerWidget {
   String street_address;
   String quantity;
   String product_name;
+  String img_url;
 
   PaymentScreen({
     super.key,
+    required this.img_url,
     required this.product_name,
     required this.quantity,
     required this.state,
@@ -173,6 +175,7 @@ class PaymentScreen extends ConsumerWidget {
                           ref
                               .read(PlaceOrderStateNotifierProvider.notifier)
                               .onPlaceOrder(
+                                img_url: img_url,
                                   userId:
                                       FirebaseAuth.instance.currentUser!.uid,
                                   name: name,

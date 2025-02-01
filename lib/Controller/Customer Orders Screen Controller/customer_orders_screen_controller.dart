@@ -1,0 +1,20 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:medicart/Controller/Customer%20Orders%20Screen%20Controller/customer_orders_screen_state.dart';
+
+final CustomerOrdersScreenStateNotifierProvider = StateNotifierProvider<
+    CustomerOrdersScreenController,
+    CustomerOrdersScreenState>((ref) => CustomerOrdersScreenController());
+
+class CustomerOrdersScreenController
+    extends StateNotifier<CustomerOrdersScreenState> {
+  CustomerOrdersScreenController() : super(CustomerOrdersScreenState());
+
+  Stream<QuerySnapshot> getUserOrdersStream(String userid) {
+    return FirebaseFirestore.instance
+        .collection('orders')
+        .doc(userid)
+        .collection('products')
+        .snapshots();
+  }
+}

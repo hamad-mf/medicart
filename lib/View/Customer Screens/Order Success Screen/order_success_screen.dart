@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:medicart/View/Customer%20Screens/Custom%20Bottom%20Navbar%20Screen/custom_bottom_navbar_screen.dart';
-import 'package:medicart/View/Customer%20Screens/Customer%20Home%20Screen/customer_home_screen.dart';
 
 class OrderSuccessScreen extends StatefulWidget {
   const OrderSuccessScreen({super.key});
@@ -14,7 +13,7 @@ class _OrderSuccessScreenState extends State<OrderSuccessScreen> {
   @override
   void initState() {
     super.initState();
-    // Navigate to home screen after 5 seconds
+   
     Future.delayed(const Duration(seconds: 3), () {
       Navigator.pushAndRemoveUntil(
         context,

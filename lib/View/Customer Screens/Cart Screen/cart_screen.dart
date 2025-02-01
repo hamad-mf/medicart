@@ -18,7 +18,6 @@ class CartScreen extends ConsumerWidget {
 
     final userCartStream = cartController.getUserCartStream(userId);
 
-
     return Scaffold(
       floatingActionButton: StreamBuilder<QuerySnapshot>(
         stream: userCartStream,
