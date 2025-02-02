@@ -5,12 +5,14 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:medicart/Controller/Place%20Oder%20Controller/place_order_state.dart';
 
 final PlaceOrderStateNotifierProvider =
-    StateNotifierProvider((ref) => PlaceOrderController());
+    StateNotifierProvider<PlaceOrderController, PlaceOrderState>(
+        (ref) => PlaceOrderController());
 
 class PlaceOrderController extends StateNotifier<PlaceOrderState> {
   PlaceOrderController() : super(PlaceOrderState());
 
   Future<void> onPlaceOrder({
+    required String payment_method,
     required String img_url,
     required String userId,
     required String name,
@@ -26,6 +28,7 @@ class PlaceOrderController extends StateNotifier<PlaceOrderState> {
   }) async {
     //check empty
     if (name.isEmpty ||
+        payment_method.isEmpty ||
         phn.isEmpty ||
         img_url.isEmpty ||
         product_name.isEmpty ||
@@ -52,7 +55,8 @@ class PlaceOrderController extends StateNotifier<PlaceOrderState> {
       final productRef = ordersRef.collection('products');
 
       await productRef.add({
-        'img_url':img_url,
+        'payment_method': payment_method,
+        'img_url': img_url,
         'userid': userId,
         'name': name,
         'phone_number': phn,
@@ -70,6 +74,6 @@ class PlaceOrderController extends StateNotifier<PlaceOrderState> {
     } catch (e) {
       log(e.toString());
     }
-      state = state.copywith(isloading: false);
+    state = state.copywith(isloading: false);
   }
 }

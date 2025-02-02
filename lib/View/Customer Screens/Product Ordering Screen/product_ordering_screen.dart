@@ -166,7 +166,7 @@ class ProductOrderingScreen extends ConsumerWidget {
                                         .read(dropdownValueProvider.notifier)
                                         .state = value;
                                   },
-                                  hint: const Text("Select"),
+                                  hint: const Text("1"),
                                 ),
                               ],
                             ),

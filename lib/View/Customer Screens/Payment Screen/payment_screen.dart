@@ -44,7 +44,7 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
-
+    final placeOrderState = ref.watch(PlaceOrderStateNotifierProvider);
     return Scaffold(
       appBar: AppBar(
         title: const Text('Select Payment Method'),
@@ -129,7 +129,8 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
                       subtitle: 'Pay using net banking',
                       icon: Icons.account_balance_wallet,
                       isSelected: selectedMethod == 'netbanking',
-                      onTap: () => setState(() => selectedMethod = 'netbanking'),
+                      onTap: () =>
+                          setState(() => selectedMethod = 'netbanking'),
                     ),
 
                     // Cash on Delivery
@@ -163,26 +164,27 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
             child: SizedBox(
               width: double.infinity,
               child: ElevatedButton(
-                onPressed: selectedMethod.isEmpty
+                onPressed: selectedMethod.isEmpty || placeOrderState.isloading 
                     ? null
                     : () async {
                         if (selectedMethod == 'cod') {
                           ref
                               .read(PlaceOrderStateNotifierProvider.notifier)
                               .onPlaceOrder(
-                                img_url: widget.img_url,
-                                userId:
-                                    FirebaseAuth.instance.currentUser!.uid,
-                                name: widget.name,
-                                phn: widget.phn,
-                                city: widget.city,
-                                State: widget.state,
-                                country: widget.country,
-                                pin_code: widget.pin_code,
-                                street_address: widget.street_address,
-                                amount: widget.amount,
-                                product_name: widget.product_name,
-                                qnt: widget.quantity);
+                                  payment_method: "COD",
+                                  img_url: widget.img_url,
+                                  userId:
+                                      FirebaseAuth.instance.currentUser!.uid,
+                                  name: widget.name,
+                                  phn: widget.phn,
+                                  city: widget.city,
+                                  State: widget.state,
+                                  country: widget.country,
+                                  pin_code: widget.pin_code,
+                                  street_address: widget.street_address,
+                                  amount: widget.amount,
+                                  product_name: widget.product_name,
+                                  qnt: widget.quantity);
 
                           Navigator.push(
                             context,
@@ -209,7 +211,9 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
                   padding: EdgeInsets.symmetric(vertical: screenHeight * 0.02),
                   backgroundColor: Theme.of(context).primaryColor,
                 ),
-                child: Text(
+                child: ref.watch(PlaceOrderStateNotifierProvider).isloading? CircularProgressIndicator() :
+                
+                Text(
                   selectedMethod == 'cod' ? 'Place Order' : 'Pay Now',
                   style: TextStyle(
                     color: Colors.white,

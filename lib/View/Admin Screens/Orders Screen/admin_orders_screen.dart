@@ -1,4 +1,4 @@
-import 'dart:developer';
+
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -16,7 +16,8 @@ class AdminOrdersScreen extends ConsumerWidget {
     final allOrdersController =
         ref.read(AdminOrdersScreenStateNotifierProvider.notifier);
 
-    final adminAllOrdersStream = allOrdersController.getAllOrderProductsStream();
+    final adminAllOrdersStream =
+        allOrdersController.getAllOrderProductsStream();
 
     return Scaffold(
       appBar: AppBar(
@@ -35,17 +36,14 @@ class AdminOrdersScreen extends ConsumerWidget {
               child: CircularProgressIndicator(),
             );
           }
-          // Fixed: Use .isEmpty on the list directly
+
           if (snapshot.data!.isEmpty) {
             return Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  SizedBox(
-                    height: screenHeight * 0.4,
-                  ),
                   Text(
-                    "No items ordered",
+                    "No Orders",
                     style: TextStyle(fontSize: screenWidth * 0.05),
                   ),
                 ],
@@ -53,10 +51,10 @@ class AdminOrdersScreen extends ConsumerWidget {
             );
           }
 
-          // Fixed: Iterate through the list directly
-          for (var doc in snapshot.data!) {
-            log(doc.data().toString());
-          }
+        //for debugging
+          // for (var doc in snapshot.data!) {
+          //   log(doc.data().toString());
+          // }
 
           return ListView.builder(
             shrinkWrap: true,
@@ -66,14 +64,15 @@ class AdminOrdersScreen extends ConsumerWidget {
             itemBuilder: (context, index) {
               // Fixed: Access via list index
               final allOrdersItem = snapshot.data![index];
-              final allOrdersItemData = allOrdersItem.data() as Map<String, dynamic>;
+              final allOrdersItemData =
+                  allOrdersItem.data() as Map<String, dynamic>;
 
               return Padding(
                 padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.03),
                 child: Container(
                   margin: EdgeInsets.symmetric(vertical: screenHeight * 0.01),
                   padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.03),
-                  height: screenHeight * 0.13,
+                  height: screenHeight * 0.11,
                   decoration: BoxDecoration(
                     color: ColorConstants.cartCardwhite,
                     borderRadius: BorderRadius.circular(12),
@@ -83,11 +82,12 @@ class AdminOrdersScreen extends ConsumerWidget {
                       InkWell(
                         onTap: () {},
                         child: Container(
-                          width: screenWidth * 0.22,
-                          height: screenHeight * 0.10,
+                          width: screenWidth * 0.20,
+                          height: screenHeight * 0.08,
                           decoration: BoxDecoration(
                             image: DecorationImage(
-                              image: NetworkImage(allOrdersItemData['img_url'] ?? ''),
+                              image: NetworkImage(
+                                  allOrdersItemData['img_url'] ?? ''),
                               fit: BoxFit.contain,
                             ),
                             borderRadius: BorderRadius.circular(8),
@@ -110,18 +110,14 @@ class AdminOrdersScreen extends ConsumerWidget {
                               overflow: TextOverflow.ellipsis,
                               maxLines: 1,
                             ),
-                            SizedBox(height: screenHeight * 0.01),
-                            Text(
-                              "No of items: ${allOrdersItemData['quantity'] ?? 'N/A'}",
-                              style: TextStyle(fontSize: screenWidth * 0.04),
-                            ),
-                            SizedBox(height: screenHeight * 0.01),
-                            Text(
-                              "Amount: ${allOrdersItemData['amount'] ?? 'N/A'}",
-                              style: TextStyle(
-                                fontSize: screenWidth * 0.05,
-                                fontWeight: FontWeight.bold,
-                              ),
+                            Row(
+                              children: [
+                                Text(
+                                  "No of items: ${allOrdersItemData['quantity'] ?? 'N/A'}",
+                                  style:
+                                      TextStyle(fontSize: screenWidth * 0.04),
+                                ),
+                              ],
                             ),
                           ],
                         ),

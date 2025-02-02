@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:medicart/Controller/Product%20Adding%20Screen%20Controller/product_adding_screen_controller.dart';
 import 'package:medicart/Controller/Product%20Adding%20Screen%20Controller/product_adding_screen_state.dart';
 import 'package:medicart/Utils/color_constants.dart';
+import 'package:medicart/View/Admin%20Screens/Admin%20Home%20Screen/admin_home_screen.dart';
 
 // ignore: must_be_immutable
 class ProductAddingScreen extends ConsumerWidget {
@@ -29,6 +30,17 @@ class ProductAddingScreen extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: ColorConstants.mainbg,
+        leading: IconButton(
+            onPressed: () {
+              Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => AdminHomeScreen(),
+                ),
+                (route) => false,
+              );
+            },
+            icon: Icon(Icons.arrow_back)),
       ),
       backgroundColor: ColorConstants.mainbg,
       body: Center(
@@ -319,7 +331,7 @@ class ProductAddingScreen extends ConsumerWidget {
                             pricectrl.clear();
                             usagectrl.clear();
                             stocksctrl.clear();
-                            
+
                             ref
                                 .read(ProductAddingScreenStateNotifierProvider
                                     .notifier)

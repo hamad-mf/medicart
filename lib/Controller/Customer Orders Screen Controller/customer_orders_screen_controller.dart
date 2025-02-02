@@ -23,8 +23,10 @@ class CustomerOrdersScreenController
         .collection('orders')
         .doc(userId)
         .collection('products');
-
+state = state.copywith(isloading: true);
     //delete that product
     await ordersRef.doc(orderedItemId).delete();
+    state = state.copywith(isloading: false);
   }
+  
 }

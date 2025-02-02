@@ -151,14 +151,17 @@ class CustomerOrdersScreen extends ConsumerWidget {
                                           ),
                                         ),
                                         TextButton(
-                                          onPressed: () async {
+                                          onPressed: ref.watch(CustomerOrdersScreenStateNotifierProvider).isloading ? null : () async {
                                             await ordersController.cancelAnItem(
                                                 FirebaseAuth
                                                     .instance.currentUser!.uid,
                                                 OrderedItemId);
                                             Navigator.of(context).pop();
                                           },
-                                          child: Text(
+                                          child: 
+                                          
+                                          ref.watch(CustomerOrdersScreenStateNotifierProvider).isloading ? CircularProgressIndicator() :
+                                          Text(
                                             'Yes',
                                             style:
                                                 TextStyle(color: Colors.green),
