@@ -4,11 +4,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:medicart/Controller/Place%20Oder%20Controller/place_order_controller.dart';
 import 'package:medicart/View/Customer%20Screens/Order%20Success%20Screen/order_success_screen.dart';
 
-// Provider for selected payment method
-final selectedPaymentMethodProvider = StateProvider<String>((ref) => '');
-
 // ignore: must_be_immutable
-class PaymentScreen extends ConsumerWidget {
+class PaymentScreen extends ConsumerStatefulWidget {
   num amount;
   String name;
   String phn;
@@ -37,10 +34,16 @@ class PaymentScreen extends ConsumerWidget {
   });
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<PaymentScreen> createState() => _PaymentScreenState();
+}
+
+class _PaymentScreenState extends ConsumerState<PaymentScreen> {
+  String selectedMethod = '';
+
+  @override
+  Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
-    final selectedMethod = ref.watch(selectedPaymentMethodProvider);
 
     return Scaffold(
       appBar: AppBar(
@@ -81,7 +84,7 @@ class PaymentScreen extends ConsumerWidget {
                           ),
                           SizedBox(height: screenHeight * 0.01),
                           Text(
-                            '₹${amount.toStringAsFixed(2)}',
+                            '₹${widget.amount.toStringAsFixed(2)}',
                             style: TextStyle(
                               fontSize: screenWidth * 0.06,
                               fontWeight: FontWeight.bold,
@@ -108,9 +111,7 @@ class PaymentScreen extends ConsumerWidget {
                       subtitle: 'Pay using any UPI app',
                       icon: Icons.account_balance,
                       isSelected: selectedMethod == 'upi',
-                      onTap: () => ref
-                          .read(selectedPaymentMethodProvider.notifier)
-                          .state = 'upi',
+                      onTap: () => setState(() => selectedMethod = 'upi'),
                     ),
 
                     // Card Option
@@ -119,9 +120,7 @@ class PaymentScreen extends ConsumerWidget {
                       subtitle: 'Pay using credit or debit card',
                       icon: Icons.credit_card,
                       isSelected: selectedMethod == 'card',
-                      onTap: () => ref
-                          .read(selectedPaymentMethodProvider.notifier)
-                          .state = 'card',
+                      onTap: () => setState(() => selectedMethod = 'card'),
                     ),
 
                     // Net Banking Option
@@ -130,9 +129,7 @@ class PaymentScreen extends ConsumerWidget {
                       subtitle: 'Pay using net banking',
                       icon: Icons.account_balance_wallet,
                       isSelected: selectedMethod == 'netbanking',
-                      onTap: () => ref
-                          .read(selectedPaymentMethodProvider.notifier)
-                          .state = 'netbanking',
+                      onTap: () => setState(() => selectedMethod = 'netbanking'),
                     ),
 
                     // Cash on Delivery
@@ -141,9 +138,7 @@ class PaymentScreen extends ConsumerWidget {
                       subtitle: 'Pay when you receive the order',
                       icon: Icons.money,
                       isSelected: selectedMethod == 'cod',
-                      onTap: () => ref
-                          .read(selectedPaymentMethodProvider.notifier)
-                          .state = 'cod',
+                      onTap: () => setState(() => selectedMethod = 'cod'),
                     ),
                   ],
                 ),
@@ -169,25 +164,25 @@ class PaymentScreen extends ConsumerWidget {
               width: double.infinity,
               child: ElevatedButton(
                 onPressed: selectedMethod.isEmpty
-                    ? null // Disable button if no payment method is selected
+                    ? null
                     : () async {
                         if (selectedMethod == 'cod') {
                           ref
                               .read(PlaceOrderStateNotifierProvider.notifier)
                               .onPlaceOrder(
-                                img_url: img_url,
-                                  userId:
-                                      FirebaseAuth.instance.currentUser!.uid,
-                                  name: name,
-                                  phn: phn,
-                                  city: city,
-                                  State: state,
-                                  country: country,
-                                  pin_code: pin_code,
-                                  street_address: street_address,
-                                  amount: amount,
-                                  product_name: product_name,
-                                  qnt: quantity);
+                                img_url: widget.img_url,
+                                userId:
+                                    FirebaseAuth.instance.currentUser!.uid,
+                                name: widget.name,
+                                phn: widget.phn,
+                                city: widget.city,
+                                State: widget.state,
+                                country: widget.country,
+                                pin_code: widget.pin_code,
+                                street_address: widget.street_address,
+                                amount: widget.amount,
+                                product_name: widget.product_name,
+                                qnt: widget.quantity);
 
                           Navigator.push(
                             context,
@@ -231,7 +226,7 @@ class PaymentScreen extends ConsumerWidget {
   }
 }
 
-// Custom Payment Option Widget
+// Custom Payment Option Widget (unchanged)
 class _PaymentOption extends StatelessWidget {
   final String title;
   final String subtitle;

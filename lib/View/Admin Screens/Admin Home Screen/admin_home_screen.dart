@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:medicart/Utils/color_constants.dart';
 import 'package:medicart/View/Admin%20Screens/Settings%20Screen/settings_screen.dart';
-import 'package:medicart/View/Admin%20Screens/Orders%20Screen/orders_screen.dart';
+import 'package:medicart/View/Admin%20Screens/Orders%20Screen/admin_orders_screen.dart';
 import 'package:medicart/View/Admin%20Screens/Admins%20Screen/admins_screen.dart';
 import 'package:medicart/View/Admin%20Screens/Product%20Adding%20Screen/product_adding_screen.dart';
 import 'package:medicart/View/Admin%20Screens/TEST/upload_home_screen.dart';
@@ -20,7 +20,7 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
     final screenHeight = MediaQuery.of(context).size.height;
     List Screens = [
       ProductAddingScreen(),
-      OrdersScreen(),
+      AdminOrdersScreen(),
       AdminsScreen(),
       SettingsScreen(),
       UploadHomeScreen(),
