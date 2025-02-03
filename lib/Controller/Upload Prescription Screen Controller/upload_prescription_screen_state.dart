@@ -1,8 +1,8 @@
 import 'dart:io';
-import 'dart:developer';
+
 
 class UploadPrescriptionScreenState {
-  final File? selectedImage;
+ File? selectedImage;
   final String? uploadedImageUrl;
   final bool isUploading;
 
@@ -19,10 +19,7 @@ class UploadPrescriptionScreenState {
     bool? isUploading,
   }) {
 
-  log('copyWith called:');
-  log('selectedImage: $selectedImage');
-  log('uploadedImageUrl: $uploadedImageUrl');
-  log('isUploading: $isUploading');
+ 
     return UploadPrescriptionScreenState(
       selectedImage: selectedImage ?? this.selectedImage,
       uploadedImageUrl: uploadedImageUrl ?? this.uploadedImageUrl,

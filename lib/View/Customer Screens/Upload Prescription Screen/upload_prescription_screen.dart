@@ -44,7 +44,7 @@ class UploadPrescriptionScreen extends ConsumerWidget {
     final uploadState = ref.watch(uploadPrescriptionScreenControllerProvider);
     final uploadController =
         ref.read(uploadPrescriptionScreenControllerProvider.notifier);
-// uploadController.clearSelectedImage();
+
     final addtocartstate =
         ref.watch(AddToCartScreenStateNotifierProvider) as AddToCartState;
 
@@ -111,14 +111,13 @@ class UploadPrescriptionScreen extends ConsumerWidget {
                           );
 
                       if (isAdded) {
-                        uploadController.clearSelectedImage();
+                        uploadState.selectedImage = null;
 
                         Navigator.pop(context);
                       }
                     },
                     text: "Add to cart",
                   ),
-               
               ],
             ),
           ),
