@@ -11,8 +11,8 @@ final AddToCartScreenStateNotifierProvider =
 
 class AddToCartController extends StateNotifier<AddToCartState> {
   AddToCartController() : super(AddToCartState());
-Future<void> onAddToCart({
-  required String userId, // Added to associate the cart with a user
+Future<bool> onAddToCart({
+  required String userId,
   required String category,
   required String details,
   required String image_url,
@@ -25,7 +25,6 @@ Future<void> onAddToCart({
   required num itemcount,
   required BuildContext context,
 }) async {
-  // Check for empty fields
   if (category.isEmpty ||
       details.isEmpty ||
       image_url.isEmpty ||
@@ -33,25 +32,20 @@ Future<void> onAddToCart({
       usage.isEmpty) {
     AppUtils.showSnackbar(
         context: context, message: "All fields are required.");
-    return;
+    return false;
   }
 
   state = state.copywith(isloading: true);
 
   try {
-    // Reference to the user's cart document
     final cartRef = FirebaseFirestore.instance.collection('cart').doc(userId);
-
-    // Reference to the user's cart items subcollection
     final itemsRef = cartRef.collection('items');
 
-    // Check if the product already exists in the user's cart
     final existingItemQuery = await itemsRef
         .where('product_name', isEqualTo: product_name)
         .get();
 
     if (existingItemQuery.docs.isEmpty) {
-      // Add new item to the cart
       await itemsRef.add({
         'price_per_item': price,
         'total_price': total_price,
@@ -66,28 +60,30 @@ Future<void> onAddToCart({
         'item_count': itemcount,
       });
 
-      // Recalculate the total price for the cart
       QuerySnapshot itemsSnapshot = await itemsRef.get();
       num updatedTotalPrice = 0;
       for (var doc in itemsSnapshot.docs) {
         updatedTotalPrice += (doc['total_price'] as num);
       }
 
-      // Update the total price in the main cart document
       await cartRef.set({
         'total_price': updatedTotalPrice,
-      }, SetOptions(merge: true)); // Merge ensures that no other fields in the cart document are overwritten.
+      }, SetOptions(merge: true));
 
       AppUtils.showSnackbar(
           context: context,
           message: "Item added to cart.",
           bgcolor: Colors.green);
+
+      state = state.copywith(isloading: false);
+      return true;  // Success
     } else {
-      // Item already exists in the cart
       AppUtils.showSnackbar(
           context: context,
           message: "Item already exists in the cart.",
           bgcolor: Colors.red);
+      state = state.copywith(isloading: false);
+      return false;  // Item already exists
     }
   } catch (e) {
     log(e.toString());
@@ -95,9 +91,9 @@ Future<void> onAddToCart({
         context: context,
         message: "An error occurred. Please try again.",
         bgcolor: Colors.red);
+    state = state.copywith(isloading: false);
+    return false;  // Failure
   }
-
-  state = state.copywith(isloading: false);
 }
 
 }

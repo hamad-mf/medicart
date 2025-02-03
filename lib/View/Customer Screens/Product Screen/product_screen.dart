@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -5,6 +7,7 @@ import 'package:medicart/Controller/Add%20To%20Cart%20Controller/add_to_cart_con
 import 'package:medicart/Controller/Add%20To%20Cart%20Controller/add_to_cart_state.dart';
 import 'package:medicart/Utils/color_constants.dart';
 import 'package:medicart/View/Customer%20Screens/Product%20Ordering%20Screen/product_ordering_screen.dart';
+import 'package:medicart/View/Customer%20Screens/Upload%20Prescription%20Screen/upload_prescription_screen.dart';
 import 'package:medicart/View/Global%20Widgets/custom_button.dart';
 
 // ignore: must_be_immutable
@@ -153,23 +156,82 @@ class ProductScreen extends ConsumerWidget {
                       Expanded(
                         child: customButton(
                           onPressed: () async {
-                            ref
-                                .read(AddToCartScreenStateNotifierProvider
-                                    .notifier)
-                                .onAddToCart(
-                                    userId:
-                                        FirebaseAuth.instance.currentUser!.uid,
-                                    total_price: price,
-                                    category: category,
-                                    details: details,
-                                    image_url: image_url,
-                                    product_name: product_name,
-                                    usage: usage,
-                                    price: price,
-                                    stocks: stocks,
-                                    requiresPrescription: isPresNeeded,
-                                    itemcount: 1,
-                                    context: context);
+                            if (isPresNeeded) {
+                              showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return AlertDialog(
+                                    title: Text('Prescription Required'),
+                                    content: Text(
+                                        'This product requires a prescription. Please upload it to proceed.'),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(15),
+                                    ),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                        child: Text(
+                                          'Cancel',
+                                          style: TextStyle(color: Colors.red),
+                                        ),
+                                      ),
+                                      TextButton(
+                                        onPressed: () {
+                                           Navigator.pop(context);
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    UploadPrescriptionScreen(
+                                                        category: category,
+                                                        context: context,
+                                                        details: details,
+                                                        image_url: image_url,
+                                                        itemcount: 1,
+                                                        price: price,
+                                                        total_price: price,
+                                                        requiresPrescription:
+                                                            isPresNeeded,
+                                                        stocks: stocks,
+                                                        user_id: FirebaseAuth
+                                                            .instance
+                                                            .currentUser!
+                                                            .uid,
+                                                        usage: usage,
+                                                        ProductName:
+                                                            product_name),
+                                              ));
+                                        },
+                                        child: Text(
+                                          'Upload Prescription',
+                                          style: TextStyle(color: Colors.green),
+                                        ),
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
+                            } else {
+                              ref
+                                  .read(AddToCartScreenStateNotifierProvider
+                                      .notifier)
+                                  .onAddToCart(
+                                      userId: FirebaseAuth
+                                          .instance.currentUser!.uid,
+                                      total_price: price,
+                                      category: category,
+                                      details: details,
+                                      image_url: image_url,
+                                      product_name: product_name,
+                                      usage: usage,
+                                      price: price,
+                                      stocks: stocks,
+                                      requiresPrescription: isPresNeeded,
+                                      itemcount: 1,
+                                      context: context);
+                            }
                           },
                           text: "Add to cart",
                         ),

@@ -27,6 +27,12 @@ class UploadPrescriptionScreenController
     }
   }
 
+  void clearSelectedImage() {
+  log('Clearing selected image...');
+  state = state.copyWith(selectedImage: null, uploadedImageUrl: null);
+  log('State after clearing: ${state.selectedImage}, ${state.uploadedImageUrl}');
+}
+
   /// Function to upload an image to Imgur
   Future<String?> uploadImageToImgur(File imageFile) async {
     const String clientId =

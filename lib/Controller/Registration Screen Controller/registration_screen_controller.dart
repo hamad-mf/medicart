@@ -50,7 +50,7 @@ class RegistrationScreenController
        await FirebaseFirestore.instance
           .collection('prescriptions')
           .doc(uid)
-          .set({'created_at': DateTime.now(), 'status': false});
+          .set({'created_at': DateTime.now(), 'status': false,'user_id':uid});
 
 
   }
