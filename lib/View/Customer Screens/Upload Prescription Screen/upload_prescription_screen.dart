@@ -1,4 +1,4 @@
-import 'dart:developer';
+
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -6,7 +6,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:medicart/Controller/Add%20To%20Cart%20Controller/add_to_cart_controller.dart';
 import 'package:medicart/Controller/Add%20To%20Cart%20Controller/add_to_cart_state.dart';
 import 'package:medicart/Controller/Upload%20Prescription%20Screen%20Controller/upload_prescription_screen_controller.dart';
-import 'package:medicart/View/Customer%20Screens/Product%20Screen/product_screen.dart';
 import 'package:medicart/View/Global%20Widgets/custom_button.dart';
 
 // ignore: must_be_immutable
