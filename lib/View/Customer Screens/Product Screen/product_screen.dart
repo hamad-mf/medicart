@@ -185,6 +185,7 @@ class ProductScreen extends ConsumerWidget {
                                               MaterialPageRoute(
                                                 builder: (context) =>
                                                     UploadPrescriptionScreen(
+                                                      isBuying: false,
                                                         category: category,
                                                         context: context,
                                                         details: details,
@@ -240,15 +241,76 @@ class ProductScreen extends ConsumerWidget {
                       Expanded(
                         child: customButton(
                           onPressed: () {
-                            Navigator.push(
+                            if (isPresNeeded) {
+                              showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return AlertDialog(
+                                    title: Text('Prescription Required'),
+                                    content: Text(
+                                        'This product requires a prescription. Please upload it to proceed.'),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(15),
+                                    ),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                        child: Text(
+                                          'Cancel',
+                                          style: TextStyle(color: Colors.red),
+                                        ),
+                                      ),
+                                      TextButton(
+                                        onPressed: () {
+                                           Navigator.pop(context);
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    UploadPrescriptionScreen(
+                                                      isBuying: true,
+                                                        category: category,
+                                                        context: context,
+                                                        details: details,
+                                                        image_url: image_url,
+                                                        itemcount: 1,
+                                                        price: price,
+                                                        total_price: price,
+                                                        requiresPrescription:
+                                                            isPresNeeded,
+                                                        stocks: stocks,
+                                                        user_id: FirebaseAuth
+                                                            .instance
+                                                            .currentUser!
+                                                            .uid,
+                                                        usage: usage,
+                                                        ProductName:
+                                                            product_name),
+                                              ));
+                                        },
+                                        child: Text(
+                                          'Upload Prescription',
+                                          style: TextStyle(color: Colors.green),
+                                        ),
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
+                            }else{ Navigator.push(
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) => ProductOrderingScreen(
+                                    code: "no",
                                     imgUrl: image_url,
                                     price: price,
                                     proName: product_name,
                                   ),
                                 ));
+                                }
+                           
                           },
                           text: "Buy now",
                         ),

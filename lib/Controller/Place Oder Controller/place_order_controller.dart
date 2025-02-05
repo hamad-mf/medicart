@@ -25,6 +25,7 @@ class PlaceOrderController extends StateNotifier<PlaceOrderState> {
     required num amount,
     required String product_name,
     required String qnt,
+    required String? code,
   }) async {
     //check empty
     if (name.isEmpty ||
@@ -55,6 +56,7 @@ class PlaceOrderController extends StateNotifier<PlaceOrderState> {
       final productRef = ordersRef.collection('products');
 
       await productRef.add({
+        'code':code,
         'payment_method': payment_method,
         'img_url': img_url,
         'userid': userId,

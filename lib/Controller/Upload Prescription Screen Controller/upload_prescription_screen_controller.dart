@@ -8,11 +8,11 @@ import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:medicart/Controller/Upload%20Prescription%20Screen%20Controller/upload_prescription_screen_state.dart';
-import 'package:medicart/Utils/app_utils.dart';
 
 final uploadPrescriptionScreenControllerProvider = StateNotifierProvider<
         UploadPrescriptionScreenController, UploadPrescriptionScreenState>(
     (ref) => UploadPrescriptionScreenController());
+final prescriptionCodeProvider = StateProvider<String>((ref) => '');
 
 class UploadPrescriptionScreenController
     extends StateNotifier<UploadPrescriptionScreenState> {
@@ -62,6 +62,7 @@ class UploadPrescriptionScreenController
 
   /// Function to save prescription details to Firestore
   Future<void> savePrescriptionToFirestore({
+    required String? code,
     required String userId,
     required String productName,
     required String imageUrl,
@@ -73,26 +74,18 @@ class UploadPrescriptionScreenController
 
       final onePrescription = prescriptionRef.collection('prescription');
 
-      // Check if a prescription already exists for the same user and product
-      final existingPrescription = await onePrescription
-    .where('user_id', isEqualTo: userId)
-    .where('product_name', isEqualTo: productName)
-    .get();
+      
 
-      if (existingPrescription.docs.isEmpty) {
-        // Add a new prescription entry
+      // Add a new prescription entry
         await onePrescription.add({
+    'code':code,
     'user_id': userId,
     'product_name': productName, // Make sure this matches consistently
     'prescription_url': imageUrl,
     'uploaded_at': FieldValue.serverTimestamp(),
   });
         log('Prescription saved to Firestore.');
-      } else {
-        // Update the existing prescription entry
-        AppUtils.showSnackbar(
-            context: context, message: "already added", bgcolor: Colors.red);
-      }
+      
     } catch (e) {
       log('Error saving prescription to Firestore: $e');
     }
@@ -100,6 +93,7 @@ class UploadPrescriptionScreenController
 
   /// Function to handle the entire process of uploading and saving a prescription
   Future<void> uploadAndSavePrescription({
+    required String? code,
     required String userId,
     required String productName,
     required BuildContext context
@@ -118,6 +112,7 @@ class UploadPrescriptionScreenController
       if (imageUrl != null) {
         // Save the prescription details to Firestore
         await savePrescriptionToFirestore(
+          code:code,
           context: context,
           userId: userId,
           productName: productName,

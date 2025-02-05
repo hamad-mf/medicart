@@ -10,7 +10,31 @@ class AdminOrdersScreenController
   AdminOrdersScreenController() : super(AdminOrdersScreenState());
 
 
+Future<String?> getPrescriptionUrlByCode(String code,String userId) async {
+  try {
+    final prescriptionsRef = FirebaseFirestore.instance
+        .collection('prescriptions')
+        .doc(userId)
+        .collection('prescription');
 
+    // Query the prescription with the matching code
+    final querySnapshot = await prescriptionsRef
+        .where('code', isEqualTo: code)
+        .limit(1)
+        .get();
+
+    if (querySnapshot.docs.isNotEmpty) {
+      final prescriptionData = querySnapshot.docs.first.data();
+      return prescriptionData['prescription_url']; // Assuming the URL field is named 'url'
+    } else {
+      print('No prescription found with the provided code.');
+      return null;
+    }
+  } catch (e) {
+    print('Error fetching prescription URL: $e');
+    return null;
+  }
+}
 
 
 

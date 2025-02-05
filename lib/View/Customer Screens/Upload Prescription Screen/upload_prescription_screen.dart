@@ -1,16 +1,18 @@
-
-
+import 'dart:math';
+import 'dart:developer' as dev;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:medicart/Controller/Add%20To%20Cart%20Controller/add_to_cart_controller.dart';
 import 'package:medicart/Controller/Add%20To%20Cart%20Controller/add_to_cart_state.dart';
 import 'package:medicart/Controller/Upload%20Prescription%20Screen%20Controller/upload_prescription_screen_controller.dart';
+import 'package:medicart/View/Customer%20Screens/Product%20Ordering%20Screen/product_ordering_screen.dart';
 import 'package:medicart/View/Global%20Widgets/custom_button.dart';
 
 // ignore: must_be_immutable
 class UploadPrescriptionScreen extends ConsumerWidget {
   String user_id;
+  bool isBuying;
   num total_price;
   String category;
   String details;
@@ -26,6 +28,7 @@ class UploadPrescriptionScreen extends ConsumerWidget {
   UploadPrescriptionScreen(
       {super.key,
       required this.ProductName,
+      required this.isBuying,
       required this.category,
       required this.context,
       required this.details,
@@ -40,6 +43,8 @@ class UploadPrescriptionScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    bool isAdded = false;
+
     final uploadState = ref.watch(uploadPrescriptionScreenControllerProvider);
     final uploadController =
         ref.read(uploadPrescriptionScreenControllerProvider.notifier);
@@ -69,8 +74,26 @@ class UploadPrescriptionScreen extends ConsumerWidget {
                         onPressed: uploadState.isUploading
                             ? null
                             : () async {
+                                // ignore: unused_element
+                                String generateRandomCode() {
+                                  const characters =
+                                      'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+                                  Random random = Random();
+                                  return String.fromCharCodes(Iterable.generate(
+                                    5,
+                                    (_) => characters.codeUnitAt(
+                                        random.nextInt(characters.length)),
+                                  ));
+                                }
+
+                                // Save the generated code in the provider
+                                ref
+                                    .read(prescriptionCodeProvider.notifier)
+                                    .state = generateRandomCode();
+                                dev.log(ref.read(prescriptionCodeProvider));
                                 await uploadController
                                     .uploadAndSavePrescription(
+                                  code: ref.read(prescriptionCodeProvider),
                                   userId:
                                       FirebaseAuth.instance.currentUser!.uid,
                                   productName: ProductName,
@@ -92,30 +115,45 @@ class UploadPrescriptionScreen extends ConsumerWidget {
                 if (uploadState.uploadedImageUrl != null)
                   customButton(
                     onPressed: () async {
-                      bool isAdded = await ref
-                          .read(AddToCartScreenStateNotifierProvider.notifier)
-                          .onAddToCart(
-                            userId: FirebaseAuth.instance.currentUser!.uid,
-                            total_price: price,
-                            category: category,
-                            details: details,
-                            image_url: image_url,
-                            product_name: ProductName,
-                            usage: usage,
-                            price: price,
-                            stocks: stocks,
-                            requiresPrescription: requiresPrescription,
-                            itemcount: 1,
-                            context: context,
-                          );
+                      if (isBuying == true) {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => ProductOrderingScreen(
+                                code: ref.read(prescriptionCodeProvider),
+                                imgUrl: image_url,
+                                price: price,
+                                proName: ProductName,
+                              ),
+                            ));
+                        uploadState.selectedImage = null;
+                        uploadState.uploadedImageUrl = null;
+                      } else {
+                        isAdded = await ref
+                            .read(AddToCartScreenStateNotifierProvider.notifier)
+                            .onAddToCart(
+                              userId: FirebaseAuth.instance.currentUser!.uid,
+                              total_price: price,
+                              category: category,
+                              details: details,
+                              image_url: image_url,
+                              product_name: ProductName,
+                              usage: usage,
+                              price: price,
+                              stocks: stocks,
+                              requiresPrescription: requiresPrescription,
+                              itemcount: 1,
+                              context: context,
+                            );
+                      }
 
                       if (isAdded) {
                         uploadState.selectedImage = null;
-
+                        uploadState.uploadedImageUrl = null;
                         Navigator.pop(context);
                       }
                     },
-                    text: "Add to cart",
+                    text: isBuying ? "Continue" : "Add to cart",
                   ),
               ],
             ),

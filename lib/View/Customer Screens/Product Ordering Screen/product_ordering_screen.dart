@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:medicart/Controller/Product%20Ordering%20Screen%20Controller/product_ordering_screen_controller.dart';
@@ -11,9 +13,11 @@ class ProductOrderingScreen extends ConsumerWidget {
   final String imgUrl;
   final num price;
   final String proName;
+  final String code;
 
   const ProductOrderingScreen(
       {super.key,
+      required this.code,
       required this.imgUrl,
       required this.proName,
       required this.price});
@@ -39,7 +43,16 @@ class ProductOrderingScreen extends ConsumerWidget {
     final profileDetailsStream = ref.watch(profileDetailsProvider(uid));
 
     return Scaffold(
-      appBar: AppBar(title: const Text("Order Summary")),
+      appBar: AppBar(
+        title: const Text("Order Summary"),
+        actions: [
+          IconButton(
+              onPressed: () {
+                log(code);
+              },
+              icon: Icon(Icons.import_contacts))
+        ],
+      ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -102,8 +115,6 @@ class ProductOrderingScreen extends ConsumerWidget {
                               screenWidth: screenWidth,
                             ),
 
-                            // Rest of your UI code...
-// Product Image
                             SizedBox(height: screenHeight * 0.02),
                             Row(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -218,6 +229,7 @@ class ProductOrderingScreen extends ConsumerWidget {
                                           context,
                                           MaterialPageRoute(
                                             builder: (context) => PaymentScreen(
+                                              code: code,
                                               quantity: dropdownValue ?? '1',
                                               img_url: imgUrl,
                                               state: state,

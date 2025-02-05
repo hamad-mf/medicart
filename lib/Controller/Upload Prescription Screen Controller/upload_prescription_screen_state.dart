@@ -1,9 +1,8 @@
 import 'dart:io';
 
-
 class UploadPrescriptionScreenState {
- File? selectedImage;
-  final String? uploadedImageUrl;
+  File? selectedImage;
+  String? uploadedImageUrl;
   final bool isUploading;
 
   UploadPrescriptionScreenState({
@@ -18,8 +17,6 @@ class UploadPrescriptionScreenState {
     String? uploadedImageUrl,
     bool? isUploading,
   }) {
-
- 
     return UploadPrescriptionScreenState(
       selectedImage: selectedImage ?? this.selectedImage,
       uploadedImageUrl: uploadedImageUrl ?? this.uploadedImageUrl,

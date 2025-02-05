@@ -17,9 +17,11 @@ class PaymentScreen extends ConsumerStatefulWidget {
   String quantity;
   String product_name;
   String img_url;
+  String? code;
 
   PaymentScreen({
     super.key,
+    required this.code,
     required this.img_url,
     required this.product_name,
     required this.quantity,
@@ -164,13 +166,14 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
             child: SizedBox(
               width: double.infinity,
               child: ElevatedButton(
-                onPressed: selectedMethod.isEmpty || placeOrderState.isloading 
+                onPressed: selectedMethod.isEmpty || placeOrderState.isloading
                     ? null
                     : () async {
                         if (selectedMethod == 'cod') {
                           ref
                               .read(PlaceOrderStateNotifierProvider.notifier)
                               .onPlaceOrder(
+                                code: widget.code,
                                   payment_method: "COD",
                                   img_url: widget.img_url,
                                   userId:
@@ -211,16 +214,16 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
                   padding: EdgeInsets.symmetric(vertical: screenHeight * 0.02),
                   backgroundColor: Theme.of(context).primaryColor,
                 ),
-                child: ref.watch(PlaceOrderStateNotifierProvider).isloading? CircularProgressIndicator() :
-                
-                Text(
-                  selectedMethod == 'cod' ? 'Place Order' : 'Pay Now',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: screenWidth * 0.045,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
+                child: ref.watch(PlaceOrderStateNotifierProvider).isloading
+                    ? CircularProgressIndicator()
+                    : Text(
+                        selectedMethod == 'cod' ? 'Place Order' : 'Pay Now',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: screenWidth * 0.045,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
               ),
             ),
           ),
