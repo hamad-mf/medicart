@@ -4,6 +4,7 @@ import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:medicart/Utils/color_constants.dart';
 import 'package:medicart/Utils/image_constants.dart';
+import 'package:medicart/View/Admin%20Screens/Admin%20Home%20Screen/admin_home_screen.dart';
 import 'package:medicart/View/Admin%20Screens/Product%20Adding%20Screen/product_adding_screen.dart';
 
 import 'package:medicart/View/Common%20Screens/Profile%20Selection%20Screen/profile_selecction_screen.dart';
@@ -27,40 +28,38 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   // Method to check user login status
- void _checkLoginStatus() async {
-  SharedPreferences prefs = await SharedPreferences.getInstance();
+  void _checkLoginStatus() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
 
-  // Check both user and admin login statuses
-  bool isUserLoggedIn = prefs.getBool('isLoggedIn') ?? false;
-  bool isAdminLoggedIn = prefs.getBool('isAdminLoggedIn') ?? false;
-  bool isDoctorLoggedIn = prefs.getBool('isDoctorLoggedIn') ?? false;
+    // Check both user and admin login statuses
+    bool isUserLoggedIn = prefs.getBool('isLoggedIn') ?? false;
+    bool isAdminLoggedIn = prefs.getBool('isAdminLoggedIn') ?? false;
+    bool isDoctorLoggedIn = prefs.getBool('isDoctorLoggedIn') ?? false;
 
-  // Wait for 4 seconds, then navigate based on login status
-  Timer(Duration(seconds: 4), () {
-    if (isAdminLoggedIn) {
-      // Navigate to Admin HomeScreen
-      Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (_) => ProductAddingScreen()));
-    } else if (isUserLoggedIn) {
-      // Navigate to User HomeScreen
-      Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (_) => CustomBottomNavbarScreen()));
-    } else if (isDoctorLoggedIn) {
-      // Navigate to User HomeScreen
-      Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (_) => DoctorHomeScreen()));
-    } else {
-      // Navigate to Profile Selection Screen
-      Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (_) => ProfileSelecctionScreen()));
-    }
+    // Wait for 4 seconds, then navigate based on login status
+    Timer(Duration(seconds: 4), () {
+      if (isAdminLoggedIn) {
+        // Navigate to Admin HomeScreen
+        Navigator.of(context).pushReplacement(
+            MaterialPageRoute(builder: (_) => AdminHomeScreen()));
+      } else if (isUserLoggedIn) {
+        // Navigate to User HomeScreen
+        Navigator.of(context).pushReplacement(
+            MaterialPageRoute(builder: (_) => CustomBottomNavbarScreen()));
+      } else if (isDoctorLoggedIn) {
+        // Navigate to User HomeScreen
+        Navigator.of(context).pushReplacement(
+            MaterialPageRoute(builder: (_) => DoctorHomeScreen()));
+      } else {
+        // Navigate to Profile Selection Screen
+        Navigator.of(context).pushReplacement(
+            MaterialPageRoute(builder: (_) => ProfileSelecctionScreen()));
+      }
 
-    // Navigator.of(context).pushReplacement(
-    //        MaterialPageRoute(builder: (_) => ProfileSelecctionScreen()));
-  });
-}
-
-
+      // Navigator.of(context).pushReplacement(
+      //        MaterialPageRoute(builder: (_) => ProfileSelecctionScreen()));
+    });
+  }
 
   @override
   Widget build(BuildContext context) {

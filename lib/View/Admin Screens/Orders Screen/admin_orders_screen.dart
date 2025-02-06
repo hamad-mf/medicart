@@ -71,6 +71,17 @@ class AdminOrdersScreen extends ConsumerWidget {
               final no_of_items = allOrdersItemData['quantity'] ?? 'N/A';
               final code = allOrdersItemData['code'] ?? 'N/A';
               final user_id = allOrdersItemData['userid'] ?? "N/A";
+              final customer_name = allOrdersItemData['name'] ?? "N/A";
+              final phone_number = allOrdersItemData['phone_number'] ?? "N/A";
+              final payment_method =
+                  allOrdersItemData["payment_method"] ?? "N/A";
+              final pin_code = allOrdersItemData["pin_code"] ?? "N/A";
+              final state = allOrdersItemData["state"] ?? "N/A";
+              final street_address =
+                  allOrdersItemData["street_address"] ?? "N/A";
+              final country = allOrdersItemData["country"] ?? "N/A";
+              final amount = allOrdersItemData["amount"] ?? "N/A";
+              final city = allOrdersItemData["city"] ?? "N/A";
               return Padding(
                 padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.03),
                 child: InkWell(
@@ -79,6 +90,15 @@ class AdminOrdersScreen extends ConsumerWidget {
                         context,
                         MaterialPageRoute(
                           builder: (context) => OrderDetailsScreen(
+                            amount: amount,
+                            city: city,
+                            country: country,
+                            customer_name: customer_name,
+                            payment_method: payment_method,
+                            state: state,
+                            phone_number: phone_number,
+                            pin_code: pin_code,
+                            street_address: street_address,
                             code: code,
                             user_id: user_id,
                             imgurl: imgurl,

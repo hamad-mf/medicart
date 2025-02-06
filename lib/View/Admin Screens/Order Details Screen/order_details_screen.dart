@@ -9,9 +9,27 @@ class OrderDetailsScreen extends ConsumerWidget {
   String product_name;
   String no_of_items;
   String code;
+  String customer_name;
+  String phone_number;
+  String payment_method;
+  String pin_code;
+  String state;
+  String street_address;
+  String country;
+  int amount;
+  String city;
   String user_id;
   OrderDetailsScreen(
       {super.key,
+      required this.amount,
+      required this.city,
+      required this.country,
+      required this.customer_name,
+      required this.payment_method,
+      required this.state,
+      required this.phone_number,
+      required this.pin_code,
+      required this.street_address,
       required this.user_id,
       required this.code,
       required this.imgurl,
@@ -37,41 +55,44 @@ class OrderDetailsScreen extends ConsumerWidget {
               children: [
                 Text(
                   "Name of product: ",
-                  style: TextStyle(fontSize: screenWidth * 0.05),
+                  style: TextStyle(fontSize: screenWidth * 0.04),
                 ),
                 Text(
                   product_name,
                   style: TextStyle(
-                      fontSize: screenWidth * 0.06,
+                      fontSize: screenWidth * 0.05,
                       fontWeight: FontWeight.bold),
                 ),
               ],
             ),
             SizedBox(
-              height: screenHeight * 0.02,
+              height: screenHeight * 0.01,
             ),
             Row(
               children: [
                 Text(
                   "No of items: ",
-                  style: TextStyle(fontSize: screenWidth * 0.05),
+                  style: TextStyle(fontSize: screenWidth * 0.04),
+                ),
+                SizedBox(
+                  width: screenWidth * 0.095,
                 ),
                 Text(
                   no_of_items,
                   style: TextStyle(
-                      fontSize: screenWidth * 0.06,
+                      fontSize: screenWidth * 0.05,
                       fontWeight: FontWeight.bold),
                 ),
               ],
-            ),
-            SizedBox(
-              height: screenHeight * 0.02,
             ),
             Row(
               children: [
                 Text(
                   "product image: ",
-                  style: TextStyle(fontSize: screenWidth * 0.05),
+                  style: TextStyle(fontSize: screenWidth * 0.04),
+                ),
+                SizedBox(
+                  width: screenWidth * 0.05,
                 ),
                 Container(
                   width: screenWidth * 0.4,
@@ -85,31 +106,34 @@ class OrderDetailsScreen extends ConsumerWidget {
                 ),
               ],
             ),
-            SizedBox(
-              height: screenHeight * 0.02,
-            ),
             Row(
               children: [
                 Text(
                   "code: ",
-                  style: TextStyle(fontSize: screenWidth * 0.05),
+                  style: TextStyle(fontSize: screenWidth * 0.04),
+                ),
+                SizedBox(
+                  width: screenWidth * 0.22,
                 ),
                 Text(
                   code,
                   style: TextStyle(
-                      fontSize: screenWidth * 0.06,
+                      fontSize: screenWidth * 0.05,
                       fontWeight: FontWeight.bold),
                 ),
               ],
             ),
             SizedBox(
-              height: screenHeight * 0.02,
+              height: screenHeight * 0.04,
             ),
             Row(
               children: [
                 Text(
                   "prescription: ",
-                  style: TextStyle(fontSize: screenWidth * 0.05),
+                  style: TextStyle(fontSize: screenWidth * 0.04),
+                ),
+                SizedBox(
+                  width: screenWidth * 0.09,
                 ),
                 FutureBuilder<String?>(
                   future: preUrl, // Wait for the URL to load
@@ -119,13 +143,83 @@ class OrderDetailsScreen extends ConsumerWidget {
                     } else if (snapshot.hasError) {
                       return const Text("Error loading prescription.");
                     } else if (snapshot.hasData && snapshot.data != null) {
-                      return Container(
-                        width: screenWidth * 0.4,
-                        height: screenHeight * 0.2,
-                        decoration: BoxDecoration(
-                          image: DecorationImage(
-                            image: NetworkImage(snapshot.data!), // Correct URL
-                            fit: BoxFit.cover,
+                      return InkWell(
+                        onTap: () {
+                          showDialog(
+                            context: context,
+                            builder: (context) {
+                              return Dialog(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                child: Stack(children: [
+                                  Container(
+                                    width: double
+                                        .infinity, // Set your desired width
+                                    height: screenHeight *
+                                        0.45, // Set your desired height
+                                    padding: EdgeInsets.all(0),
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        FutureBuilder<String?>(
+                                          future:
+                                              preUrl, // Wait for the URL to load
+                                          builder: (context, snapshot) {
+                                            if (snapshot.connectionState ==
+                                                ConnectionState.waiting) {
+                                              return const CircularProgressIndicator(); // Show a loader while fetching
+                                            } else if (snapshot.hasError) {
+                                              return const Text(
+                                                  "Error loading prescription.");
+                                            } else if (snapshot.hasData &&
+                                                snapshot.data != null) {
+                                              return Container(
+                                                width: double.infinity,
+                                                height: screenHeight * 0.45,
+                                                decoration: BoxDecoration(
+                                                  image: DecorationImage(
+                                                    image: NetworkImage(snapshot
+                                                        .data!), // Correct URL
+                                                    fit: BoxFit.cover,
+                                                  ),
+                                                ),
+                                              );
+                                            } else {
+                                              return const Text(
+                                                  "No prescription available.");
+                                            }
+                                          },
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  Positioned(
+                                    top: 0,
+                                    right: 0,
+                                    child: IconButton(
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                        },
+                                        icon: Icon(
+                                          Icons.close,
+                                          color: ColorConstants.mainwhite,
+                                        )),
+                                  )
+                                ]),
+                              );
+                            },
+                          );
+                        },
+                        child: Container(
+                          width: screenWidth * 0.4,
+                          height: screenHeight * 0.2,
+                          decoration: BoxDecoration(
+                            image: DecorationImage(
+                              image:
+                                  NetworkImage(snapshot.data!), // Correct URL
+                              fit: BoxFit.cover,
+                            ),
                           ),
                         ),
                       );
@@ -133,6 +227,92 @@ class OrderDetailsScreen extends ConsumerWidget {
                       return const Text("No prescription available.");
                     }
                   },
+                ),
+              ],
+            ),
+            Row(
+              children: [
+                Text(
+                  "Customer name: ",
+                  style: TextStyle(fontSize: screenWidth * 0.04),
+                ),
+                SizedBox(
+                  width: screenWidth * 0.02,
+                ),
+                Text(
+                  customer_name,
+                  style: TextStyle(
+                      fontSize: screenWidth * 0.05,
+                      fontWeight: FontWeight.bold),
+                ),
+              ],
+            ),
+            Row(
+              children: [
+                Text(
+                  "Phone number: ",
+                  style: TextStyle(fontSize: screenWidth * 0.04),
+                ),
+                SizedBox(
+                  width: screenWidth * 0.04,
+                ),
+                Text(
+                  phone_number,
+                  style: TextStyle(
+                      fontSize: screenWidth * 0.05,
+                      fontWeight: FontWeight.bold),
+                ),
+              ],
+            ),
+            Row(
+              children: [
+                Text(
+                  "Total amount: ",
+                  style: TextStyle(fontSize: screenWidth * 0.04),
+                ),
+                SizedBox(
+                  width: screenWidth * 0.062,
+                ),
+                Text(
+                  "₹${amount.toString()}",
+                  style: TextStyle(
+                      fontSize: screenWidth * 0.05,
+                      fontWeight: FontWeight.bold),
+                ),
+              ],
+            ),
+            Row(
+              children: [
+                Text(
+                  "Payment mode: ",
+                  style: TextStyle(fontSize: screenWidth * 0.04),
+                ),
+                SizedBox(
+                  width: screenWidth * 0.036,
+                ),
+                Text(
+                  payment_method,
+                  style: TextStyle(
+                      fontSize: screenWidth * 0.05,
+                      fontWeight: FontWeight.bold),
+                ),
+              ],
+            ),
+            SizedBox(),
+             Row(
+              children: [
+                Text(
+                  "Total amount: ",
+                  style: TextStyle(fontSize: screenWidth * 0.04),
+                ),
+                SizedBox(
+                  width: screenWidth * 0.062,
+                ),
+                Text(
+                  "₹${amount.toString()}",
+                  style: TextStyle(
+                      fontSize: screenWidth * 0.05,
+                      fontWeight: FontWeight.bold),
                 ),
               ],
             ),
