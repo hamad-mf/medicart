@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:medicart/Utils/color_constants.dart';
 import 'package:medicart/Utils/image_constants.dart';
 import 'package:medicart/View/Admin%20Screens/Admin%20Home%20Screen/admin_home_screen.dart';
-import 'package:medicart/View/Admin%20Screens/Product%20Adding%20Screen/product_adding_screen.dart';
 
 import 'package:medicart/View/Common%20Screens/Profile%20Selection%20Screen/profile_selecction_screen.dart';
 import 'package:medicart/View/Customer%20Screens/Custom%20Bottom%20Navbar%20Screen/custom_bottom_navbar_screen.dart';
