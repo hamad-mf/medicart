@@ -173,6 +173,7 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
                           ref
                               .read(PlaceOrderStateNotifierProvider.notifier)
                               .onPlaceOrder(
+                                status:"in process",
                                 code: widget.code,
                                   payment_method: "COD",
                                   img_url: widget.img_url,

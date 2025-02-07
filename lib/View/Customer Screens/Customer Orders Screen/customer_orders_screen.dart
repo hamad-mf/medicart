@@ -60,9 +60,9 @@ class CustomerOrdersScreen extends ConsumerWidget {
               itemBuilder: (context, index) {
                 final OrdersItem = snapshot.data!.docs[index];
                 final OrderedItemId = OrdersItem.id;
-                return Padding(
-                  padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.03),
-                  child: Container(
+                return ExpansionTile(
+                  showTrailingIcon: false,
+                  title: Container(
                     margin: EdgeInsets.symmetric(vertical: screenHeight * 0.01),
                     padding:
                         EdgeInsets.symmetric(horizontal: screenWidth * 0.03),
@@ -151,21 +151,29 @@ class CustomerOrdersScreen extends ConsumerWidget {
                                           ),
                                         ),
                                         TextButton(
-                                          onPressed: ref.watch(CustomerOrdersScreenStateNotifierProvider).isloading ? null : () async {
-                                            await ordersController.cancelAnItem(
-                                                FirebaseAuth
-                                                    .instance.currentUser!.uid,
-                                                OrderedItemId);
-                                            Navigator.of(context).pop();
-                                          },
-                                          child: 
-                                          
-                                          ref.watch(CustomerOrdersScreenStateNotifierProvider).isloading ? CircularProgressIndicator() :
-                                          Text(
-                                            'Yes',
-                                            style:
-                                                TextStyle(color: Colors.green),
-                                          ),
+                                          onPressed: ref
+                                                  .watch(
+                                                      CustomerOrdersScreenStateNotifierProvider)
+                                                  .isloading
+                                              ? null
+                                              : () async {
+                                                  await ordersController
+                                                      .cancelAnItem(
+                                                          FirebaseAuth.instance
+                                                              .currentUser!.uid,
+                                                          OrderedItemId);
+                                                  Navigator.of(context).pop();
+                                                },
+                                          child: ref
+                                                  .watch(
+                                                      CustomerOrdersScreenStateNotifierProvider)
+                                                  .isloading
+                                              ? CircularProgressIndicator()
+                                              : Text(
+                                                  'Yes',
+                                                  style: TextStyle(
+                                                      color: Colors.green),
+                                                ),
                                         ),
                                       ],
                                     );
@@ -188,6 +196,23 @@ class CustomerOrdersScreen extends ConsumerWidget {
                       ],
                     ),
                   ),
+                  children: [
+                    Align(
+                      alignment: Alignment.topLeft,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "Order Status:  ${OrdersItem["status"]}",
+                              style: TextStyle(fontSize: 18),
+                            )
+                          ],
+                        ),
+                      ),
+                    )
+                  ],
                 );
               },
             );

@@ -82,6 +82,7 @@ class AdminOrdersScreen extends ConsumerWidget {
               final country = allOrdersItemData["country"] ?? "N/A";
               final amount = allOrdersItemData["amount"] ?? "N/A";
               final city = allOrdersItemData["city"] ?? "N/A";
+              final status = allOrdersItemData["status"] ?? "N/A";
               return Padding(
                 padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.03),
                 child: InkWell(
@@ -90,6 +91,7 @@ class AdminOrdersScreen extends ConsumerWidget {
                         context,
                         MaterialPageRoute(
                           builder: (context) => OrderDetailsScreen(
+                            status: status,
                             amount: amount,
                             city: city,
                             country: country,
