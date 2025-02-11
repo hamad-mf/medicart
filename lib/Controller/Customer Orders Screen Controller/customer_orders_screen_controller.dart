@@ -16,7 +16,7 @@ class CustomerOrdersScreenController
     return FirebaseFirestore.instance
         .collection('orders')
         .doc(userid)
-        .collection('products')
+        .collection('ordered_products')
         .snapshots();
   }
 
@@ -24,7 +24,7 @@ class CustomerOrdersScreenController
     final ordersRef = FirebaseFirestore.instance
         .collection('orders')
         .doc(userId)
-        .collection('products');
+        .collection('ordered_products');
     final prescriptionRef = FirebaseFirestore.instance
         .collection('prescriptions')
         .doc(userId)

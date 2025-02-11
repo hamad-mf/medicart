@@ -55,7 +55,7 @@ class PlaceOrderController extends StateNotifier<PlaceOrderState> {
       // // Reference to the user's cart items subcollection
       // final itemsRef = cartRef.collection('items');
 // Reference to the user's orders products subcollection
-      final productRef = ordersRef.collection('products');
+      final productRef = ordersRef.collection('ordered_products');
 
       await productRef.add({
         'status': status,

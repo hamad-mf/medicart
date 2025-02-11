@@ -38,27 +38,52 @@ class AdminOrdersScreenController
     }
   }
 
+
+
+
+
+
+ Future<String?> updateTheStatus(String phone_number, String userId) async {
+    try {
+      final prescriptionsRef = FirebaseFirestore.instance
+          .collection('orders')
+          .doc(userId)
+          .collection('ordered_products');
+
+      // Query the prescription with the matching code
+      final querySnapshot =
+          await prescriptionsRef.where('phone_number', isEqualTo: phone_number).limit(1).get();
+
+      if (querySnapshot.docs.isNotEmpty) {
+        final prescriptionData = querySnapshot.docs.first.data();
+        return prescriptionData[
+            'status']; 
+      } else {
+        print('Not retrieved');
+        return null;
+      }
+    } catch (e) {
+      print('Error fetching status: $e');
+      return null;
+    }
+  }
+
+
+
   Stream<List<DocumentSnapshot>> getAllOrderProductsStream() {
     return FirebaseFirestore.instance
-        .collection('orders') // Query the 'orders' collection
+        .collectionGroup(
+            'ordered_products') // Query all 'products' subcollections at once
         .snapshots()
-        .asyncMap((querySnapshot) async {
-      List<DocumentSnapshot> products = [];
-      for (var orderDoc in querySnapshot.docs) {
-        // Query the 'products' subcollection for each order document
-        var productsSnapshot =
-            await orderDoc.reference.collection('products').get();
-        products.addAll(
-            productsSnapshot.docs); // Add all product documents to the list
-      }
-      return products; // Return the list of product documents
+        .map((querySnapshot) {
+      return querySnapshot.docs; // Return all product documents
     });
   }
 
   Future<void> changeOrderStatus(
       {required String upddatedStatus,
       required String userid,
-     required String code}) async {
+      required String code}) async {
     if (upddatedStatus.isEmpty) {
       log("All fields are required.");
       return;
@@ -69,7 +94,7 @@ class AdminOrdersScreenController
       final ordersRef = FirebaseFirestore.instance
           .collection('orders')
           .doc(userid)
-          .collection('products');
+          .collection('ordered_products');
 
       final querySnapshot =
           await ordersRef.where('code', isEqualTo: code).limit(1).get();

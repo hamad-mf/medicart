@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:medicart/Controller/Admin%20Orders%20Screen%20Controller/admin_orders_screen_controller.dart';
@@ -47,6 +46,8 @@ class OrderDetailsScreen extends ConsumerWidget {
 
     Future<String?> preUrl =
         allOrdersController.getPrescriptionUrlByCode(code, user_id);
+    Future<String?> OrderStatus =
+        allOrdersController.updateTheStatus(phone_number, user_id);
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
@@ -441,11 +442,27 @@ class OrderDetailsScreen extends ConsumerWidget {
                     SizedBox(
                       width: screenWidth * 0.05,
                     ),
-                    Text(
-                      status,
-                      style: TextStyle(
-                          fontSize: screenWidth * 0.05,
-                          fontWeight: FontWeight.w400),
+                    FutureBuilder<String?>(
+                      future: OrderStatus,
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return const CircularProgressIndicator();
+                        } else if (snapshot.hasError) {
+                          return const Text(
+                              "Error loading status"); // Changed error message
+                        } else if (snapshot.hasData && snapshot.data != null) {
+                          return Text(
+                            snapshot.data!,
+                            style: TextStyle(
+                                fontSize: screenWidth * 0.05,
+                                fontWeight: FontWeight.w400),
+                          );
+                        } else {
+                          return const Text(
+                              "Status not available"); // Add else case
+                        }
+                      },
                     ),
                   ],
                 ),
@@ -478,17 +495,7 @@ class OrderDetailsScreen extends ConsumerWidget {
               ],
             ),
           ),
-          if (ref.watch(AdminOrdersScreenStateNotifierProvider).isloading)
-            Positioned.fill(
-              child: Container(
-                color: Colors.black.withOpacity(0.5),
-                child: Center(
-                  child: CircularProgressIndicator(
-                    color: ColorConstants.mainwhite,
-                  ),
-                ),
-              ),
-            ),
+          
         ]),
       ),
     );

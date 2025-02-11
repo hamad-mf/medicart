@@ -159,6 +159,10 @@ class AdminOrdersScreen extends ConsumerWidget {
                                   ),
                                 ],
                               ),
+                              Text(
+                                "status: ${status}",
+                                style: TextStyle(fontSize: screenWidth * 0.04),
+                              ),
                             ],
                           ),
                         ),
