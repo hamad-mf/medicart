@@ -63,6 +63,7 @@ class AdminOrdersScreen extends ConsumerWidget {
             itemBuilder: (context, index) {
               // Fixed: Access via list index
               final allOrdersItem = snapshot.data![index];
+              final ordereditemid = allOrdersItem.id;
               final allOrdersItemData =
                   allOrdersItem.data() as Map<String, dynamic>;
               final imgurl = allOrdersItemData['img_url'] ?? '';
@@ -91,6 +92,7 @@ class AdminOrdersScreen extends ConsumerWidget {
                         context,
                         MaterialPageRoute(
                           builder: (context) => OrderDetailsScreen(
+                            ordereditemid: ordereditemid,
                             status: status,
                             amount: amount,
                             city: city,
@@ -159,25 +161,9 @@ class AdminOrdersScreen extends ConsumerWidget {
                                   ),
                                 ],
                               ),
-                              StreamBuilder<DocumentSnapshot>(
-                                stream: allOrdersController.getstatus(user_id),
-                                builder: (context,
-                                    AsyncSnapshot<DocumentSnapshot>
-                                        docSnapshot) {
-                                  if (docSnapshot.hasData) {
-                                    final OrderDoc = docSnapshot.data!;
-
-                                    final status = OrderDoc['status'];
-
-                                    return Text(
-                                      '$status',
-                                      style: TextStyle(
-                                        fontSize: screenWidth * 0.04,
-                                      ),
-                                    );
-                                  }
-                                  return CircularProgressIndicator();
-                                },
+                              Text(
+                                "Status: $status",
+                                style: TextStyle(fontSize: screenWidth * 0.04),
                               ),
                             ],
                           ),

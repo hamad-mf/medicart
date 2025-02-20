@@ -75,10 +75,7 @@ class PlaceOrderController extends StateNotifier<PlaceOrderState> {
       });
 
 
-await FirebaseFirestore.instance
-        .collection('orders')
-        .doc(userId)
-        .update({'status':'processing'});
+
 
 
 

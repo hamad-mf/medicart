@@ -13,6 +13,25 @@ class AdminOrdersScreenController
     extends StateNotifier<AdminOrdersScreenState> {
   AdminOrdersScreenController() : super(AdminOrdersScreenState());
 
+
+
+
+
+
+  Stream<String?> getStatusStream(String userId, String orderedItemId) {
+    return FirebaseFirestore.instance
+        .collection('orders')
+        .doc(userId)
+        .collection('ordered_products')
+        .doc(orderedItemId)
+        .snapshots()
+        .map((snapshot) => snapshot['status'] as String?);
+  }
+
+
+
+
+
   Future<String?> getPrescriptionUrlByCode(String code, String userId) async {
     try {
       final prescriptionsRef = FirebaseFirestore.instance
@@ -38,42 +57,12 @@ class AdminOrdersScreenController
     }
   }
 
-
-
-
-
-
- Future<String?> updateTheStatus(String phone_number, String userId) async {
-    try {
-      final prescriptionsRef = FirebaseFirestore.instance
-          .collection('orders')
-          .doc(userId)
-          .collection('ordered_products');
-
-      // Query the prescription with the matching code
-      final querySnapshot =
-          await prescriptionsRef.where('phone_number', isEqualTo: phone_number).limit(1).get();
-
-      if (querySnapshot.docs.isNotEmpty) {
-        final prescriptionData = querySnapshot.docs.first.data();
-        return prescriptionData[
-            'status']; 
-      } else {
-        print('Not retrieved');
-        return null;
-      }
-    } catch (e) {
-      print('Error fetching status: $e');
-      return null;
-    }
+  Stream<DocumentSnapshot> getstatus(String userId) {
+    return FirebaseFirestore.instance
+        .collection('orders')
+        .doc(userId)
+        .snapshots();
   }
-
-Stream<DocumentSnapshot> getstatus(String userId) {
-  return FirebaseFirestore.instance
-      .collection('orders')
-      .doc(userId)
-      .snapshots();
-}
 
   Stream<List<DocumentSnapshot>> getAllOrderProductsStream() {
     return FirebaseFirestore.instance
@@ -85,10 +74,11 @@ Stream<DocumentSnapshot> getstatus(String userId) {
     });
   }
 
-  Future<void> changeOrderStatus(
-      {required String upddatedStatus,
-      required String userid,
-      }) async {
+  Future<void> changeOrderStatus({
+    required String upddatedStatus,
+    required String userid,
+    required String ordereditemid,
+  }) async {
     if (upddatedStatus.isEmpty) {
       log("All fields are required.");
       return;
@@ -96,10 +86,14 @@ Stream<DocumentSnapshot> getstatus(String userId) {
     state = state.copywith(isloading: true);
 
     try {
-     await FirebaseFirestore.instance
-        .collection('orders')
-        .doc(userid)
-        .update({'status': upddatedStatus});
+      await FirebaseFirestore.instance
+          .collection('orders')
+          .doc(userid)
+          .collection('ordered_products')
+          .doc(ordereditemid)
+          .update({
+        'status': upddatedStatus,
+      });
     } catch (e) {
       log("failed");
       log(e.toString());

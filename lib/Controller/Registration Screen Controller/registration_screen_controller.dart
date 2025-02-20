@@ -42,10 +42,7 @@ class RegistrationScreenController
             .collection('cart')
             .doc(uid)
             .set({'created_at': DateTime.now(), 'total_price': 0});
-        await FirebaseFirestore.instance
-            .collection('orders')
-            .doc(uid)
-            .set({'created_at': DateTime.now(), 'status': 'unavailable'});
+
         await FirebaseFirestore.instance
             .collection('prescriptions')
             .doc(uid)

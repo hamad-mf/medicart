@@ -1,5 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:medicart/Controller/Admin%20Orders%20Screen%20Controller/admin_orders_screen_controller.dart';
@@ -20,11 +18,13 @@ class OrderDetailsScreen extends ConsumerWidget {
   String state;
   String street_address;
   String country;
+  String ordereditemid;
   int amount;
   String city;
   String user_id;
   OrderDetailsScreen(
       {super.key,
+      required this.ordereditemid,
       required this.status,
       required this.amount,
       required this.city,
@@ -48,8 +48,8 @@ class OrderDetailsScreen extends ConsumerWidget {
 
     Future<String?> preUrl =
         allOrdersController.getPrescriptionUrlByCode(code, user_id);
-    Future<String?> OrderStatus =
-        allOrdersController.updateTheStatus(phone_number, user_id);
+    Stream<String?> statusStream =
+        allOrdersController.getStatusStream(user_id, ordereditemid);
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
@@ -444,25 +444,21 @@ class OrderDetailsScreen extends ConsumerWidget {
                     SizedBox(
                       width: screenWidth * 0.09,
                     ),
-                    StreamBuilder<DocumentSnapshot>(
-                      stream: allOrdersController.getstatus(user_id),
-                      builder: (context,
-                          AsyncSnapshot<DocumentSnapshot> docSnapshot) {
-                        if (docSnapshot.hasData) {
-                          final OrderDoc = docSnapshot.data!;
-
-                          final status = OrderDoc['status'];
-
-                          return Text(
-                            '$status',
-                            style: TextStyle(
-                                fontSize: screenWidth * 0.05,
-                                fontWeight: FontWeight.w400),
-                          );
+                    StreamBuilder<String?>(
+                      stream: statusStream,
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return const CircularProgressIndicator();
+                        } else if (snapshot.hasError) {
+                          return const Text("Error loading status.");
+                        } else if (snapshot.hasData && snapshot.data != null) {
+                          return Text(snapshot.data!);
+                        } else {
+                          return const Text("No status available.");
                         }
-                        return CircularProgressIndicator();
                       },
-                    ),
+                    )
                   ],
                 ),
                 SizedBox(
@@ -473,7 +469,9 @@ class OrderDetailsScreen extends ConsumerWidget {
                     customButton(
                         onPressed: () async {
                           await allOrdersController.changeOrderStatus(
-                              upddatedStatus: "accepted", userid: user_id);
+                              upddatedStatus: "accepted",
+                              userid: user_id,
+                              ordereditemid: ordereditemid);
                         },
                         text: "Accept"),
                     SizedBox(
@@ -482,7 +480,9 @@ class OrderDetailsScreen extends ConsumerWidget {
                     customButton(
                         onPressed: () async {
                           await allOrdersController.changeOrderStatus(
-                              upddatedStatus: "Declined", userid: user_id);
+                              upddatedStatus: "Declined",
+                              userid: user_id,
+                              ordereditemid: ordereditemid);
                         },
                         text: "Decline"),
                   ],
