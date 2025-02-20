@@ -159,9 +159,25 @@ class AdminOrdersScreen extends ConsumerWidget {
                                   ),
                                 ],
                               ),
-                              Text(
-                                "status: ${status}",
-                                style: TextStyle(fontSize: screenWidth * 0.04),
+                              StreamBuilder<DocumentSnapshot>(
+                                stream: allOrdersController.getstatus(user_id),
+                                builder: (context,
+                                    AsyncSnapshot<DocumentSnapshot>
+                                        docSnapshot) {
+                                  if (docSnapshot.hasData) {
+                                    final OrderDoc = docSnapshot.data!;
+
+                                    final status = OrderDoc['status'];
+
+                                    return Text(
+                                      '$status',
+                                      style: TextStyle(
+                                        fontSize: screenWidth * 0.04,
+                                      ),
+                                    );
+                                  }
+                                  return CircularProgressIndicator();
+                                },
                               ),
                             ],
                           ),

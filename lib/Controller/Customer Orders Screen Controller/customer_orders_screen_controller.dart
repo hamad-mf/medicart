@@ -20,6 +20,14 @@ class CustomerOrdersScreenController
         .snapshots();
   }
 
+Stream<DocumentSnapshot> getstatus(String userId) {
+  return FirebaseFirestore.instance
+      .collection('orders')
+      .doc(userId)
+      .snapshots();
+}
+
+
   Future<void> cancelAnItem(String userId, String orderedItemId) async {
     final ordersRef = FirebaseFirestore.instance
         .collection('orders')

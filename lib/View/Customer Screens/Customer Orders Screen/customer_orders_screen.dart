@@ -204,10 +204,26 @@ class CustomerOrdersScreen extends ConsumerWidget {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(
-                              "Order Status:  ${OrdersItem["status"]}",
-                              style: TextStyle(fontSize: 18),
-                            )
+                            // Text(
+                            //   "Order Status:  ${OrdersItem["status"]}",
+                            //   style: TextStyle(fontSize: 18),
+                            // )
+
+                            StreamBuilder<DocumentSnapshot>(
+                              stream: ordersController.getstatus(
+                                  FirebaseAuth.instance.currentUser!.uid),
+                              builder: (context,
+                                  AsyncSnapshot<DocumentSnapshot> docSnapshot) {
+                                if (docSnapshot.hasData) {
+                                  final OrderDoc = docSnapshot.data!;
+
+                                  final status = OrderDoc['status'];
+
+                                  return Text('Status: $status');
+                                }
+                                return CircularProgressIndicator();
+                              },
+                            ),
                           ],
                         ),
                       ),

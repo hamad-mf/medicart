@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:medicart/Controller/Admin%20Orders%20Screen%20Controller/admin_orders_screen_controller.dart';
@@ -440,28 +442,25 @@ class OrderDetailsScreen extends ConsumerWidget {
                       style: TextStyle(fontSize: screenWidth * 0.04),
                     ),
                     SizedBox(
-                      width: screenWidth * 0.05,
+                      width: screenWidth * 0.09,
                     ),
-                    FutureBuilder<String?>(
-                      future: OrderStatus,
-                      builder: (context, snapshot) {
-                        if (snapshot.connectionState ==
-                            ConnectionState.waiting) {
-                          return const CircularProgressIndicator();
-                        } else if (snapshot.hasError) {
-                          return const Text(
-                              "Error loading status"); // Changed error message
-                        } else if (snapshot.hasData && snapshot.data != null) {
+                    StreamBuilder<DocumentSnapshot>(
+                      stream: allOrdersController.getstatus(user_id),
+                      builder: (context,
+                          AsyncSnapshot<DocumentSnapshot> docSnapshot) {
+                        if (docSnapshot.hasData) {
+                          final OrderDoc = docSnapshot.data!;
+
+                          final status = OrderDoc['status'];
+
                           return Text(
-                            snapshot.data!,
+                            '$status',
                             style: TextStyle(
                                 fontSize: screenWidth * 0.05,
                                 fontWeight: FontWeight.w400),
                           );
-                        } else {
-                          return const Text(
-                              "Status not available"); // Add else case
                         }
+                        return CircularProgressIndicator();
                       },
                     ),
                   ],
@@ -474,9 +473,7 @@ class OrderDetailsScreen extends ConsumerWidget {
                     customButton(
                         onPressed: () async {
                           await allOrdersController.changeOrderStatus(
-                              code: code,
-                              upddatedStatus: "accepted",
-                              userid: user_id);
+                              upddatedStatus: "accepted", userid: user_id);
                         },
                         text: "Accept"),
                     SizedBox(
@@ -485,9 +482,7 @@ class OrderDetailsScreen extends ConsumerWidget {
                     customButton(
                         onPressed: () async {
                           await allOrdersController.changeOrderStatus(
-                              code: code,
-                              upddatedStatus: "Declined",
-                              userid: user_id);
+                              upddatedStatus: "Declined", userid: user_id);
                         },
                         text: "Decline"),
                   ],
@@ -495,7 +490,6 @@ class OrderDetailsScreen extends ConsumerWidget {
               ],
             ),
           ),
-          
         ]),
       ),
     );

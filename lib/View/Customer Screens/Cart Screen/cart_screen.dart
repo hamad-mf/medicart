@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -184,14 +186,19 @@ class CartScreen extends ConsumerWidget {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   SizedBox(height: screenHeight * 0.02),
-                                  Text(
-                                    cartItem['product_name'],
-                                    style: TextStyle(
-                                      fontSize: screenWidth * 0.05,
-                                      fontWeight: FontWeight.bold,
+                                  InkWell(
+                                    onTap: () {
+                                      log(cartItem["created_at"].toString());
+                                    },
+                                    child: Text(
+                                      cartItem['product_name'],
+                                      style: TextStyle(
+                                        fontSize: screenWidth * 0.05,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                      overflow: TextOverflow.ellipsis,
+                                      maxLines: 1,
                                     ),
-                                    overflow: TextOverflow.ellipsis,
-                                    maxLines: 1,
                                   ),
                                   SizedBox(height: screenHeight * 0.02),
                                   Row(

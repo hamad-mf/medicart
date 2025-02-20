@@ -36,24 +36,25 @@ class RegistrationScreenController
           .doc(uid)
           .set({'role': role, 'isProfileDetailsAdded': false});
 
-      
-  if (role =='user') {
-     // Initialize an empty cart for the specific user
-      await FirebaseFirestore.instance
-          .collection('cart')
-          .doc(uid)
-          .set({'created_at': DateTime.now(), 'total_price': 0});
-      await FirebaseFirestore.instance
-          .collection('orders')
-          .doc(uid)
-          .set({'created_at': DateTime.now(),});
-       await FirebaseFirestore.instance
-          .collection('prescriptions')
-          .doc(uid)
-          .set({'created_at': DateTime.now(), 'status': false,'user_id':uid});
-
-
-  }
+      if (role == 'user') {
+        // Initialize an empty cart for the specific user
+        await FirebaseFirestore.instance
+            .collection('cart')
+            .doc(uid)
+            .set({'created_at': DateTime.now(), 'total_price': 0});
+        await FirebaseFirestore.instance
+            .collection('orders')
+            .doc(uid)
+            .set({'created_at': DateTime.now(), 'status': 'unavailable'});
+        await FirebaseFirestore.instance
+            .collection('prescriptions')
+            .doc(uid)
+            .set({
+          'created_at': DateTime.now(),
+          'status': false,
+          'user_id': uid
+        });
+      }
       // Notify user about registration success
       AppUtils.showSnackbar(
           context: context,

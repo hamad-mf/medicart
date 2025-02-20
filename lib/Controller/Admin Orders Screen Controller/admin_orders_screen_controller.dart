@@ -68,7 +68,12 @@ class AdminOrdersScreenController
     }
   }
 
-
+Stream<DocumentSnapshot> getstatus(String userId) {
+  return FirebaseFirestore.instance
+      .collection('orders')
+      .doc(userId)
+      .snapshots();
+}
 
   Stream<List<DocumentSnapshot>> getAllOrderProductsStream() {
     return FirebaseFirestore.instance
@@ -83,7 +88,7 @@ class AdminOrdersScreenController
   Future<void> changeOrderStatus(
       {required String upddatedStatus,
       required String userid,
-      required String code}) async {
+      }) async {
     if (upddatedStatus.isEmpty) {
       log("All fields are required.");
       return;
@@ -91,21 +96,10 @@ class AdminOrdersScreenController
     state = state.copywith(isloading: true);
 
     try {
-      final ordersRef = FirebaseFirestore.instance
-          .collection('orders')
-          .doc(userid)
-          .collection('ordered_products');
-
-      final querySnapshot =
-          await ordersRef.where('code', isEqualTo: code).limit(1).get();
-
-      if (querySnapshot.docs.isNotEmpty) {
-        final docId = querySnapshot.docs.first.id;
-        await ordersRef.doc(docId).update({'status': upddatedStatus});
-        log("done");
-        state = state.copywith(isloading: false);
-      }
-      log("succuss");
+     await FirebaseFirestore.instance
+        .collection('orders')
+        .doc(userid)
+        .update({'status': upddatedStatus});
     } catch (e) {
       log("failed");
       log(e.toString());
