@@ -1,5 +1,3 @@
-
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -179,13 +177,13 @@ class ProductScreen extends ConsumerWidget {
                                       ),
                                       TextButton(
                                         onPressed: () {
-                                           Navigator.pop(context);
+                                          Navigator.pop(context);
                                           Navigator.push(
                                               context,
                                               MaterialPageRoute(
                                                 builder: (context) =>
                                                     UploadPrescriptionScreen(
-                                                      isBuying: false,
+                                                        isBuying: false,
                                                         category: category,
                                                         context: context,
                                                         details: details,
@@ -264,13 +262,13 @@ class ProductScreen extends ConsumerWidget {
                                       ),
                                       TextButton(
                                         onPressed: () {
-                                           Navigator.pop(context);
+                                          Navigator.pop(context);
                                           Navigator.push(
                                               context,
                                               MaterialPageRoute(
                                                 builder: (context) =>
                                                     UploadPrescriptionScreen(
-                                                      isBuying: true,
+                                                        isBuying: true,
                                                         category: category,
                                                         context: context,
                                                         details: details,
@@ -299,18 +297,19 @@ class ProductScreen extends ConsumerWidget {
                                   );
                                 },
                               );
-                            }else{ Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => ProductOrderingScreen(
-                                    code: "no",
-                                    imgUrl: image_url,
-                                    price: price,
-                                    proName: product_name,
-                                  ),
-                                ));
-                                }
-                           
+                            } else {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => ProductOrderingScreen(
+                                      isDoctorNeeded: false,
+                                      code: "no",
+                                      imgUrl: image_url,
+                                      price: price,
+                                      proName: product_name,
+                                    ),
+                                  ));
+                            }
                           },
                           text: "Buy now",
                         ),

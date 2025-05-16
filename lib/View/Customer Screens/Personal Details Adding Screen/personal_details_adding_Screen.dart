@@ -333,7 +333,7 @@ class PersonalDetailsAddingScreen extends ConsumerWidget {
                           child: Text(
                             "Update",
                             style: TextStyle(
-                                color: ColorConstants.mainwhite,
+                                color: ColorConstants.mainblack,
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold),
                           ))

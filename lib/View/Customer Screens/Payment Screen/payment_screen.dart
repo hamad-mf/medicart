@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -6,6 +8,7 @@ import 'package:medicart/View/Customer%20Screens/Order%20Success%20Screen/order_
 
 // ignore: must_be_immutable
 class PaymentScreen extends ConsumerStatefulWidget {
+  bool isDoctorNeeded;
   num amount;
   String name;
   String phn;
@@ -21,6 +24,7 @@ class PaymentScreen extends ConsumerStatefulWidget {
 
   PaymentScreen({
     super.key,
+    required this.isDoctorNeeded,
     required this.code,
     required this.img_url,
     required this.product_name,
@@ -170,32 +174,64 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
                     ? null
                     : () async {
                         if (selectedMethod == 'cod') {
-                          ref
-                              .read(PlaceOrderStateNotifierProvider.notifier)
-                              .onPlaceOrder(
-                              
-                                code: widget.code,
-                                  payment_method: "COD",
-                                  img_url: widget.img_url,
-                                  userId:
-                                      FirebaseAuth.instance.currentUser!.uid,
-                                  name: widget.name,
-                                  phn: widget.phn,
-                                  city: widget.city,
-                                  State: widget.state,
-                                  country: widget.country,
-                                  pin_code: widget.pin_code,
-                                  street_address: widget.street_address,
-                                  amount: widget.amount,
-                                  product_name: widget.product_name,
-                                  qnt: widget.quantity);
+                          if (widget.isDoctorNeeded) {
+                            log(widget.isDoctorNeeded.toString());
+                            ref
+                                .read(PlaceOrderStateNotifierProvider.notifier)
+                                .onPlaceOrderWithPresc(
+                                    isDocApproved: false,
+                                    code: widget.code,
+                                    payment_method: "COD",
+                                    img_url: widget.img_url,
+                                    userId:
+                                        FirebaseAuth.instance.currentUser!.uid,
+                                    name: widget.name,
+                                    phn: widget.phn,
+                                    city: widget.city,
+                                    State: widget.state,
+                                    country: widget.country,
+                                    pin_code: widget.pin_code,
+                                    street_address: widget.street_address,
+                                    amount: widget.amount,
+                                    product_name: widget.product_name,
+                                    qnt: widget.quantity);
 
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const OrderSuccessScreen(),
-                            ),
-                          );
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    const OrderSuccessScreen(),
+                              ),
+                            );
+                          } else {
+                            log(widget.isDoctorNeeded.toString());
+                            ref
+                                .read(PlaceOrderStateNotifierProvider.notifier)
+                                .onPlaceOrder(
+                                    code: widget.code,
+                                    payment_method: "COD",
+                                    img_url: widget.img_url,
+                                    userId:
+                                        FirebaseAuth.instance.currentUser!.uid,
+                                    name: widget.name,
+                                    phn: widget.phn,
+                                    city: widget.city,
+                                    State: widget.state,
+                                    country: widget.country,
+                                    pin_code: widget.pin_code,
+                                    street_address: widget.street_address,
+                                    amount: widget.amount,
+                                    product_name: widget.product_name,
+                                    qnt: widget.quantity);
+
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    const OrderSuccessScreen(),
+                              ),
+                            );
+                          }
                         } else {
                           // Handle other payment methods
                           switch (selectedMethod) {

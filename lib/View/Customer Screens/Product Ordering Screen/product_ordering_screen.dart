@@ -10,6 +10,7 @@ import 'package:medicart/View/Customer%20Screens/Product%20Ordering%20Screen/wid
 import 'package:medicart/Utils/color_constants.dart';
 
 class ProductOrderingScreen extends ConsumerWidget {
+  final bool isDoctorNeeded;
   final String imgUrl;
   final num price;
   final String proName;
@@ -17,6 +18,7 @@ class ProductOrderingScreen extends ConsumerWidget {
 
   const ProductOrderingScreen(
       {super.key,
+      required this.isDoctorNeeded,
       required this.code,
       required this.imgUrl,
       required this.proName,
@@ -229,6 +231,7 @@ class ProductOrderingScreen extends ConsumerWidget {
                                           context,
                                           MaterialPageRoute(
                                             builder: (context) => PaymentScreen(
+                                              isDoctorNeeded: isDoctorNeeded,
                                               code: code,
                                               quantity: dropdownValue ?? '1',
                                               img_url: imgUrl,

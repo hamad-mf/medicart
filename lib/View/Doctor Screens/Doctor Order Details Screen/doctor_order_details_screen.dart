@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:medicart/Controller/Admin%20Orders%20Screen%20Controller/admin_orders_screen_controller.dart';
+
+import 'package:medicart/Controller/Doctor%20Orders%20Screen%20Controller/doctor_orders_screen_controller.dart';
 import 'package:medicart/Utils/color_constants.dart';
-import 'package:medicart/View/Admin%20Screens/Orders%20Screen/admin_orders_screen.dart';
 import 'package:medicart/View/Global%20Widgets/custom_button.dart';
 
 // ignore: must_be_immutable
-class OrderDetailsScreen extends ConsumerWidget {
+class DoctorOrderDetailsScreen extends ConsumerWidget {
   String imgurl;
   String product_name;
   String status;
@@ -23,7 +23,7 @@ class OrderDetailsScreen extends ConsumerWidget {
   int amount;
   String city;
   String user_id;
-  OrderDetailsScreen(
+  DoctorOrderDetailsScreen(
       {super.key,
       required this.ordereditemid,
       required this.status,
@@ -45,7 +45,7 @@ class OrderDetailsScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final allOrdersController =
-        ref.read(AdminOrdersScreenStateNotifierProvider.notifier);
+        ref.read(DoctorOrdersScreenStateNotifierProvider.notifier);
 
     Future<String?> preUrl =
         allOrdersController.getPrescriptionUrlByCode(code, user_id);
@@ -470,14 +470,9 @@ class OrderDetailsScreen extends ConsumerWidget {
                     customButton(
                         onPressed: () async {
                           await allOrdersController.changeOrderStatus(
-                              upddatedStatus: "accepted",
+                              upddatedStatus: "Doctor Approved",
                               userid: user_id,
                               ordereditemid: ordereditemid);
-                          Navigator.of(context).pushAndRemoveUntil(
-                            MaterialPageRoute(
-                                builder: (context) => AdminOrdersScreen()),
-                            (Route<dynamic> route) => route.isFirst,
-                          );
                         },
                         text: "Accept"),
                     SizedBox(
@@ -486,14 +481,9 @@ class OrderDetailsScreen extends ConsumerWidget {
                     customButton(
                         onPressed: () async {
                           await allOrdersController.changeOrderStatus(
-                              upddatedStatus: "Declined",
+                              upddatedStatus: "doctor declined",
                               userid: user_id,
                               ordereditemid: ordereditemid);
-                          Navigator.of(context).pushAndRemoveUntil(
-                            MaterialPageRoute(
-                                builder: (context) => AdminOrdersScreen()),
-                            (Route<dynamic> route) => route.isFirst,
-                          );
                         },
                         text: "Decline"),
                   ],

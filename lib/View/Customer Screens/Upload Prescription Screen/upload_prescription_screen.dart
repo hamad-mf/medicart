@@ -120,6 +120,7 @@ class UploadPrescriptionScreen extends ConsumerWidget {
                             context,
                             MaterialPageRoute(
                               builder: (context) => ProductOrderingScreen(
+                                isDoctorNeeded: true,
                                 code: ref.read(prescriptionCodeProvider),
                                 imgUrl: image_url,
                                 price: price,

@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:medicart/Controller/Admin%20Orders%20Screen%20Controller/admin_orders_screen_controller.dart';
+import 'package:medicart/Utils/app_utils.dart';
 import 'package:medicart/Utils/color_constants.dart';
 import 'package:medicart/View/Admin%20Screens/Order%20Details%20Screen/order_details_screen.dart';
 
@@ -13,7 +14,7 @@ class AdminOrdersScreen extends ConsumerWidget {
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
     final allOrdersController =
-        ref.read(AdminOrdersScreenStateNotifierProvider.notifier);
+        ref.watch(AdminOrdersScreenStateNotifierProvider.notifier);
 
     final adminAllOrdersStream =
         allOrdersController.getAllOrderProductsStream();
@@ -88,28 +89,38 @@ class AdminOrdersScreen extends ConsumerWidget {
                 padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.03),
                 child: InkWell(
                   onTap: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => OrderDetailsScreen(
-                            ordereditemid: ordereditemid,
-                            status: status,
-                            amount: amount,
-                            city: city,
-                            country: country,
-                            customer_name: customer_name,
-                            payment_method: payment_method,
-                            state: state,
-                            phone_number: phone_number,
-                            pin_code: pin_code,
-                            street_address: street_address,
-                            code: code,
-                            user_id: user_id,
-                            imgurl: imgurl,
-                            product_name: productName,
-                            no_of_items: no_of_items,
-                          ),
-                        ));
+                    if (status == 'processing' ||
+                        status == 'Doctor Approved' ||
+                        status == 'accepted' ||
+                        status == "Declined") {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => OrderDetailsScreen(
+                              ordereditemid: ordereditemid,
+                              status: status,
+                              amount: amount,
+                              city: city,
+                              country: country,
+                              customer_name: customer_name,
+                              payment_method: payment_method,
+                              state: state,
+                              phone_number: phone_number,
+                              pin_code: pin_code,
+                              street_address: street_address,
+                              code: code,
+                              user_id: user_id,
+                              imgurl: imgurl,
+                              product_name: productName,
+                              no_of_items: no_of_items,
+                            ),
+                          ));
+                    } else {
+                      AppUtils.showSnackbar(
+                          context: context,
+                          message: "Wait for doctor to approve",
+                          bgcolor: Colors.green);
+                    }
                   },
                   child: Container(
                     margin: EdgeInsets.symmetric(vertical: screenHeight * 0.01),

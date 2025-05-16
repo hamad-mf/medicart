@@ -30,33 +30,30 @@ class UploadPrescriptionScreenController
 
 
   /// Function to upload an image to Imgur
-  Future<String?> uploadImageToImgur(File imageFile) async {
-    const String clientId =
-        '71ef9f46d10df0e'; // Replace with your Imgur Client ID
+  Future<String?> uploadImageToImgbb(File imageFile) async {
+    const String apiKey =
+        'ba920ecb770b8218fc19a1da5636632c'; // Replace this with your actual ImgBB API key
+
     try {
-      final request = http.MultipartRequest(
-        'POST',
-        Uri.parse('https://api.imgur.com/3/image'),
+      final base64Image = base64Encode(await imageFile.readAsBytes());
+      final response = await http.post(
+        Uri.parse("https://api.imgbb.com/1/upload?key=$apiKey"),
+        body: {
+          "image": base64Image,
+        },
       );
 
-      request.headers['Authorization'] = 'Client-ID $clientId';
-
-      request.files.add(
-        await http.MultipartFile.fromPath('image', imageFile.path),
-      );
-
-      final response = await request.send();
-      final responseData = await http.Response.fromStream(response);
-      final jsonData = jsonDecode(responseData.body);
+      final jsonData = jsonDecode(response.body);
 
       if (jsonData['success'] == true) {
-        return jsonData['data']['link'];
+        return jsonData['data']['url'];
       } else {
-        log('Imgur Upload Failed: ${jsonData['data']['error']}');
+        log('ImgBB Upload Failed: ${jsonData['error']['message']}');
       }
     } catch (e) {
       log('Error uploading image: $e');
     }
+
     return null;
   }
 
@@ -108,7 +105,7 @@ class UploadPrescriptionScreenController
 
     try {
       // Upload the selected image to Imgur
-      final imageUrl = await uploadImageToImgur(selectedImage);
+      final imageUrl = await uploadImageToImgbb(selectedImage);
       if (imageUrl != null) {
         // Save the prescription details to Firestore
         await savePrescriptionToFirestore(
